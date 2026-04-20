@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { ArrowLeft, LayoutDashboard, Calendar, Lock } from 'lucide-react'
 import { BestTimeInsights } from '@/components/admin/best-time-insights'
 import { GrowthCharts } from '@/components/charts/growth-charts'
+import { LeadsTable } from '@/components/admin/leads-table'
+import { AudienceInsights } from '@/components/admin/audience-insights'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useInstagram } from '@/hooks/use-instagram'
@@ -15,6 +17,7 @@ const PASSWORD_KEY = 'techvyro:admin-key'
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
+  const [token, setToken] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -33,7 +36,7 @@ export default function AdminPage() {
         headers: { Authorization: `Bearer ${pwd}` },
       })
       if (res.ok) {
-        setAuthed(true)
+        setAuthed(true); setToken(pwd)
         try { localStorage.setItem(PASSWORD_KEY, pwd) } catch {}
       } else {
         setError('Wrong password')
@@ -86,9 +89,9 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen pt-24 pb-24 md:pb-16 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-5xl">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
           <div>
             <Link href="/" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-2">
               <ArrowLeft className="h-3 w-3" /> Back to site
@@ -107,6 +110,8 @@ export default function AdminPage() {
         </div>
 
         <div className="space-y-6">
+          <LeadsTable token={token} />
+          <AudienceInsights />
           <GrowthCharts postsByPlatform={postsByPlatform} />
           <BestTimeInsights />
         </div>

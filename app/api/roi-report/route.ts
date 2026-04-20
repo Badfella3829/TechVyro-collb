@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/email'
 import { sendInquiryWhatsapp } from '@/lib/whatsapp'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { addLead } from '@/lib/lead-store'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -126,6 +127,18 @@ export async function POST(req: Request) {
     } catch (e) {
       console.error('roi report whatsapp failed', e)
     }
+
+    try {
+      await addLead({
+        source: 'roi-report',
+        email: data.email,
+        name: data.name,
+        package: data.package,
+        budget: String(data.budget),
+        notes: `ROI: ${data.estROI.toFixed(1)}× · Reach: ${data.estReach.toLocaleString('en-IN')}`,
+        payload: { ip },
+      })
+    } catch {}
 
     return NextResponse.json({ ok: true, message: 'Report sent to your email' })
   } catch (err) {

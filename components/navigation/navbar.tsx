@@ -13,8 +13,9 @@ const navLinks = [
   { href: '#about', label: 'About' },
   { href: '#stats', label: 'Stats' },
   { href: '#packages', label: 'Packages' },
-  { href: '#portfolio', label: 'Portfolio' },
-  { href: '#media-kit', label: 'Media Kit' },
+  { href: '/recommender', label: 'Match', external: true },
+  { href: '/case-studies', label: 'Case Studies', external: true },
+  { href: '/blog', label: 'Blog', external: true },
   { href: '#contact', label: 'Contact' },
 ]
 
@@ -31,9 +32,16 @@ export function Navbar() {
   }, [])
 
   const scrollToSection = (href: string) => {
+    if (href.startsWith('/')) {
+      window.location.href = href
+      setIsMobileMenuOpen(false)
+      return
+    }
     const element = document.querySelector(href)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
+    } else if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+      window.location.href = `/${href}`
     }
     setIsMobileMenuOpen(false)
   }

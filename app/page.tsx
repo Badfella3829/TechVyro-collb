@@ -10,6 +10,8 @@ import { PortfolioSection } from '@/components/portfolio/portfolio-section'
 import { LatestFeed } from '@/components/feed/latest-feed'
 import { WhyMeSection } from '@/components/why-me/why-me-section'
 import { TestimonialsSection } from '@/components/testimonials/testimonials-section'
+import { NewsletterInline } from '@/components/newsletter/newsletter-inline'
+import { PressSection } from '@/components/press/press-section'
 import { MediaKitSection } from '@/components/media-kit/media-kit-section'
 import { CollabProcess } from '@/components/process/collab-process'
 import { AvailabilityCalendar } from '@/components/availability/availability-calendar'
@@ -33,6 +35,8 @@ export default function Home() {
       <LatestFeed />
       <WhyMeSection />
       <TestimonialsSection />
+      <PressSection />
+      <NewsletterInline />
       <MediaKitSection />
       <CollabProcess />
       <AvailabilityCalendar />

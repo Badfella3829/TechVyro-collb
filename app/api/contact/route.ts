@@ -4,6 +4,7 @@ import path from 'path'
 import { sendInquiryWhatsapp } from '@/lib/whatsapp'
 import { addBooking } from '@/lib/availability-store'
 import { sendEmail, buildInquiryAckEmail, buildOwnerAlertEmail } from '@/lib/email'
+import { addLead } from '@/lib/lead-store'
 
 const OWNER_EMAIL = process.env.OWNER_EMAIL || 'techvyro@gmail.com'
 
@@ -119,6 +120,23 @@ export async function POST(req: Request) {
     }
 
     const reference = `TV-${Date.now().toString(36).toUpperCase()}`
+
+    // Persist lead to CRM store
+    try {
+      await addLead({
+        source: 'contact',
+        email: inquiry.email,
+        name: inquiry.contactName,
+        phone: inquiry.phone,
+        brand: inquiry.brandName,
+        budget: inquiry.budget,
+        package: inquiry.collabType,
+        notes: inquiry.message?.slice(0, 240),
+        payload: { reference, fitScore: inquiry.fitScore, goal: inquiry.campaignGoal, timeline: inquiry.timeline },
+      })
+    } catch (e) {
+      console.error('[contact] addLead failed:', e)
+    }
 
     // If a startDate was provided, automatically reserve it as TENTATIVE.
     // The owner can later confirm or remove via /admin/availability.

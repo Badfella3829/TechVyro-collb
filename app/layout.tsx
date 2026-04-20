@@ -6,6 +6,8 @@ import { WhatsAppButton } from '@/components/floating/whatsapp-button'
 import { ExitIntentPopup } from '@/components/exit-intent/exit-intent-popup'
 import { VisitorCounter } from '@/components/visitor-counter/visitor-counter'
 import { PageTransition } from '@/components/page-transition/page-transition'
+import { CookieConsent } from '@/components/cookie-consent/cookie-consent'
+import { BottomNav } from '@/components/mobile-nav/bottom-nav'
 import { personJsonLd, organizationJsonLd, websiteJsonLd } from '@/lib/json-ld'
 import './globals.css'
 
@@ -103,11 +105,16 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased min-h-screen">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-primary-foreground focus:px-3 focus:py-1.5 focus:rounded">
+          Skip to content
+        </a>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <PageTransition>{children}</PageTransition>
+          <div id="main-content"><PageTransition>{children}</PageTransition></div>
           <WhatsAppButton />
           <ExitIntentPopup />
           <VisitorCounter />
+          <CookieConsent />
+          <BottomNav />
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
