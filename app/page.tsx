@@ -96,7 +96,6 @@ export default function Home() {
         subtitle="A frictionless 4-step collaboration flow"
       />
       <CollabProcess />
-      <MediaKitSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 8 — CONVERT: Engage, book, contact                         */}
@@ -109,6 +108,9 @@ export default function Home() {
       <NewsletterInline />
       <AvailabilityCalendar />
       <ContactSection />
+
+      {/* Final CTA — Media Kit right above footer */}
+      <MediaKitSection />
 
       <Footer />
     </main>
