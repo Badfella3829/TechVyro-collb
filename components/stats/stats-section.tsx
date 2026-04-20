@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Users, Play, Eye, Award, TrendingUp, Calendar } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { AudienceDemographics } from './audience-demographics'
 
 interface StatItemProps {
   icon: React.ComponentType<{ className?: string }>
@@ -185,6 +186,9 @@ export function StatsSection() {
           </div>
         </motion.div>
         
+        {/* Audience Demographics Charts */}
+        <AudienceDemographics />
+
         {/* Last updated badge */}
         <motion.div
           initial={{ opacity: 0 }}

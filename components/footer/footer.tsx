@@ -18,7 +18,8 @@ const navLinks = [
   { href: '#stats', label: 'Stats' },
   { href: '#packages', label: 'Packages' },
   { href: '#portfolio', label: 'Portfolio' },
-  { href: '#testimonials', label: 'Testimonials' },
+  { href: '#media-kit', label: 'Media Kit' },
+  { href: '#availability', label: 'Availability' },
   { href: '#contact', label: 'Contact' },
 ]
 
