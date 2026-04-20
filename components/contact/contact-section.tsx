@@ -400,7 +400,7 @@ export function ContactSection() {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8 lg:gap-10 max-w-6xl mx-auto">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 max-w-6xl mx-auto">
           {/* Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
@@ -534,7 +534,7 @@ export function ContactSection() {
                           exit={{ opacity: 0, height: 0 }}
                           className="overflow-hidden"
                         >
-                          <div className="mx-6 sm:mx-8 mt-6 rounded-xl border border-primary/40 bg-gradient-to-r from-primary/15 via-secondary/10 to-transparent p-4 flex items-start gap-3">
+                          <div className="mx-3 sm:mx-6 lg:mx-8 mt-4 sm:mt-6 rounded-xl border border-primary/40 bg-gradient-to-r from-primary/15 via-secondary/10 to-transparent p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
                             <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                             <div className="flex-1 min-w-0">
                               <p className="text-xs uppercase tracking-wider text-primary font-semibold">
@@ -569,14 +569,14 @@ export function ContactSection() {
                     </AnimatePresence>
 
                     {/* Stepper */}
-                    <div className="px-6 sm:px-8 pt-6">
+                    <div className="px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6">
                       <div className="flex items-center gap-2">
                         {stepLabels.map((label, i) => (
-                          <div key={label} className="flex-1 flex items-center gap-2">
+                          <div key={label} className="flex-1 flex items-center gap-1 sm:gap-2 min-w-0">
                             <button
                               type="button"
                               onClick={() => i < step && setStep(i)}
-                              className={`flex items-center gap-2 text-xs font-medium transition-colors ${
+                              className={`flex items-center gap-1.5 sm:gap-2 text-xs font-medium transition-colors min-w-0 ${
                                 i === step
                                   ? 'text-primary'
                                   : i < step
@@ -595,7 +595,7 @@ export function ContactSection() {
                               >
                                 {i < step ? <Check className="h-3 w-3" /> : i + 1}
                               </span>
-                              <span className="hidden sm:inline">{label}</span>
+                              <span className="hidden md:inline truncate">{label}</span>
                             </button>
                             {i < stepLabels.length - 1 && (
                               <div
@@ -609,7 +609,7 @@ export function ContactSection() {
                       </div>
                     </div>
 
-                    <div className="p-6 sm:p-8">
+                    <div className="p-4 sm:p-6 lg:p-8">
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={step}

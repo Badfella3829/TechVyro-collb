@@ -119,12 +119,12 @@ export function HeroSection() {
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-12 w-full sm:w-auto px-4 sm:px-0"
         >
           <Button
             size="lg"
             onClick={() => scrollToSection('contact')}
-            className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-semibold neon-glow-cyan"
+            className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold neon-glow-cyan w-full sm:w-auto"
           >
             <Zap className="mr-2 h-5 w-5" />
             Let&apos;s Collab
@@ -135,7 +135,7 @@ export function HeroSection() {
             size="lg"
             variant="outline"
             onClick={() => scrollToSection('portfolio')}
-            className="group border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-8 py-6 text-lg font-semibold"
+            className="group border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold w-full sm:w-auto"
           >
             <Play className="mr-2 h-5 w-5" />
             View My Work
@@ -148,18 +148,18 @@ export function HeroSection() {
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="flex flex-wrap items-center justify-center gap-8 sm:gap-12"
+          className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-8 lg:gap-12 w-full max-w-md sm:max-w-none mx-auto px-4 sm:px-0"
         >
           {[
-            { value: ready ? formatBig(totals.followers) : '—', label: 'Total Followers' },
-            { value: ready ? formatBig(totals.totalViews) : '—', label: 'Total Views' },
-            { value: ready ? formatBig(totals.content) : '—', label: 'Posts & Videos' },
+            { value: ready ? formatBig(totals.followers) : '—', label: 'Followers' },
+            { value: ready ? formatBig(totals.totalViews) : '—', label: 'Views' },
+            { value: ready ? formatBig(totals.content) : '—', label: 'Posts' },
           ].map((stat, index) => (
             <div key={index} className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-primary">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary">
                 {stat.value}
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-xs sm:text-sm text-muted-foreground">
                 {stat.label}
               </div>
             </div>
@@ -186,9 +186,9 @@ export function HeroSection() {
         </motion.button>
       </motion.div>
 
-      {/* Side decorations */}
-      <div className="absolute top-1/4 left-4 sm:left-8 w-px h-32 bg-gradient-to-b from-transparent via-primary to-transparent opacity-50" />
-      <div className="absolute top-1/4 right-4 sm:right-8 w-px h-32 bg-gradient-to-b from-transparent via-secondary to-transparent opacity-50" />
+      {/* Side decorations — desktop only */}
+      <div className="hidden sm:block absolute top-1/4 left-8 w-px h-32 bg-gradient-to-b from-transparent via-primary to-transparent opacity-50" />
+      <div className="hidden sm:block absolute top-1/4 right-8 w-px h-32 bg-gradient-to-b from-transparent via-secondary to-transparent opacity-50" />
     </section>
   )
 }

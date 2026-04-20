@@ -57,15 +57,15 @@ function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView, re
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay }}
     >
-      <Card className="glass border-border/50 hover:border-primary/50 transition-colors group">
-        <CardContent className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className={`p-3 rounded-xl ${color}`}>
-              <Icon className="h-6 w-6" />
+      <Card className="glass border-border/50 hover:border-primary/50 transition-colors group h-full">
+        <CardContent className="p-3 sm:p-6">
+          <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className={`p-2 sm:p-3 rounded-lg sm:rounded-xl ${color}`}>
+              <Icon className="h-4 w-4 sm:h-6 sm:w-6" />
             </div>
             <TrendingUp className="h-4 w-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <div className="text-3xl sm:text-4xl font-bold text-foreground mb-1">
+          <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 break-all">
             {ready ? (
               <AnimatedCounter value={value} isInView={isInView} />
             ) : (
@@ -73,7 +73,7 @@ function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView, re
             )}
             <span className="text-primary">{suffix}</span>
           </div>
-          <p className="text-sm text-muted-foreground">{label}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-tight">{label}</p>
         </CardContent>
       </Card>
     </motion.div>

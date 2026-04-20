@@ -271,7 +271,7 @@ export function PortfolioSection() {
                   onClick={() => setSelectedItem(item)}
                 >
                   <Card className="h-full overflow-hidden glass border-border/50 hover:border-primary/50 transition-all duration-300">
-                    <div className="relative aspect-[9/12] overflow-hidden bg-muted">
+                    <div className="relative aspect-[4/5] sm:aspect-[9/12] overflow-hidden bg-muted">
                       {item.thumbnail ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img

@@ -122,7 +122,7 @@ export function AvailabilityCalendar() {
           className="max-w-xl mx-auto"
         >
           <Card className="glass border-border/50 overflow-hidden">
-            <CardContent className="p-6 sm:p-8">
+            <CardContent className="p-3 sm:p-6 lg:p-8">
               {/* Loading indicator */}
               {availabilityLoading && (
                 <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/50 mb-6 text-xs text-muted-foreground">

@@ -130,7 +130,7 @@ export function MediaKitSection() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ delay: 0.4 + index * 0.05 }}
-                    className="p-4 sm:p-6 text-center border-r border-b sm:border-b-0 border-border/30 last:border-r-0 [&:nth-child(2)]:border-r-0 sm:[&:nth-child(2)]:border-r"
+                    className="p-3 sm:p-6 text-center border-r border-b sm:border-b-0 border-border/30 last:border-r-0 last:col-span-2 sm:last:col-span-1 [&:nth-child(2)]:border-r-0 sm:[&:nth-child(2)]:border-r"
                   >
                     <stat.icon className="h-5 w-5 text-primary mx-auto mb-2" />
                     <p className="text-lg font-bold text-foreground">{stat.value}</p>

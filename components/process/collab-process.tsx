@@ -150,7 +150,7 @@ export function CollabProcess() {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-border/30">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 pt-4 border-t border-border/30">
                           {step.details.map((detail) => (
                             <div key={detail} className="flex items-center gap-2 text-sm">
                               <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />

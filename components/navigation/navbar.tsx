@@ -44,7 +44,7 @@ export function Navbar() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          isScrolled ? "glass py-3" : "bg-transparent py-4"
+          isScrolled ? "glass py-2 sm:py-3" : "bg-transparent py-3 sm:py-4"
         )}
       >
         <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -94,7 +94,8 @@ export function Navbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-foreground"
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              className="md:hidden p-3 -mr-2 text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -110,10 +111,10 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 md:hidden"
+            className="fixed inset-0 z-40 md:hidden overflow-y-auto overscroll-contain"
           >
             <div className="absolute inset-0 bg-background/95 backdrop-blur-lg" />
-            <nav className="relative pt-24 px-6">
+            <nav className="relative pt-24 pb-12 px-6 min-h-full">
               <div className="flex flex-col gap-6">
                 {navLinks.map((link, index) => (
                   <motion.button
@@ -122,7 +123,7 @@ export function Navbar() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                     onClick={() => scrollToSection(link.href)}
-                    className="text-2xl font-semibold text-foreground text-left"
+                    className="text-2xl font-semibold text-foreground text-left py-2 min-h-[44px]"
                   >
                     {link.label}
                   </motion.button>

@@ -84,8 +84,8 @@ export function WhyMeSection() {
           className="max-w-4xl mx-auto"
         >
           <div className="glass rounded-2xl border border-border/50 overflow-hidden">
-            {/* Table header */}
-            <div className="grid grid-cols-3 gap-4 p-4 sm:p-6 border-b border-border/50 bg-muted/20">
+            {/* Table header — desktop only */}
+            <div className="hidden sm:grid grid-cols-3 gap-4 p-4 sm:p-6 border-b border-border/50 bg-muted/20">
               <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                 Feature
               </div>
@@ -104,17 +104,32 @@ export function WhyMeSection() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.4, delay: 0.3 + index * 0.08 }}
-                className="grid grid-cols-3 gap-4 p-4 sm:p-6 border-b border-border/30 last:border-b-0 hover:bg-primary/5 transition-colors"
+                className="sm:grid sm:grid-cols-3 sm:gap-4 p-4 sm:p-6 border-b border-border/30 last:border-b-0 hover:bg-primary/5 transition-colors"
               >
-                <div className="text-sm font-medium text-foreground">
+                {/* Mobile stacked layout */}
+                <div className="sm:hidden space-y-2">
+                  <div className="text-base font-semibold text-foreground">
+                    {row.feature}
+                  </div>
+                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <X className="h-4 w-4 text-destructive/70 shrink-0 mt-0.5" />
+                    <span><span className="font-medium opacity-70">Others:</span> {row.average}</span>
+                  </div>
+                  <div className="flex items-start gap-2 text-sm text-primary">
+                    <Check className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span><span className="font-medium opacity-90">TechVyro:</span> {row.techvyro}</span>
+                  </div>
+                </div>
+                {/* Desktop grid layout */}
+                <div className="hidden sm:block text-sm font-medium text-foreground">
                   {row.feature}
                 </div>
-                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <X className="h-4 w-4 text-destructive/70 shrink-0 hidden sm:block" />
+                <div className="hidden sm:flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <X className="h-4 w-4 text-destructive/70 shrink-0" />
                   <span className="text-center">{row.average}</span>
                 </div>
-                <div className="flex items-center justify-center gap-2 text-sm text-primary">
-                  <Check className="h-4 w-4 text-accent shrink-0 hidden sm:block" />
+                <div className="hidden sm:flex items-center justify-center gap-2 text-sm text-primary">
+                  <Check className="h-4 w-4 text-accent shrink-0" />
                   <span className="text-center font-medium">{row.techvyro}</span>
                 </div>
               </motion.div>
