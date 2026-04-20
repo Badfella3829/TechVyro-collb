@@ -1,12 +1,17 @@
 "use client"
 
-import { Calendar, Clock, ArrowRight } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, MessageCircle } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-const CALENDLY_URL = process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/techvyro/30min'
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '916396094707'
+const PRESET_MESSAGE = encodeURIComponent(
+  "Hi Akansh! I'd like to book a free 30-min discovery call. Please share your available time slots."
+)
 
 export function CalendlyEmbed() {
+  const bookingHref = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${PRESET_MESSAGE}`
+
   return (
     <Card className="glass border-border/50 hover:border-primary/40 transition-colors">
       <CardContent className="p-5 sm:p-6">
@@ -31,13 +36,14 @@ export function CalendlyEmbed() {
             </div>
           ))}
         </div>
-        <Button asChild className="w-full" size="lg">
-          <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer">
-            Pick a Time Slot <ArrowRight className="h-4 w-4 ml-2" />
+        <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" size="lg">
+          <a href={bookingHref} target="_blank" rel="noopener noreferrer">
+            <MessageCircle className="h-4 w-4 mr-2" />
+            Book via WhatsApp <ArrowRight className="h-4 w-4 ml-2" />
           </a>
         </Button>
         <p className="text-[10px] text-muted-foreground text-center mt-3">
-          Powered by Calendly • Secure & encrypted
+          Instant reply on WhatsApp • +91 63960 94707
         </p>
       </CardContent>
     </Card>
