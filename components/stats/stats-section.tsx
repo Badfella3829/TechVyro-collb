@@ -1,10 +1,17 @@
 "use client"
 
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Users, Play, Eye, Award, TrendingUp, Calendar } from 'lucide-react'
+import { Users, Play, Eye, Award, TrendingUp, Calendar, Heart, MessageCircle } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { AudienceDemographics } from './audience-demographics'
+import { useInstagram } from '@/hooks/use-instagram'
+
+function formatNumber(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`
+  return n.toLocaleString()
+}
 
 interface StatItemProps {
   icon: React.ComponentType<{ className?: string }>
@@ -42,7 +49,7 @@ function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean
   return <span>{count.toLocaleString()}</span>
 }
 
-function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView }: StatItemProps) {
+function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView, ready }: StatItemProps & { ready: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -58,7 +65,11 @@ function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView }: 
             <TrendingUp className="h-4 w-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
           <div className="text-3xl sm:text-4xl font-bold text-foreground mb-1">
-            <AnimatedCounter value={value} isInView={isInView} />
+            {ready ? (
+              <AnimatedCounter value={value} isInView={isInView} />
+            ) : (
+              <span className="opacity-40">—</span>
+            )}
             <span className="text-primary">{suffix}</span>
           </div>
           <p className="text-sm text-muted-foreground">{label}</p>
@@ -68,42 +79,51 @@ function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView }: 
   )
 }
 
-const stats = [
-  { icon: Users, value: 500, suffix: 'K+', label: 'Total Followers', color: 'bg-primary/20 text-primary' },
-  { icon: Play, value: 1000, suffix: '+', label: 'Videos Published', color: 'bg-secondary/20 text-secondary' },
-  { icon: Eye, value: 50, suffix: 'M+', label: 'Total Views', color: 'bg-accent/20 text-accent' },
-  { icon: Award, value: 100, suffix: '+', label: 'Brand Collabs', color: 'bg-primary/20 text-primary' },
-  { icon: Calendar, value: 5, suffix: '+', label: 'Years Creating', color: 'bg-secondary/20 text-secondary' },
-  { icon: TrendingUp, value: 8, suffix: '%', label: 'Avg. Engagement', color: 'bg-accent/20 text-accent' },
-]
-
-const platformStats = [
-  { 
-    platform: 'YouTube',
-    followers: '250K',
-    avgViews: '100K',
-    engagement: '8.5%',
-    color: 'border-red-500/30 bg-red-500/10'
-  },
-  { 
-    platform: 'Instagram',
-    followers: '200K',
-    avgViews: '50K',
-    engagement: '12%',
-    color: 'border-pink-500/30 bg-pink-500/10'
-  },
-  { 
-    platform: 'Twitter/X',
-    followers: '50K',
-    avgViews: '25K',
-    engagement: '5%',
-    color: 'border-foreground/30 bg-foreground/10'
-  },
-]
-
 export function StatsSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const { data: ig, loading: igLoading } = useInstagram()
+
+  const stats = useMemo(() => {
+    const followers = ig?.account.followers_count ?? 0
+    const posts = ig?.account.media_count ?? 0
+    const avgLikes = ig?.computed.avgLikes ?? 0
+    const avgComments = ig?.computed.avgComments ?? 0
+    const engagement = ig?.computed.avgEngagement ?? 0
+
+    return [
+      { icon: Users, value: followers, suffix: '', label: 'Instagram Followers', color: 'bg-primary/20 text-primary' },
+      { icon: Play, value: posts, suffix: '', label: 'Posts Published', color: 'bg-secondary/20 text-secondary' },
+      { icon: Heart, value: avgLikes, suffix: '', label: 'Avg. Likes / Post', color: 'bg-accent/20 text-accent' },
+      { icon: MessageCircle, value: avgComments, suffix: '', label: 'Avg. Comments', color: 'bg-primary/20 text-primary' },
+      { icon: TrendingUp, value: Math.round(engagement * 100) / 100, suffix: '%', label: 'Engagement Rate', color: 'bg-secondary/20 text-secondary' },
+      { icon: Calendar, value: 5, suffix: '+', label: 'Years Creating', color: 'bg-accent/20 text-accent' },
+    ]
+  }, [ig])
+
+  const platformStats = useMemo(() => [
+    {
+      platform: 'Instagram',
+      followers: ig ? formatNumber(ig.account.followers_count) : '—',
+      avgViews: ig ? formatNumber(ig.computed.avgLikes) : '—',
+      engagement: ig ? `${ig.computed.avgEngagement.toFixed(2)}%` : '—',
+      color: 'border-pink-500/30 bg-pink-500/10',
+    },
+    {
+      platform: 'YouTube',
+      followers: 'Coming soon',
+      avgViews: '—',
+      engagement: '—',
+      color: 'border-red-500/30 bg-red-500/10',
+    },
+    {
+      platform: 'Twitter/X',
+      followers: 'Coming soon',
+      avgViews: '—',
+      engagement: '—',
+      color: 'border-foreground/30 bg-foreground/10',
+    },
+  ], [ig])
 
   return (
     <section id="stats" className="py-24 sm:py-32 relative">
@@ -143,6 +163,7 @@ export function StatsSection() {
               color={stat.color}
               delay={index * 0.1}
               isInView={isInView}
+              ready={!igLoading || stat.label === 'Years Creating'}
             />
           ))}
         </div>
@@ -198,7 +219,11 @@ export function StatsSection() {
         >
           <span className="inline-flex items-center gap-2 text-xs text-muted-foreground glass px-4 py-2 rounded-full">
             <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-            Last updated: April 2026
+            {igLoading
+              ? 'Fetching live Instagram data…'
+              : ig
+              ? `Live from @${ig.account.username} • ${new Date(ig.fetchedAt).toLocaleString()}`
+              : 'Last updated: April 2026'}
           </span>
         </motion.div>
       </div>
