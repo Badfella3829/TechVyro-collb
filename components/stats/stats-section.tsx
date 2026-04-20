@@ -2,7 +2,8 @@
 
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Users, Play, Eye, TrendingUp, Heart, MessageCircle } from 'lucide-react'
+import Link from 'next/link'
+import { Users, Play, Eye, TrendingUp, Heart, MessageCircle, ArrowRight } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { useInstagram } from '@/hooks/use-instagram'
 import { useFacebook } from '@/hooks/use-facebook'
@@ -118,24 +119,30 @@ export function StatsSection() {
   const platformStats = useMemo(() => [
     {
       platform: 'Instagram',
+      href: '/analytics/instagram',
       followers: ig ? formatNumber(ig.account.followers_count) : '—',
       avgViews: ig ? formatNumber(ig.computed.avgLikes) : '—',
       engagement: ig ? `${ig.computed.avgEngagement.toFixed(2)}%` : '—',
       color: 'border-pink-500/30 bg-pink-500/10',
+      hover: 'hover:border-pink-500/60',
     },
     {
       platform: 'Facebook',
+      href: '/analytics/facebook',
       followers: fb ? formatNumber(fb.page.followers_count) : '—',
       avgViews: fb ? formatNumber(fb.computed.avgReactions) : '—',
       engagement: fb ? `${fb.computed.avgEngagement.toFixed(2)}%` : '—',
       color: 'border-blue-500/30 bg-blue-500/10',
+      hover: 'hover:border-blue-500/60',
     },
     {
       platform: 'YouTube',
+      href: '/analytics/youtube',
       followers: yt ? formatNumber(yt.channel.subscribers) : '—',
       avgViews: yt ? formatNumber(yt.computed.avgViews) : '—',
       engagement: yt ? `${yt.computed.avgEngagement.toFixed(2)}%` : '—',
       color: 'border-red-500/30 bg-red-500/10',
+      hover: 'hover:border-red-500/60',
     },
   ], [ig, fb, yt])
 
@@ -205,25 +212,33 @@ export function StatsSection() {
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
               >
-                <Card className={`border-2 ${platform.color} hover:scale-[1.02] transition-transform`}>
-                  <CardContent className="p-6">
-                    <h4 className="text-lg font-semibold mb-4">{platform.platform}</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground text-sm">Followers</span>
-                        <span className="font-semibold">{platform.followers}</span>
+                <Link href={platform.href} className="block group h-full">
+                  <Card className={`border-2 ${platform.color} ${platform.hover} hover:scale-[1.02] transition-all cursor-pointer h-full`}>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold">{platform.platform}</h4>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground text-sm">Avg. Views</span>
-                        <span className="font-semibold">{platform.avgViews}</span>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground text-sm">Followers</span>
+                          <span className="font-semibold">{platform.followers}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground text-sm">Avg. {platform.platform === 'YouTube' ? 'Views' : platform.platform === 'Instagram' ? 'Likes' : 'Reactions'}</span>
+                          <span className="font-semibold">{platform.avgViews}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground text-sm">Engagement</span>
+                          <span className="font-semibold text-accent">{platform.engagement}</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground text-sm">Engagement</span>
-                        <span className="font-semibold text-accent">{platform.engagement}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <p className="text-[11px] text-muted-foreground mt-4 pt-3 border-t border-border/30 flex items-center gap-1">
+                        View full analytics <ArrowRight className="h-3 w-3" />
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
             ))}
           </div>
