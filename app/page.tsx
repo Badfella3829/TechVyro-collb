@@ -31,59 +31,52 @@ export default function Home() {
       <Navbar />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 1 — IMPACT: First impression in 5 seconds                  */}
+      {/* ACT 1 — WELCOME: First impression                              */}
+      {/* Hero hook → TrustBar marquee                                   */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <HeroSection />
       <TrustBar />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 2 — PROOF: Live numbers + brand logos                      */}
+      {/* ACT 2 — PROOF: Credibility numbers + brand logos               */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
         label="01 — PROOF"
         title="Numbers Don't Lie"
-        subtitle="Real-time stats from live platforms"
+        subtitle="Real-time stats from live platforms · Brands we've served"
       />
       <StatsSection />
       <BrandsSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 3 — SERVICES: What we make                                 */}
+      {/* ACT 3 — WORK: Show the work, then explain the formats          */}
+      {/* Portfolio (show) → Latest Feed (live) → Services (formats)     */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="02 — SERVICES"
-        title="What We Create"
-        subtitle="8 production formats engineered for tech brands"
-      />
-      <ServicesGrid />
-
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 4 — WORK: Featured productions                             */}
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <SectionDivider
-        label="03 — WORK"
+        label="02 — WORK"
         title="Featured Productions"
-        subtitle="From idea to viral — explore our latest"
+        subtitle="See what we've built · Live feed · Content formats we create"
       />
       <PortfolioSection />
       <LatestFeed />
+      <ServicesGrid />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 5 — STORY: Why we win                                      */}
+      {/* ACT 4 — STORY: Why TechVyro + journey timeline                 */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="04 — STORY"
+        label="03 — STORY"
         title="The TechVyro Edge"
-        subtitle="Built different. Engineered for ROI."
+        subtitle="Why we win · How we got here"
       />
       <WhyMeSection />
       <JourneyTimeline />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 6 — VALIDATION: Voices that matter                         */}
+      {/* ACT 5 — TRUST: Voices that matter (clients + media)            */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="05 — VALIDATION"
+        label="04 — TRUST"
         title="Brands & Press Speak"
         subtitle="What partners and media say about working with us"
       />
@@ -91,52 +84,43 @@ export default function Home() {
       <PressSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 7 — OFFER: Packages + ROI                                  */}
+      {/* ACT 6 — OFFER: Packages → ROI → Why us vs others               */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="06 — OFFER"
+        label="05 — OFFER"
         title="Pick Your Growth Pack"
-        subtitle="Transparent pricing. Calculate your ROI live."
+        subtitle="Transparent pricing · Calculate ROI · See the difference"
       />
       <PackagesSection />
       <ROICalculator />
-
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 8 — DIFFERENTIATION: Why TechVyro vs others                */}
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <SectionDivider
-        label="07 — DIFFERENTIATION"
-        title="Why TechVyro Wins"
-        subtitle="Side-by-side: agency vs solo creator vs us"
-      />
       <ComparisonTable />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 9 — PROCESS: How we collaborate                            */}
+      {/* ACT 7 — PROCESS: How we collaborate + media kit download       */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="08 — PROCESS"
+        label="06 — PROCESS"
         title="From Brief to Viral"
-        subtitle="A frictionless 4-step collaboration flow"
+        subtitle="A frictionless 4-step flow · Download our deck"
       />
       <CollabProcess />
       <MediaKitSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 10 — ANSWERS: FAQ                                          */}
+      {/* ACT 8 — ANSWERS: Clear final doubts                            */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="09 — ANSWERS"
+        label="07 — ANSWERS"
         title="Frequently Asked"
         subtitle="Everything you wanted to know — answered"
       />
       <FaqSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 11 — CONNECT: Final conversion stack (right above footer)  */}
+      {/* ACT 9 — CONNECT: Final conversion stack (right above footer)   */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="10 — CONNECT"
+        label="08 — CONNECT"
         title="Let's Build Something Big"
         subtitle="Newsletter · Book a call · Send a brief"
       />
