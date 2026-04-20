@@ -140,7 +140,7 @@ export function StatsSection() {
   ], [ig, fb, yt])
 
   return (
-    <section id="stats" className="py-24 sm:py-32 relative">
+    <section id="stats" className="py-16 sm:py-24 lg:py-32 relative">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
       

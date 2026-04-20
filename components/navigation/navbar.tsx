@@ -62,7 +62,7 @@ export function Navbar() {
                   className="object-cover"
                 />
               </div>
-              <span className="text-xl font-bold gradient-text hidden sm:block">
+              <span className="text-lg sm:text-xl font-bold gradient-text">
                 TechVyro
               </span>
             </button>

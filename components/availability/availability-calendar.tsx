@@ -91,7 +91,7 @@ export function AvailabilityCalendar() {
   }
 
   return (
-    <section id="availability" className="py-24 sm:py-32 relative overflow-hidden">
+    <section id="availability" className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/5 to-transparent" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative" ref={ref}>
@@ -226,7 +226,7 @@ export function AvailabilityCalendar() {
               </div>
 
               {/* Legend */}
-              <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-border/30">
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-6 pt-4 border-t border-border/30">
                 <div className="flex items-center gap-2 text-xs">
                   <div className="w-3 h-3 rounded bg-accent/15 border border-accent/30" />
                   <span className="text-muted-foreground">Available</span>

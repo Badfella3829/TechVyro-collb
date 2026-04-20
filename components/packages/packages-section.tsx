@@ -199,7 +199,7 @@ export function PackagesSection() {
   }
 
   return (
-    <section id="packages" className="py-24 sm:py-32 relative">
+    <section id="packages" className="py-16 sm:py-24 lg:py-32 relative">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/5 to-transparent" />
       
@@ -229,7 +229,7 @@ export function PackagesSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-2 mb-12"
+          className="flex sm:flex-wrap sm:justify-center gap-2 mb-12 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:overflow-visible scrollbar-hide snap-x snap-mandatory"
         >
           <Button
             variant={activeCategory === 'all' ? 'default' : 'outline'}

@@ -376,7 +376,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-24 sm:py-32 relative">
+    <section id="contact" className="py-16 sm:py-24 lg:py-32 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-background" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative" ref={ref}>
