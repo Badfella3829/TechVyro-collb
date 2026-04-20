@@ -10,9 +10,12 @@ type Booking = {
   brandName: string
   contactName: string
   email: string
+  phone?: string
   reference: string
   collabType?: string
   notes?: string
+  confirmedAt?: string
+  confirmationSent?: boolean
   createdAt: string
 }
 
@@ -25,6 +28,7 @@ export default function AdminAvailabilityPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [pendingId, setPendingId] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ type: 'success' | 'warn' | 'error'; text: string } | null>(null)
 
   // Add-form state
   const [showAdd, setShowAdd] = useState(false)
@@ -85,7 +89,7 @@ export default function AdminAvailabilityPage() {
   const mutate = async (
     body: Record<string, unknown>,
     optimisticId?: string
-  ) => {
+  ): Promise<Record<string, unknown> | null> => {
     setPendingId(optimisticId || null)
     try {
       const res = await fetch('/api/admin/availability', {
@@ -96,20 +100,44 @@ export default function AdminAvailabilityPage() {
         },
         body: JSON.stringify(body),
       })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Failed')
-      }
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || 'Failed')
       await fetchBookings(password)
+      return data
     } catch (e) {
       setError(String(e))
+      return null
     } finally {
       setPendingId(null)
     }
   }
 
-  const handleConfirm = (b: Booking) =>
-    mutate({ action: 'update', id: b.id, status: 'booked' }, b.id)
+  // Auto-dismiss toast
+  useEffect(() => {
+    if (!toast) return
+    const t = setTimeout(() => setToast(null), 6000)
+    return () => clearTimeout(t)
+  }, [toast])
+
+  const handleConfirm = async (b: Booking) => {
+    const data = await mutate({ action: 'update', id: b.id, status: 'booked' }, b.id)
+    if (!data) return
+    const conf = (data as { confirmation?: { sent: boolean; mode?: string; skipped?: boolean; reason?: string; error?: string } }).confirmation
+    if (!conf) {
+      setToast({ type: 'success', text: `Confirmed booking for ${b.brandName}.` })
+    } else if (conf.sent) {
+      setToast({
+        type: 'success',
+        text: conf.mode === 'template'
+          ? `Confirmed! Sent "hello_world" template to ${b.brandName} (Meta requires templates for cold outreach). They can reply to open a 24h window.`
+          : `Confirmed! WhatsApp confirmation sent to ${b.brandName}.`,
+      })
+    } else if (conf.skipped) {
+      setToast({ type: 'warn', text: `Confirmed, but no WhatsApp sent: ${conf.reason}` })
+    } else {
+      setToast({ type: 'error', text: `Confirmed, but WhatsApp failed: ${conf.error}` })
+    }
+  }
   const handleMakeTentative = (b: Booking) =>
     mutate({ action: 'update', id: b.id, status: 'tentative' }, b.id)
   const handleRemove = (b: Booking) => {
@@ -215,6 +243,20 @@ export default function AdminAvailabilityPage() {
           </div>
         )}
 
+        {toast && (
+          <div className={`mb-4 p-3 rounded-lg border text-sm flex items-start gap-2 ${
+            toast.type === 'success'
+              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+              : toast.type === 'warn'
+              ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+              : 'bg-red-500/10 border-red-500/30 text-red-400'
+          }`}>
+            {toast.type === 'success' ? <Check className="h-4 w-4 shrink-0 mt-0.5" /> : <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />}
+            <span className="flex-1">{toast.text}</span>
+            <button onClick={() => setToast(null)} className="text-xs opacity-70 hover:opacity-100">×</button>
+          </div>
+        )}
+
         {/* Add form */}
         {showAdd && (
           <form onSubmit={handleAdd} className="mb-6 p-4 sm:p-5 rounded-xl border border-border bg-card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
@@ -273,7 +315,12 @@ export default function AdminAvailabilityPage() {
                       <td className="px-4 py-3 font-medium">{b.brandName}</td>
                       <td className="px-4 py-3">
                         <div>{b.contactName}</div>
-                        <a href={`mailto:${b.email}`} className="text-xs text-primary hover:underline">{b.email}</a>
+                        <a href={`mailto:${b.email}`} className="text-xs text-primary hover:underline block">{b.email}</a>
+                        {b.phone ? (
+                          <a href={`https://wa.me/${b.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="text-xs text-emerald-400 hover:underline">📱 {b.phone}</a>
+                        ) : (
+                          <span className="text-xs text-muted-foreground/60 italic">no phone</span>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-xs text-muted-foreground">{b.collabType || '—'}</td>
                       <td className="px-4 py-3 text-xs text-muted-foreground font-mono">{b.reference}</td>

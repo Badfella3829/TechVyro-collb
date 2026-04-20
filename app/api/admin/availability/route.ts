@@ -2,10 +2,12 @@ import { NextResponse } from 'next/server'
 import {
   addBooking,
   listBookings,
+  markConfirmationSent,
   removeBooking,
   updateBookingStatus,
   type SlotState,
 } from '@/lib/availability-store'
+import { sendBookingConfirmation } from '@/lib/whatsapp'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -66,9 +68,35 @@ export async function POST(req: Request) {
     }
     if (body.action === 'update') {
       if (!body.id || !body.status) return NextResponse.json({ error: 'Missing id/status' }, { status: 400 })
-      const entry = await updateBookingStatus(body.id, body.status)
-      if (!entry) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-      return NextResponse.json({ ok: true, entry })
+      const result = await updateBookingStatus(body.id, body.status)
+      if (!result) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      const { entry, previousStatus } = result
+
+      // Auto-send WhatsApp confirmation when transitioning to "booked"
+      let confirmation:
+        | { sent: boolean; mode?: string; skipped?: boolean; reason?: string; error?: string }
+        | undefined
+      if (body.status === 'booked' && previousStatus !== 'booked') {
+        const r = await sendBookingConfirmation({
+          brandName: entry.brandName,
+          contactName: entry.contactName,
+          date: entry.date,
+          reference: entry.reference,
+          collabType: entry.collabType,
+          phone: entry.phone,
+        })
+        if (r.ok) {
+          confirmation = { sent: true, mode: r.mode }
+          await markConfirmationSent(entry.id)
+        } else if (r.skipped) {
+          confirmation = { sent: false, skipped: true, reason: r.reason }
+        } else {
+          confirmation = { sent: false, error: r.error }
+          console.error('[admin] Brand confirmation failed:', r.error, r.details)
+        }
+      }
+
+      return NextResponse.json({ ok: true, entry, confirmation })
     }
     if (body.action === 'remove') {
       if (!body.id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })

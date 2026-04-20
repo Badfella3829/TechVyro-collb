@@ -86,6 +86,7 @@ export async function POST(req: Request) {
           brandName: inquiry.brandName,
           contactName: inquiry.contactName,
           email: inquiry.email,
+          phone: inquiry.phone,
           reference,
           collabType: inquiry.collabType,
         })

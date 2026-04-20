@@ -10,9 +10,12 @@ export interface BookingEntry {
   brandName: string
   contactName: string
   email: string
+  phone?: string
   reference: string
   collabType?: string
   notes?: string
+  confirmedAt?: string
+  confirmationSent?: boolean
   createdAt: string
 }
 
@@ -62,6 +65,7 @@ export async function addBooking(
     brandName: entry.brandName,
     contactName: entry.contactName,
     email: entry.email,
+    phone: entry.phone,
     reference: entry.reference,
     collabType: entry.collabType,
     notes: entry.notes,
@@ -75,13 +79,25 @@ export async function addBooking(
 export async function updateBookingStatus(
   id: string,
   status: SlotState
-): Promise<BookingEntry | null> {
+): Promise<{ entry: BookingEntry; previousStatus: SlotState } | null> {
   const data = await ensureFile()
   const idx = data.bookings.findIndex((b) => b.id === id)
   if (idx === -1) return null
+  const previousStatus = data.bookings[idx].status
   data.bookings[idx].status = status
+  if (status === 'booked' && previousStatus !== 'booked') {
+    data.bookings[idx].confirmedAt = new Date().toISOString()
+  }
   await writeData(data)
-  return data.bookings[idx]
+  return { entry: data.bookings[idx], previousStatus }
+}
+
+export async function markConfirmationSent(id: string): Promise<void> {
+  const data = await ensureFile()
+  const idx = data.bookings.findIndex((b) => b.id === id)
+  if (idx === -1) return
+  data.bookings[idx].confirmationSent = true
+  await writeData(data)
 }
 
 export async function removeBooking(id: string): Promise<boolean> {
