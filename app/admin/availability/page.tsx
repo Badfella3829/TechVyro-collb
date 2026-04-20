@@ -244,8 +244,8 @@ export default function AdminAvailabilityPage() {
 
   if (!authed) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
-        <form onSubmit={handleLogin} className="w-full max-w-sm bg-card border border-border rounded-2xl p-8 space-y-4">
+      <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">
+        <form onSubmit={handleLogin} className="w-full max-w-sm bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-4">
           <div className="text-center mb-4">
             <Calendar className="h-10 w-10 text-primary mx-auto mb-2" />
             <h1 className="text-2xl font-bold">Admin Access</h1>
@@ -256,8 +256,9 @@ export default function AdminAvailabilityPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Admin password"
-            className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-primary outline-none text-sm"
+            className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-primary outline-none text-base"
             autoFocus
+            autoComplete="current-password"
           />
           {error && (
             <p className="text-xs text-red-400 flex items-center gap-1">
@@ -267,7 +268,7 @@ export default function AdminAvailabilityPage() {
           <button
             type="submit"
             disabled={loading || !password.trim()}
-            className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold disabled:opacity-50 hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 min-h-[48px] rounded-lg bg-primary text-primary-foreground font-semibold disabled:opacity-50 hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             Sign In
@@ -281,39 +282,41 @@ export default function AdminAvailabilityPage() {
   const bookedCount = bookings.filter((b) => b.status === 'booked').length
 
   return (
-    <div className="min-h-screen bg-background py-8 sm:py-12 px-4">
+    <div className="min-h-screen bg-background py-6 sm:py-12 px-3 sm:px-4">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div className="mb-6 space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:flex-wrap sm:gap-3">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-              <Calendar className="h-6 w-6 text-primary" />
+            <h1 className="text-xl sm:text-3xl font-bold flex items-center gap-2">
+              <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-primary shrink-0" />
               Availability Admin
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               {bookedCount} confirmed • {tentativeCount} tentative • {bookings.length} total
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-3 sm:flex sm:items-center gap-2">
             <button
               onClick={() => fetchBookings(password)}
               disabled={loading}
-              className="px-3 py-2 rounded-lg border border-border hover:bg-card text-sm flex items-center gap-1.5"
+              className="px-3 py-2.5 min-h-[44px] rounded-lg border border-border hover:bg-card text-xs sm:text-sm flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
+              <RefreshCw className={`h-3.5 w-3.5 shrink-0 ${loading ? 'animate-spin' : ''}`} />
+              <span className="truncate">Refresh</span>
             </button>
             <button
               onClick={() => setShowAdd((v) => !v)}
-              className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm flex items-center gap-1.5"
+              className="px-3 py-2.5 min-h-[44px] rounded-lg bg-primary text-primary-foreground text-xs sm:text-sm flex items-center justify-center gap-1.5 font-medium"
             >
-              <Plus className="h-3.5 w-3.5" /> Add Manual
+              <Plus className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{showAdd ? 'Close' : 'Add'}</span>
             </button>
             <button
               onClick={handleLogout}
-              className="px-3 py-2 rounded-lg border border-border hover:bg-card text-sm flex items-center gap-1.5"
+              className="px-3 py-2.5 min-h-[44px] rounded-lg border border-border hover:bg-card text-xs sm:text-sm flex items-center justify-center gap-1.5"
             >
-              <LogOut className="h-3.5 w-3.5" /> Logout
+              <LogOut className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">Logout</span>
             </button>
           </div>
         </div>
@@ -341,21 +344,21 @@ export default function AdminAvailabilityPage() {
         {/* Add form */}
         {showAdd && (
           <form onSubmit={handleAdd} className="mb-6 p-4 sm:p-5 rounded-xl border border-border bg-card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-            <input type="date" required value={newDate} onChange={(e) => setNewDate(e.target.value)} className="px-3 py-2 rounded-lg bg-background border border-border text-sm" />
-            <input required placeholder="Brand name" value={newBrand} onChange={(e) => setNewBrand(e.target.value)} className="px-3 py-2 rounded-lg bg-background border border-border text-sm" />
-            <input required placeholder="Contact name" value={newContact} onChange={(e) => setNewContact(e.target.value)} className="px-3 py-2 rounded-lg bg-background border border-border text-sm" />
-            <input required type="email" placeholder="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="px-3 py-2 rounded-lg bg-background border border-border text-sm" />
+            <input type="date" required value={newDate} onChange={(e) => setNewDate(e.target.value)} className="px-3 py-2.5 min-h-[44px] rounded-lg bg-background border border-border text-base sm:text-sm" />
+            <input required placeholder="Brand name" value={newBrand} onChange={(e) => setNewBrand(e.target.value)} className="px-3 py-2.5 min-h-[44px] rounded-lg bg-background border border-border text-base sm:text-sm" />
+            <input required placeholder="Contact name" value={newContact} onChange={(e) => setNewContact(e.target.value)} className="px-3 py-2.5 min-h-[44px] rounded-lg bg-background border border-border text-base sm:text-sm" />
+            <input required type="email" placeholder="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="px-3 py-2.5 min-h-[44px] rounded-lg bg-background border border-border text-base sm:text-sm" />
             <div className="flex gap-2">
-              <select value={newStatus} onChange={(e) => setNewStatus(e.target.value as 'booked' | 'tentative')} className="flex-1 px-3 py-2 rounded-lg bg-background border border-border text-sm">
+              <select value={newStatus} onChange={(e) => setNewStatus(e.target.value as 'booked' | 'tentative')} className="flex-1 px-3 py-2.5 min-h-[44px] rounded-lg bg-background border border-border text-base sm:text-sm">
                 <option value="booked">Booked</option>
                 <option value="tentative">Tentative</option>
               </select>
-              <button type="submit" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium">Add</button>
+              <button type="submit" className="px-4 py-2.5 min-h-[44px] rounded-lg bg-primary text-primary-foreground text-sm font-medium">Add</button>
             </div>
           </form>
         )}
 
-        {/* Bookings table */}
+        {/* Bookings — Mobile cards + Desktop table */}
         {bookings.length === 0 ? (
           <div className="text-center py-16 border border-dashed border-border rounded-xl">
             <Calendar className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
@@ -365,7 +368,111 @@ export default function AdminAvailabilityPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-border">
+          <>
+          {/* Mobile cards (below md) */}
+          <div className="md:hidden space-y-3">
+            {bookings.map((b) => {
+              const busy = pendingId === b.id
+              return (
+                <div key={b.id} className="rounded-xl border border-border bg-card p-4 space-y-3">
+                  {/* Top: date + status */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="font-semibold text-base">{b.date}</div>
+                      <div className="text-xs text-muted-foreground font-mono mt-0.5 break-all">{b.reference}</div>
+                    </div>
+                    <span className={`shrink-0 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      b.status === 'booked'
+                        ? 'bg-red-500/15 text-red-400 border border-red-500/30'
+                        : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                    }`}>
+                      {b.status === 'booked' ? 'Booked' : 'Tentative'}
+                    </span>
+                  </div>
+
+                  {/* Brand */}
+                  <div>
+                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-0.5">Brand</div>
+                    <div className="font-semibold">{b.brandName}</div>
+                    {b.collabType && (
+                      <div className="text-xs text-muted-foreground mt-0.5">{b.collabType}</div>
+                    )}
+                  </div>
+
+                  {/* Contact */}
+                  <div>
+                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-0.5">Contact</div>
+                    <div className="text-sm font-medium">{b.contactName}</div>
+                    <a href={`mailto:${b.email}`} className="text-xs text-primary hover:underline block break-all mt-0.5">{b.email}</a>
+                    {b.phone ? (
+                      <a href={`https://wa.me/${b.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="text-xs text-emerald-400 hover:underline inline-block mt-1">📱 {b.phone}</a>
+                    ) : (
+                      <span className="text-xs text-muted-foreground/60 italic block mt-1">no phone</span>
+                    )}
+                  </div>
+
+                  {/* Notes */}
+                  {b.notes && (
+                    <div>
+                      <div className="text-xs uppercase tracking-wider text-muted-foreground mb-0.5">Notes</div>
+                      <div className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">{b.notes}</div>
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  <div className="pt-2 border-t border-border/50">
+                    {b.status === 'tentative' ? (
+                      <button
+                        onClick={() => handleConfirm(b)}
+                        disabled={busy}
+                        className="w-full px-3 py-3 min-h-[44px] rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25 text-sm font-medium flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      >
+                        {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                        Confirm Booking
+                      </button>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => handleWhatsappBrand(b)}
+                          disabled={busy || !b.phone}
+                          className="px-3 py-3 min-h-[44px] rounded-lg bg-emerald-600/15 text-emerald-400 border border-emerald-600/30 hover:bg-emerald-600/25 text-xs font-medium flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          <MessageCircle className="h-3.5 w-3.5" />
+                          WhatsApp
+                          {b.confirmationSent && <CheckCircle2 className="h-3 w-3 text-emerald-300" />}
+                        </button>
+                        <button
+                          onClick={() => handleEmailBrand(b)}
+                          disabled={busy}
+                          className="px-3 py-3 min-h-[44px] rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30 hover:bg-blue-500/25 text-xs font-medium flex items-center justify-center gap-1 disabled:opacity-50"
+                        >
+                          <Mail className="h-3.5 w-3.5" />
+                          Email
+                        </button>
+                        <button
+                          onClick={() => handleMakeTentative(b)}
+                          disabled={busy}
+                          className="px-3 py-2.5 min-h-[44px] rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 text-xs font-medium disabled:opacity-50"
+                        >
+                          ↩ Tentative
+                        </button>
+                        <button
+                          onClick={() => handleRemove(b)}
+                          disabled={busy}
+                          className="px-3 py-2.5 min-h-[44px] rounded-lg border border-border hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 text-xs font-medium flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" /> Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Desktop table (md+) */}
+          <div className="hidden md:block overflow-hidden rounded-xl border border-border">
             <table className="w-full text-sm">
               <thead className="bg-card">
                 <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
@@ -464,6 +571,7 @@ export default function AdminAvailabilityPage() {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </div>
     </div>
