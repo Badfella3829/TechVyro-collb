@@ -2,7 +2,7 @@ export function personJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Akansh Chahal',
+    name: 'TechVyro Team',
     alternateName: 'TechVyro',
     url: 'https://techvyro.com',
     image: 'https://techvyro.com/images/techvyro-icon.jpg',
@@ -38,7 +38,7 @@ export function organizationJsonLd() {
       areaServed: 'IN',
       availableLanguage: ['en', 'hi'],
     },
-    founder: { '@type': 'Person', name: 'Akansh Chahal' },
+    founder: { '@type': 'Person', name: 'TechVyro Team' },
     foundingDate: '2020',
   }
 }

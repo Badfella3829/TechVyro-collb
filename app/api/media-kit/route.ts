@@ -26,7 +26,7 @@ function buildHtmlMediaKit() {
 </style></head><body>
 <div class="page">
   <h1>TechVyro Media Kit</h1>
-  <p style="color:#888">India's Premier Tech Content Creator · Founder: Akansh Chahal</p>
+  <p style="color:#888">India's Premier Tech Content Creator · Founder: TechVyro Team</p>
 
   <h2>About</h2>
   <p>TechVyro creates high-quality tech reviews, unboxings, and brand collaborations across Instagram, Facebook & YouTube. Our audience is engaged tech enthusiasts in Tier-1 & Tier-2 Indian cities.</p>

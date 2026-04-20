@@ -8,7 +8,7 @@ const TESTIMONIALS = [
   {
     name: 'Rajesh Kumar',
     role: 'Marketing Head, Smartphone Brand',
-    quote: 'Akansh ka unboxing video humare launch ke liye game-changer tha. 2.4M views aur 18% conversion lift!',
+    quote: 'TechVyro ka unboxing video humare launch ke liye game-changer tha. 2.4M views aur 18% conversion lift!',
     rating: 5,
     initial: 'RK',
   },
@@ -22,7 +22,7 @@ const TESTIMONIALS = [
   {
     name: 'Vikram Mehta',
     role: 'Brand Manager, Tech Accessories',
-    quote: 'Best ROI we\'ve seen from any creator. Akansh\'s audience trusts him completely — that converts to sales.',
+    quote: 'Best ROI we\'ve seen from any creator. TechVyro\'s audience trusts them completely — that converts to sales.',
     rating: 5,
     initial: 'VM',
   },

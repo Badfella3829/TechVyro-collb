@@ -59,12 +59,12 @@ export function ExitIntentPopup() {
             </div>
             <h3 className="text-2xl font-bold mb-2">Wait! Don&apos;t leave yet 🚀</h3>
             <p className="text-muted-foreground mb-5 leading-relaxed">
-              Get a <span className="text-primary font-semibold">FREE 30-min strategy call</span> with Akansh.
+              Get a <span className="text-primary font-semibold">FREE 30-min strategy call</span> with our team.
               Discover how TechVyro can scale your brand with proven content strategies.
             </p>
             <div className="space-y-2.5">
               <a
-                href="https://wa.me/916396094707?text=Hi%20Akansh!%20I%27d%20like%20my%20free%2030-min%20strategy%20call."
+                href="https://wa.me/916396094707?text=Hi%20TechVyro%20Team!%20I%27d%20like%20my%20free%2030-min%20strategy%20call."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors"

@@ -145,7 +145,7 @@ export default function AdminAvailabilityPage() {
       ``,
       `I'll DM you the next steps shortly. Save this number for direct chat 💬`,
       ``,
-      `— Akansh Chahal | TechVyro`,
+      `— TechVyro Team | TechVyro`,
     ]
     return lines.join('\n')
   }
@@ -175,7 +175,7 @@ export default function AdminAvailabilityPage() {
       ``,
       `Warm regards,`,
       ``,
-      `Akansh Chahal`,
+      `TechVyro Team`,
       `Founder, TechVyro`,
       `Email: techvyro@gmail.com`,
       `WhatsApp: +91 63960 94707`,

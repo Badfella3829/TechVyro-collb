@@ -6,7 +6,7 @@ import { MessageCircle, X } from 'lucide-react'
 
 const OWNER_PHONE = '916396094707'
 const PRESET_MESSAGE = encodeURIComponent(
-  "Hi Akansh! 👋 I saw your TechVyro portfolio and I'd love to discuss a brand collaboration."
+  "Hi TechVyro Team! 👋 I saw your TechVyro portfolio and I'd love to discuss a brand collaboration."
 )
 
 export function WhatsAppButton() {
@@ -36,7 +36,7 @@ export function WhatsAppButton() {
                 <MessageCircle className="h-4 w-4 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold leading-tight">Akansh @ TechVyro</p>
+                <p className="text-sm font-semibold leading-tight">TechVyro</p>
                 <p className="text-[11px] text-muted-foreground">Typically replies in 1 hour</p>
               </div>
               <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground" aria-label="Close">

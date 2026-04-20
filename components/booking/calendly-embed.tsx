@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '916396094707'
 const PRESET_MESSAGE = encodeURIComponent(
-  "Hi Akansh! I'd like to book a free 30-min discovery call. Please share your available time slots."
+  "Hi TechVyro Team! I'd like to book a free 30-min discovery call. Please share your available time slots."
 )
 
 export function CalendlyEmbed() {

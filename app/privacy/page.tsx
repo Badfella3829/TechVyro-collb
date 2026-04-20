@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
           <section>
             <h2 className="text-base font-semibold text-foreground mb-2">Who we are</h2>
-            <p>TechVyro is operated by Akansh Chahal. Contact: <a className="underline" href="mailto:techvyro@gmail.com">techvyro@gmail.com</a>.</p>
+            <p>TechVyro is operated by TechVyro Team. Contact: <a className="underline" href="mailto:techvyro@gmail.com">techvyro@gmail.com</a>.</p>
           </section>
 
           <section>
