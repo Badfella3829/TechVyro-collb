@@ -157,6 +157,110 @@ export function ContactSection() {
     } catch {}
   }, [])
 
+  // Auto-fill from URL params (e.g., from Recommender quiz)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    const pkgKey = params.get('pkg')
+    if (!pkgKey) return
+
+    const PKG_MAP: Record<string, { name: string; description: string; features: string[]; category: string }> = {
+      starter: {
+        name: 'Starter Package',
+        description: 'Single high-impact piece — great for product pushes & quick tests.',
+        features: ['1 dedicated piece', 'Cross-platform optimisation', 'Basic reporting'],
+        category: 'Quick Push',
+      },
+      growth: {
+        name: 'Growth Package',
+        description: '3 pieces + cross-platform repost. Best ongoing value for steady reach.',
+        features: ['3 content pieces', 'Multi-platform distribution', 'Engagement reporting', 'Story sequence'],
+        category: 'Best Value',
+      },
+      scale: {
+        name: 'Scale Package',
+        description: '6+ pieces, full multi-platform campaign with detailed reporting.',
+        features: ['6+ content pieces', 'Full campaign management', 'Detailed analytics report', 'Priority support', 'Cross-platform amplification'],
+        category: 'Full Campaign',
+      },
+      custom: {
+        name: 'Custom Retainer',
+        description: 'Long-term ambassadorship, video series, or event coverage — tailored to your goals.',
+        features: ['Custom scope', 'Monthly retainer', 'Dedicated strategist', 'Quarterly reviews'],
+        category: 'Enterprise',
+      },
+    }
+
+    const pkg = PKG_MAP[pkgKey]
+    if (!pkg) return
+
+    const goal = params.get('goal') || ''
+    const budget = params.get('budget') || ''
+    const timeline = params.get('timeline') || ''
+    const industry = params.get('industry') || ''
+    const addons = (params.get('addons') || '').split('|').filter(Boolean)
+    const reasons = (params.get('reasons') || '').split('|').filter(Boolean)
+
+    const goalMap: Record<string, string> = {
+      awareness: 'Brand Awareness',
+      conversions: 'Sales / Conversions',
+      launch: 'Product Launch',
+      longterm: 'Community Building',
+    }
+    const budgetMap: Record<string, string> = {
+      low: '₹10,000 – ₹25,000',
+      mid: '₹25,000 – ₹50,000',
+      high: '₹1,00,000 – ₹3,00,000',
+      enterprise: '₹3,00,000+',
+    }
+    const timelineMap: Record<string, string> = {
+      urgent: 'ASAP (within 7 days)',
+      normal: '2 – 4 weeks',
+      flexible: 'Flexible',
+    }
+
+    setSelectedPackage(pkg)
+    const mappedType = mapPackageToCollabType(pkg.name)
+
+    const briefLines = [
+      `Hi! I'd like to start with the "${pkg.name}".`,
+      '',
+      `Quick context from the Smart Recommender:`,
+      goal ? `• Primary goal: ${goalMap[goal] || goal}` : '',
+      industry ? `• Industry: ${industry}` : '',
+      budget ? `• Budget range: ${budgetMap[budget] || budget}` : '',
+      timeline ? `• Timeline: ${timelineMap[timeline] || timeline}` : '',
+      '',
+      reasons.length ? `Why this package was recommended:\n${reasons.map((r) => `• ${r}`).join('\n')}` : '',
+      addons.length ? `\nSuggested add-ons to consider:\n${addons.map((a) => `• ${a}`).join('\n')}` : '',
+      '',
+      'Please share pricing, availability, and next steps.',
+    ].filter(Boolean).join('\n')
+
+    setForm((prev) => ({
+      ...prev,
+      collabType: mappedType,
+      campaignGoal: prev.campaignGoal || goalMap[goal] || prev.campaignGoal,
+      budget: prev.budget || budgetMap[budget] || prev.budget,
+      timeline: prev.timeline || timelineMap[timeline] || prev.timeline,
+      message: prev.message && !prev.message.startsWith("Hi! I'd like") ? prev.message : briefLines,
+    }))
+    setStep(0)
+
+    // Clean up URL so refresh doesn't re-trigger
+    try {
+      const url = new URL(window.location.href)
+      ;['pkg', 'goal', 'budget', 'industry', 'timeline', 'addons', 'reasons'].forEach((k) => url.searchParams.delete(k))
+      window.history.replaceState({}, '', url.pathname + url.hash)
+    } catch {}
+
+    // Smooth-scroll to contact after a tick
+    requestAnimationFrame(() => {
+      const el = document.getElementById('contact')
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    })
+  }, [])
+
   // Listen for package selection from Packages section
   useEffect(() => {
     const handler = (e: Event) => {
