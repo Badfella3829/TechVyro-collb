@@ -126,7 +126,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <span className="block text-foreground font-medium">Email</span>
-                collab@techvyro.com
+                techvyro@gmail.com
               </li>
               <li>
                 <span className="block text-foreground font-medium">Response Time</span>

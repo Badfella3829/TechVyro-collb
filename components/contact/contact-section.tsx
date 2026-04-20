@@ -39,7 +39,7 @@ import {
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
 import { PACKAGE_SELECTED_EVENT, mapPackageToCollabType, type SelectedPackage } from '@/lib/select-package'
 
-const COLLAB_EMAIL = 'collab@techvyro.com'
+const COLLAB_EMAIL = 'techvyro@gmail.com'
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
 const DRAFT_KEY = 'techvyro:collab-draft:v1'
 
