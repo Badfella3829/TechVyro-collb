@@ -6,36 +6,36 @@ import { Plus, HelpCircle } from 'lucide-react'
 
 const FAQS = [
   {
-    q: 'Aap kis tarah ke brands ke saath kaam karte ho?',
-    a: 'Tech-first brands — gadgets, SaaS, AI tools, EdTech, mobile accessories, smart home, FinTech apps. Agar product tech-related hai aur target audience Gen-Z + Millennials hai, hum perfect fit hain.',
+    q: 'What kinds of brands do you work with?',
+    a: 'Tech-first brands — gadgets, SaaS, AI tools, EdTech, mobile accessories, smart home, and FinTech apps. If your product is tech-related and your target audience is Gen-Z and Millennials, we are the perfect fit.',
   },
   {
-    q: 'Pricing kaise kaam karti hai? Hidden costs to nahi?',
-    a: 'Bilkul transparent. 3 packages hain (Starter / Growth / Enterprise) — fixed pricing, no hidden costs. ROI Calculator se aap khud projected return calculate kar sakte ho. Custom briefs ke liye quote 24hr mein milta hai.',
+    q: 'How does pricing work? Are there any hidden costs?',
+    a: 'Completely transparent. We offer 3 packages (Starter / Growth / Enterprise) with fixed pricing and no hidden costs. Our ROI Calculator lets you estimate projected returns yourself. For custom briefs, you receive a quote within 24 hours.',
   },
   {
-    q: 'Turnaround time kya hai content ka?',
-    a: 'Standard delivery 48-72 hours from approved brief. Reels/Shorts: 24-48hr. Long-form YouTube videos: 5-7 days. Urgent campaigns ke liye rush delivery available (additional charge).',
+    q: 'What is the turnaround time for content?',
+    a: 'Standard delivery is 48–72 hours from an approved brief. Reels and Shorts: 24–48 hours. Long-form YouTube videos: 5–7 days. Rush delivery is available for urgent campaigns (additional charge applies).',
   },
   {
-    q: 'Kya aap white-label / ghostwriting karte ho?',
-    a: 'Haan, brand campaigns ke liye white-label content aur unattributed content dono available hain. NDA + content rights ka clear contract hota hai upfront.',
+    q: 'Do you offer white-label or ghostwriting services?',
+    a: 'Yes — both white-label and unattributed content are available for brand campaigns. A clear NDA and content rights contract is signed upfront.',
   },
   {
-    q: 'Performance guarantee milti hai?',
-    a: 'Hum minimum reach guarantee dete hain (package ke hisaab se). Engagement rate aur conversion lift par track-record share karte hain. Industry mein 18% avg conversion lift achieve kiya hai brand campaigns mein.',
+    q: 'Do you offer a performance guarantee?',
+    a: 'We offer a minimum reach guarantee (varies by package) and share our track record on engagement rate and conversion lift. Our brand campaigns have achieved an industry-leading 18% average conversion lift.',
   },
   {
-    q: 'Payment terms kya hain?',
-    a: '50% advance on brief approval, 50% on delivery. UPI, Bank Transfer, Razorpay accept karte hain. International clients ke liye Wise / Stripe. GST invoice provide karte hain.',
+    q: 'What are the payment terms?',
+    a: '50% advance on brief approval, 50% on delivery. We accept UPI, Bank Transfer, and Razorpay. For international clients we use Wise or Stripe. GST invoices are provided.',
   },
   {
-    q: 'Content rights kiske paas rehte hain?',
-    a: 'Brand collaborations mein full usage rights aap (brand) ko milte hain — paid ads, organic posts, website, sab jagah use kar sakte ho. Originality + IP humare paas reh sakti hai depending on contract.',
+    q: 'Who owns the content rights?',
+    a: 'For brand collaborations, the brand receives full usage rights — paid ads, organic posts, your website, anywhere you need. Originality and IP may remain with us depending on the contract.',
   },
   {
-    q: 'Pehli baar collab kaise start karein?',
-    a: 'Bahut simple — niche "Send a Brief" form fill karein ya WhatsApp +91 63960 94707 par message karein. Hum 24hr mein discovery call schedule kar denge — free, no commitment.',
+    q: 'How do I start my first collaboration?',
+    a: 'Very simple — fill out the "Send a Brief" form below, or message us on WhatsApp at +91 63960 94707. We will schedule a discovery call within 24 hours — free and no commitment.',
   },
 ]
 
@@ -56,7 +56,7 @@ export function FaqSection() {
             Got <span className="gradient-text">Questions?</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Sab kuch jo aapko poochna tha — saaf-saaf jawaab. Aur kuch hai? Bas WhatsApp karo.
+            Everything you wanted to know — clear, straightforward answers. Anything else? Just send us a WhatsApp message.
           </p>
         </div>
 
@@ -112,14 +112,14 @@ export function FaqSection() {
 
         <div className="mt-10 text-center">
           <p className="text-sm text-muted-foreground">
-            Aur question hai?{' '}
+            Have another question?{' '}
             <a
               href="https://wa.me/916396094707?text=Hi%20TechVyro%20Team!%20I%20have%20a%20question."
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary font-semibold hover:underline"
             >
-              WhatsApp pe poocho →
+              Ask on WhatsApp →
             </a>
           </p>
         </div>

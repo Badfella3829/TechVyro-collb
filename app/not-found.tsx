@@ -7,10 +7,10 @@ export default function NotFound() {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 pointer-events-none" />
       <div className="text-center max-w-md relative z-10">
         <div className="text-[120px] sm:text-[160px] font-bold gradient-text leading-none mb-2">404</div>
-        <h1 className="text-2xl sm:text-3xl font-bold mb-3">Yeh page kahin kho gaya 🤔</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-3">This page seems to be lost 🤔</h1>
         <p className="text-muted-foreground mb-8">
-          Ya to URL galat hai, ya page ab exist nahi karta. Chinta nahi —
-          neeche ke options try karo!
+          The URL might be incorrect, or the page no longer exists. No worries —
+          try one of the options below!
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link

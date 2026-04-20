@@ -44,7 +44,7 @@ export function WhatsAppButton() {
               </button>
             </div>
             <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
-              👋 Namaste! Brand collab, sponsorship ya consultation ke liye message karo. Free quote 24 hrs me!
+              👋 Hello! Send us a message for brand collabs, sponsorships, or consultations. Get a free quote within 24 hours!
             </p>
             <a
               href={href}

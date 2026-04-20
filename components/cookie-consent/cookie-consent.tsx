@@ -47,7 +47,7 @@ export function CookieConsent() {
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-semibold mb-1">We use cookies 🍪</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Hum essential cookies use karte hain site chalane ke liye, aur optional analytics cookies content improve karne ke liye. Aap apni preference choose kar sakte hain. Read our{' '}
+            We use essential cookies to run the site and optional analytics cookies to improve our content. You can choose your preference. Read our{' '}
             <Link href="/privacy" className="underline text-foreground">privacy policy</Link>.
           </p>
           <div className="flex flex-wrap gap-2 mt-3">

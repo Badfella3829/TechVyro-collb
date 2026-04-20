@@ -8,14 +8,14 @@ const TESTIMONIALS = [
   {
     name: 'Rajesh Kumar',
     role: 'Marketing Head, Smartphone Brand',
-    quote: 'TechVyro ka unboxing video humare launch ke liye game-changer tha. 2.4M views aur 18% conversion lift!',
+    quote: 'TechVyro\'s unboxing video was a game-changer for our launch. 2.4M views and 18% conversion lift!',
     rating: 5,
     initial: 'RK',
   },
   {
     name: 'Priya Sharma',
     role: 'Founder, D2C Audio Brand',
-    quote: 'TechVyro ke saath kaam karna seamless tha. Professional, on-time delivery, and amazing creative ideas.',
+    quote: 'Working with TechVyro was seamless. Professional, on-time delivery, and amazing creative ideas.',
     rating: 5,
     initial: 'PS',
   },

@@ -14,9 +14,9 @@ function welcomeHtml(name: string) {
   return `<!doctype html><html><body style="font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#fff;padding:24px">
   <div style="max-width:560px;margin:auto;background:#111;border-radius:16px;padding:32px">
     <h1 style="margin:0 0 8px;font-size:22px">Welcome to TechVyro, ${name || 'there'}! 🎉</h1>
-    <p style="color:#aaa;margin:0 0 16px">Aap ab India ke premier tech creator network ka hissa ho. Aapka <b>FREE Media Kit + Pricing Guide</b> attached ho raha hai (download link below).</p>
+    <p style="color:#aaa;margin:0 0 16px">You're now part of India's premier tech creator network. Your <b>FREE Media Kit + Pricing Guide</b> is attached below (download link).</p>
     <p style="margin:0 0 24px"><a href="${SITE_URL}/api/media-kit" style="display:inline-block;background:#3b82f6;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">📄 Download Media Kit</a></p>
-    <p style="color:#888;font-size:13px">Brand collab ke liye reply karein ya WhatsApp +91 63960 94707.<br>— TechVyro Team</p>
+    <p style="color:#888;font-size:13px">For brand collaborations, simply reply to this email or WhatsApp us at +91 63960 94707.<br>— TechVyro Team</p>
   </div></body></html>`
 }
 
