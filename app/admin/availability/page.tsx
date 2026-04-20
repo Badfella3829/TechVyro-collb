@@ -130,21 +130,56 @@ export default function AdminAvailabilityPage() {
   const handleMakeTentative = (b: Booking) =>
     mutate({ action: 'update', id: b.id, status: 'tentative' }, b.id)
 
-  // Build the confirmation message body (used by both WhatsApp and Email)
-  const buildConfirmationMessage = (b: Booking): string => {
+  // WhatsApp format — casual, short, emojis, *bold* (WhatsApp markdown)
+  const buildWhatsappMessage = (b: Booking): string => {
+    const firstName = b.contactName.split(' ')[0] || b.contactName
     const lines = [
-      `Hi ${b.contactName},`,
+      `Hey ${firstName}! 👋`,
       ``,
-      `Great news! Your collaboration with TechVyro is confirmed:`,
+      `Good news — your collab with *TechVyro* is confirmed ✅`,
       ``,
-      `• Brand: ${b.brandName}`,
-      ...(b.collabType ? [`• Type: ${b.collabType}`] : []),
-      `• Date: ${b.date}`,
-      `• Reference: ${b.reference}`,
+      `🏢 *Brand:* ${b.brandName}`,
+      ...(b.collabType ? [`🎬 *Type:* ${b.collabType}`] : []),
+      `📅 *Date:* ${b.date}`,
+      `🔖 *Ref:* ${b.reference}`,
       ``,
-      `I'll be in touch shortly with next steps. Save this number for direct communication.`,
+      `I'll DM you the next steps shortly. Save this number for direct chat 💬`,
       ``,
-      `— TechVyro Team`,
+      `— Vyom | TechVyro`,
+    ]
+    return lines.join('\n')
+  }
+
+  // Email format — professional, structured, proper greeting & signature
+  const buildEmailBody = (b: Booking): string => {
+    const lines = [
+      `Dear ${b.contactName},`,
+      ``,
+      `Thank you for choosing TechVyro for your upcoming campaign. I'm pleased to confirm your collaboration booking with the following details:`,
+      ``,
+      `--- Booking Confirmation ---`,
+      `Brand          : ${b.brandName}`,
+      ...(b.collabType ? [`Collaboration  : ${b.collabType}`] : []),
+      `Scheduled Date : ${b.date}`,
+      `Reference No.  : ${b.reference}`,
+      `----------------------------`,
+      ``,
+      `What happens next:`,
+      `1. I will share a detailed brief and creative direction within 24 hours.`,
+      `2. We'll align on key messaging, deliverables, and timelines.`,
+      `3. Production and review schedule will be confirmed in writing.`,
+      ``,
+      `If you have any questions or wish to discuss anything before we kick off, feel free to reply to this email or reach me on WhatsApp at +91 63960 94707.`,
+      ``,
+      `Looking forward to creating something great together.`,
+      ``,
+      `Warm regards,`,
+      ``,
+      `Vyom`,
+      `Founder, TechVyro`,
+      `Email: techvyro@gmail.com`,
+      `WhatsApp: +91 63960 94707`,
+      `Web: https://techvyro.com`,
     ]
     return lines.join('\n')
   }
@@ -156,7 +191,7 @@ export default function AdminAvailabilityPage() {
     }
     let digits = b.phone.replace(/\D/g, '').replace(/^0+/, '')
     if (digits.length === 10) digits = '91' + digits
-    const text = encodeURIComponent(buildConfirmationMessage(b))
+    const text = encodeURIComponent(buildWhatsappMessage(b))
     window.open(`https://wa.me/${digits}?text=${text}`, '_blank', 'noopener,noreferrer')
     if (!b.confirmationSent) {
       await mutate({ action: 'mark-confirmation-sent', id: b.id }, b.id)
@@ -164,8 +199,8 @@ export default function AdminAvailabilityPage() {
   }
 
   const handleEmailBrand = async (b: Booking) => {
-    const subject = encodeURIComponent(`Booking Confirmed — ${b.brandName} (${b.reference})`)
-    const body = encodeURIComponent(buildConfirmationMessage(b))
+    const subject = encodeURIComponent(`Your TechVyro Collaboration is Confirmed — Ref ${b.reference}`)
+    const body = encodeURIComponent(buildEmailBody(b))
     window.open(`mailto:${b.email}?subject=${subject}&body=${body}`, '_self')
     if (!b.confirmationSent) {
       await mutate({ action: 'mark-confirmation-sent', id: b.id }, b.id)
