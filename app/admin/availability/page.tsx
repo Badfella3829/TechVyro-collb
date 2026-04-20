@@ -199,11 +199,26 @@ export default function AdminAvailabilityPage() {
   }
 
   const handleEmailBrand = async (b: Booking) => {
-    const subject = encodeURIComponent(`Your TechVyro Collaboration is Confirmed — Ref ${b.reference}`)
-    const body = encodeURIComponent(buildEmailBody(b))
-    window.open(`mailto:${b.email}?subject=${subject}&body=${body}`, '_self')
-    if (!b.confirmationSent) {
-      await mutate({ action: 'mark-confirmation-sent', id: b.id }, b.id)
+    try {
+      const res = await fetch('/api/admin/availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${password}` },
+        body: JSON.stringify({ action: 'send-confirmation-email', id: b.id }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (data?.ok && data?.sent) {
+        setToast({ type: 'success', text: `✅ Email sent to ${data.to}` })
+        await fetchBookings(password)
+      } else if (data?.skipped) {
+        setToast({ type: 'warn', text: `Auto-send not configured (${data.reason}). Opening mail app...` })
+        const subject = encodeURIComponent(`Your TechVyro Collaboration is Confirmed — Ref ${b.reference}`)
+        const body = encodeURIComponent(buildEmailBody(b))
+        window.open(`mailto:${b.email}?subject=${subject}&body=${body}`, '_self')
+      } else {
+        setToast({ type: 'error', text: `Email failed: ${data?.error || 'Unknown error'}` })
+      }
+    } catch (e) {
+      setToast({ type: 'error', text: `Email error: ${e instanceof Error ? e.message : String(e)}` })
     }
   }
   const handleRemove = (b: Booking) => {

@@ -3,6 +3,7 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import { sendInquiryWhatsapp } from '@/lib/whatsapp'
 import { addBooking } from '@/lib/availability-store'
+import { sendEmail, buildInquiryAckEmail } from '@/lib/email'
 
 export const runtime = 'nodejs'
 
@@ -151,11 +152,44 @@ export async function POST(req: Request) {
       console.error('[contact] WhatsApp notify threw:', err)
     }
 
+    // Send acknowledgement email to brand
+    let ack: { delivered: boolean; error?: string } = { delivered: false }
+    try {
+      const built = buildInquiryAckEmail({
+        reference,
+        brandName: inquiry.brandName,
+        contactName: inquiry.contactName,
+        email: inquiry.email,
+        phone: inquiry.phone,
+        website: inquiry.website,
+        campaignGoal: inquiry.campaignGoal,
+        collabType: inquiry.collabType,
+        deliverables: inquiry.deliverables,
+        budget: inquiry.budget,
+        timeline: inquiry.timeline,
+        startDate: inquiry.startDate,
+        message: inquiry.message,
+      })
+      const r = await sendEmail({
+        to: inquiry.email,
+        subject: built.subject,
+        text: built.text,
+        html: built.html,
+      })
+      if (r.ok) ack = { delivered: true }
+      else if ('skipped' in r) ack = { delivered: false, error: r.reason }
+      else { ack = { delivered: false, error: r.error }; console.error('[contact] Ack email failed:', r.error) }
+    } catch (err) {
+      ack = { delivered: false, error: String(err) }
+      console.error('[contact] Ack email threw:', err)
+    }
+
     return NextResponse.json({
       ok: true,
       message: 'Inquiry received. You will hear back within 24 hours.',
       reference,
       notification,
+      ack,
     })
   } catch (err) {
     return NextResponse.json(

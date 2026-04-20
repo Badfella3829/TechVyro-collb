@@ -92,12 +92,18 @@ export async function updateBookingStatus(
   return { entry: data.bookings[idx], previousStatus }
 }
 
-export async function markConfirmationSent(id: string): Promise<void> {
+export async function markConfirmationSent(id: string): Promise<boolean> {
   const data = await ensureFile()
   const idx = data.bookings.findIndex((b) => b.id === id)
-  if (idx === -1) return
+  if (idx === -1) return false
   data.bookings[idx].confirmationSent = true
   await writeData(data)
+  return true
+}
+
+export async function getBookingById(id: string): Promise<BookingEntry | null> {
+  const data = await ensureFile()
+  return data.bookings.find((b) => b.id === id) || null
 }
 
 export async function removeBooking(id: string): Promise<boolean> {
