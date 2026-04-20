@@ -73,12 +73,13 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-12 h-12 rounded-xl overflow-hidden">
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-background">
                 <Image
                   src="/images/techvyro-logo.jpg"
                   alt="TechVyro"
                   fill
-                  className="object-cover"
+                  sizes="48px"
+                  className="object-cover scale-[1.45] origin-top"
                 />
               </div>
               <span className="text-2xl font-bold gradient-text">TechVyro</span>

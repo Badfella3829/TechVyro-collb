@@ -68,7 +68,8 @@ export function HeroSection() {
               src="/images/techvyro-logo.jpg"
               alt="TechVyro Logo"
               fill
-              className="object-contain rounded-2xl"
+              sizes="(max-width: 640px) 128px, 160px"
+              className="object-cover scale-[1.45] origin-top rounded-2xl"
               priority
             />
             {/* Glow effect behind logo */}

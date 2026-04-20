@@ -50,12 +50,13 @@ export function AboutSection() {
               <div className="absolute -inset-4 bg-gradient-to-r from-primary via-secondary to-accent opacity-20 blur-2xl rounded-full" />
               
               {/* Main image container */}
-              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-border glass">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-border glass bg-background">
                 <Image
                   src="/images/techvyro-logo.jpg"
                   alt="TechVyro"
                   fill
-                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-cover scale-[1.45] origin-top"
                 />
                 
                 {/* Overlay gradient */}

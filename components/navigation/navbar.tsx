@@ -54,12 +54,13 @@ export function Navbar() {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="flex items-center gap-3 group"
             >
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden">
+              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-background">
                 <Image
                   src="/images/techvyro-logo.jpg"
                   alt="TechVyro"
                   fill
-                  className="object-cover"
+                  sizes="40px"
+                  className="object-cover scale-[1.45] origin-top"
                 />
               </div>
               <span className="text-lg sm:text-xl font-bold gradient-text">

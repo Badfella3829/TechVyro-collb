@@ -64,13 +64,14 @@ export function LoadingScreen() {
                 ],
               }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="relative w-24 h-24 rounded-2xl overflow-hidden"
+              className="relative w-24 h-24 rounded-2xl overflow-hidden bg-background"
             >
               <Image
                 src="/images/techvyro-logo.jpg"
                 alt="TechVyro"
                 fill
-                className="object-contain"
+                sizes="96px"
+                className="object-cover scale-[1.45] origin-top"
                 priority
               />
             </motion.div>
