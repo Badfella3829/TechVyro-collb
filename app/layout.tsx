@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: 'India\'s Premier Tech Content Creator. Let\'s create content that converts.',
     images: [
       {
-        url: '/images/techvyro-logo.jpg',
+        url: '/images/techvyro-icon.jpg',
         width: 1200,
         height: 630,
         alt: 'TechVyro Logo',
@@ -41,11 +41,11 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'TechVyro | Tech Content Creator',
     description: 'India\'s Premier Tech Content Creator. Let\'s create content that converts.',
-    images: ['/images/techvyro-logo.jpg'],
+    images: ['/images/techvyro-icon.jpg'],
   },
   icons: {
-    icon: '/images/techvyro-logo.jpg',
-    apple: '/images/techvyro-logo.jpg',
+    icon: '/images/techvyro-icon.jpg',
+    apple: '/images/techvyro-icon.jpg',
   },
 }
 
