@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { sendInquiryWhatsapp } from '@/lib/whatsapp'
+import { addBooking } from '@/lib/availability-store'
 
 export const runtime = 'nodejs'
 
@@ -74,6 +75,24 @@ export async function POST(req: Request) {
     }
 
     const reference = `TV-${Date.now().toString(36).toUpperCase()}`
+
+    // If a startDate was provided, automatically reserve it as TENTATIVE.
+    // The owner can later confirm or remove via /admin/availability.
+    if (inquiry.startDate && /^\d{4}-\d{2}-\d{2}$/.test(inquiry.startDate)) {
+      try {
+        await addBooking({
+          date: inquiry.startDate,
+          status: 'tentative',
+          brandName: inquiry.brandName,
+          contactName: inquiry.contactName,
+          email: inquiry.email,
+          reference,
+          collabType: inquiry.collabType,
+        })
+      } catch (e) {
+        console.error('[contact] Failed to add tentative booking:', e)
+      }
+    }
 
     // Fire-and-record WhatsApp notification (non-blocking failure).
     let notification: { delivered: boolean; mode?: string; error?: string } = { delivered: false }

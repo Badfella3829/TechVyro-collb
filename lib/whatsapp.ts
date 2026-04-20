@@ -39,6 +39,12 @@ function formatInquiryMessage(i: InquiryPayload): string {
   const briefPreview = i.message.length > 400 ? i.message.slice(0, 400) + '…' : i.message
   lines.push(`*Brief:*`)
   lines.push(briefPreview)
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.REPLIT_DEV_DOMAIN
+  if (siteUrl) {
+    const base = siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`
+    lines.push('')
+    lines.push(`Manage: ${base}/admin/availability`)
+  }
   return lines.join('\n')
 }
 

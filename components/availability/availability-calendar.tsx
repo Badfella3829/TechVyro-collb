@@ -2,10 +2,11 @@
 
 import { useRef, useState, useMemo } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { CalendarDays, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react'
+import { CalendarDays, ChevronLeft, ChevronRight, AlertTriangle, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { useAvailability } from '@/hooks/use-availability'
 
 type SlotStatus = 'available' | 'booked' | 'tentative'
 
@@ -15,12 +16,10 @@ function getMonthData(year: number, month: number) {
   return { firstDay, daysInMonth }
 }
 
-// Generate semi-random availability for demo
-function getSlotStatus(day: number, month: number): SlotStatus {
-  const seed = (day * 7 + month * 13) % 10
-  if (seed < 3) return 'booked'
-  if (seed < 5) return 'tentative'
-  return 'available'
+function toIso(year: number, month: number, day: number): string {
+  const m = String(month + 1).padStart(2, '0')
+  const d = String(day).padStart(2, '0')
+  return `${year}-${m}-${d}`
 }
 
 const monthNames = [
@@ -42,13 +41,35 @@ export function AvailabilityCalendar() {
     [currentYear, currentMonth]
   )
 
+  const { data: availability, loading: availabilityLoading } = useAvailability()
+
+  const bookedSet = useMemo(
+    () => new Set(availability?.bookedDates || []),
+    [availability]
+  )
+  const tentativeSet = useMemo(
+    () => new Set(availability?.tentativeDates || []),
+    [availability]
+  )
+
+  const getStatusForDay = (day: number): SlotStatus => {
+    const iso = toIso(currentYear, currentMonth, day)
+    if (bookedSet.has(iso)) return 'booked'
+    if (tentativeSet.has(iso)) return 'tentative'
+    return 'available'
+  }
+
   const availableCount = useMemo(() => {
     let count = 0
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
     for (let d = 1; d <= daysInMonth; d++) {
-      if (getSlotStatus(d, currentMonth) === 'available') count++
+      const date = new Date(currentYear, currentMonth, d)
+      if (date < todayStart) continue
+      if (getStatusForDay(d) === 'available') count++
     }
     return count
-  }, [daysInMonth, currentMonth])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [daysInMonth, currentMonth, currentYear, bookedSet, tentativeSet])
 
   const navigateMonth = (dir: number) => {
     let newMonth = currentMonth + dir
@@ -101,8 +122,16 @@ export function AvailabilityCalendar() {
         >
           <Card className="glass border-border/50 overflow-hidden">
             <CardContent className="p-6 sm:p-8">
+              {/* Loading indicator */}
+              {availabilityLoading && (
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/50 mb-6 text-xs text-muted-foreground">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Loading live availability…
+                </div>
+              )}
+
               {/* FOMO badge */}
-              {availableCount <= 8 && (
+              {!availabilityLoading && availableCount <= 8 && availableCount > 0 && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -161,7 +190,7 @@ export function AvailabilityCalendar() {
                 {Array.from({ length: daysInMonth }).map((_, i) => {
                   const day = i + 1
                   const past = isPast(day)
-                  const status = past ? 'booked' : getSlotStatus(day, currentMonth)
+                  const status: SlotStatus = past ? 'booked' : getStatusForDay(day)
                   const todayFlag = isToday(day)
 
                   return (
