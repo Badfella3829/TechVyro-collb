@@ -1,8 +1,8 @@
 "use client"
 
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { 
   Youtube, 
   Instagram, 
@@ -18,6 +18,7 @@ const navLinks = [
   { href: '#stats', label: 'Stats' },
   { href: '#packages', label: 'Packages' },
   { href: '#portfolio', label: 'Portfolio' },
+  { href: '#testimonials', label: 'Testimonials' },
   { href: '#contact', label: 'Contact' },
 ]
 
@@ -31,6 +32,15 @@ const socialLinks = [
 export function Footer() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
+  const [showBackToTop, setShowBackToTop] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -158,21 +168,26 @@ export function Footer() {
         </motion.div>
 
         {/* Back to top button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="fixed bottom-8 right-8 z-40"
-        >
-          <Button
-            onClick={scrollToTop}
-            size="icon"
-            className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg neon-glow-cyan h-12 w-12"
-            aria-label="Back to top"
-          >
-            <ArrowUp className="h-5 w-5" />
-          </Button>
-        </motion.div>
+        <AnimatePresence>
+          {showBackToTop && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="fixed bottom-8 right-8 z-40"
+            >
+              <Button
+                onClick={scrollToTop}
+                size="icon"
+                className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg neon-glow-cyan h-12 w-12"
+                aria-label="Back to top"
+              >
+                <ArrowUp className="h-5 w-5" />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </footer>
   )
