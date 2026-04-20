@@ -158,7 +158,10 @@ export default function FacebookAnalyticsPage() {
         )}
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-          <h2 className="text-xl font-semibold mb-4">Top Performing Posts ({top50.length})</h2>
+          <div className="flex items-baseline justify-between flex-wrap gap-2 mb-4">
+            <h2 className="text-xl font-semibold">Top Performing Posts ({top50.length})</h2>
+            <span className="text-xs text-muted-foreground">sorted by Reactions</span>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {top50.map((post, idx) => (
               <a key={post.id} href={post.permalink_url} target="_blank" rel="noopener noreferrer" className="group">

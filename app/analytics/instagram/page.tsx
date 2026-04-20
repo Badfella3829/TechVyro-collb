@@ -163,7 +163,10 @@ export default function InstagramAnalyticsPage() {
 
         {/* Recent posts grid */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-          <h2 className="text-xl font-semibold mb-4">Top Performing Posts ({top50.length})</h2>
+          <div className="flex items-baseline justify-between flex-wrap gap-2 mb-4">
+            <h2 className="text-xl font-semibold">Top Performing Posts ({top50.length})</h2>
+            <span className="text-xs text-muted-foreground">sorted by Likes</span>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {top50.map((post, idx) => (
               <a key={post.id} href={post.permalink} target="_blank" rel="noopener noreferrer" className="group">
