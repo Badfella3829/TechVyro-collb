@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getInstagramToken, maybeRefreshInstagramToken } from '@/lib/token-store'
 
 export const revalidate = 3600
 
@@ -28,7 +29,10 @@ type IGMedia = {
 export async function GET(req: Request) {
   const url = new URL(req.url)
   const forceRefresh = url.searchParams.has('refresh') || url.searchParams.has('_t')
-  const token = process.env.INSTAGRAM_ACCESS_TOKEN
+  // Auto-extend the long-lived token if it's nearing expiry (>50 days old).
+  // This makes the IG token effectively permanent as long as the API is hit at least once every ~10 days.
+  await maybeRefreshInstagramToken()
+  const token = await getInstagramToken()
   const userId = process.env.INSTAGRAM_USER_ID
 
   if (!token || !userId) {

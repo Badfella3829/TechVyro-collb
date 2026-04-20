@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getFacebookToken } from '@/lib/token-store'
 
 export const revalidate = 3600
 
@@ -41,7 +42,8 @@ type FBPost = {
 
 export async function GET(req: Request) {
   const _u = new URL(req.url); const forceRefresh = _u.searchParams.has("refresh") || _u.searchParams.has("_t");
-  const token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
+  // Prefer the never-expiring page token saved via /admin's Token Manager (falls back to env var).
+  const token = await getFacebookToken()
   const pageId = process.env.FACEBOOK_PAGE_ID
 
   if (!token || !pageId) {

@@ -7,6 +7,7 @@ import { BestTimeInsights } from '@/components/admin/best-time-insights'
 import { GrowthCharts } from '@/components/charts/growth-charts'
 import { LeadsTable } from '@/components/admin/leads-table'
 import { AudienceInsights } from '@/components/admin/audience-insights'
+import { TokenManager } from '@/components/admin/token-manager'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useInstagram } from '@/hooks/use-instagram'
@@ -110,6 +111,7 @@ export default function AdminPage() {
         </div>
 
         <div className="space-y-6">
+          <TokenManager token={token} />
           <LeadsTable token={token} />
           <AudienceInsights />
           <GrowthCharts postsByPlatform={postsByPlatform} />
