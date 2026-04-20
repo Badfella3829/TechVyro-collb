@@ -38,7 +38,7 @@ export function CookieConsent() {
     <div
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed inset-x-3 bottom-3 sm:left-auto sm:right-4 sm:bottom-4 sm:max-w-md z-[60] glass border border-border/60 rounded-2xl shadow-2xl p-4 sm:p-5 animate-in slide-in-from-bottom-5"
+      className="fixed inset-x-3 bottom-[calc(76px+env(safe-area-inset-bottom))] md:left-auto md:right-4 md:bottom-4 md:max-w-md z-[60] glass border border-border/60 rounded-2xl shadow-2xl p-4 sm:p-5 animate-in slide-in-from-bottom-5"
     >
       <div className="flex items-start gap-3">
         <div className="h-9 w-9 rounded-full bg-primary/15 flex items-center justify-center shrink-0">

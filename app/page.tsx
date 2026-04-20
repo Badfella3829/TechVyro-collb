@@ -22,7 +22,6 @@ import { ContactSection } from '@/components/contact/contact-section'
 import { FaqSection } from '@/components/faq/faq-section'
 import { Footer } from '@/components/footer/footer'
 import { ClientEffects } from '@/components/effects/client-effects'
-import { StickyMobileCta } from '@/components/floating/sticky-mobile-cta'
 
 export default function Home() {
   return (
@@ -129,7 +128,6 @@ export default function Home() {
       <ContactSection />
 
       <Footer />
-      <StickyMobileCta />
     </main>
   )
 }

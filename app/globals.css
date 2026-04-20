@@ -123,11 +123,28 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Prevent horizontal overflow on mobile (long marquees, wide tables, etc.) */
+    overflow-x: hidden;
+    /* Reserve space for the mobile bottom nav so footer/last section is never hidden */
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
-  
+
+  @media (min-width: 768px) {
+    body {
+      padding-bottom: 0;
+    }
+  }
+
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Prevent images from forcing horizontal overflow */
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
   }
 }
 

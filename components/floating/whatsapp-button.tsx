@@ -21,7 +21,7 @@ export function WhatsAppButton() {
   const href = `https://wa.me/${OWNER_PHONE}?text=${PRESET_MESSAGE}`
 
   return (
-    <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed right-4 sm:right-6 z-50 flex flex-col items-end gap-3 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-6">
       <AnimatePresence>
         {open && (
           <motion.div
