@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { Calendar, Check, Trash2, Plus, LogOut, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
+import { Calendar, Check, Trash2, Plus, LogOut, Loader2, AlertCircle, RefreshCw, MessageCircle, Mail, CheckCircle2 } from 'lucide-react'
 
 type Booking = {
   id: string
@@ -122,24 +122,55 @@ export default function AdminAvailabilityPage() {
   const handleConfirm = async (b: Booking) => {
     const data = await mutate({ action: 'update', id: b.id, status: 'booked' }, b.id)
     if (!data) return
-    const conf = (data as { confirmation?: { sent: boolean; mode?: string; skipped?: boolean; reason?: string; error?: string } }).confirmation
-    if (!conf) {
-      setToast({ type: 'success', text: `Confirmed booking for ${b.brandName}.` })
-    } else if (conf.sent) {
-      setToast({
-        type: 'success',
-        text: conf.mode === 'template'
-          ? `Confirmed! Sent "hello_world" template to ${b.brandName} (Meta requires templates for cold outreach). They can reply to open a 24h window.`
-          : `Confirmed! WhatsApp confirmation sent to ${b.brandName}.`,
-      })
-    } else if (conf.skipped) {
-      setToast({ type: 'warn', text: `Confirmed, but no WhatsApp sent: ${conf.reason}` })
-    } else {
-      setToast({ type: 'error', text: `Confirmed, but WhatsApp failed: ${conf.error}` })
-    }
+    setToast({
+      type: 'success',
+      text: `Booking confirmed for ${b.brandName}. Now click 📱 WhatsApp or ✉️ Email to send confirmation.`,
+    })
   }
   const handleMakeTentative = (b: Booking) =>
     mutate({ action: 'update', id: b.id, status: 'tentative' }, b.id)
+
+  // Build the confirmation message body (used by both WhatsApp and Email)
+  const buildConfirmationMessage = (b: Booking): string => {
+    const lines = [
+      `Hi ${b.contactName},`,
+      ``,
+      `Great news! Your collaboration with TechVyro is confirmed:`,
+      ``,
+      `• Brand: ${b.brandName}`,
+      ...(b.collabType ? [`• Type: ${b.collabType}`] : []),
+      `• Date: ${b.date}`,
+      `• Reference: ${b.reference}`,
+      ``,
+      `I'll be in touch shortly with next steps. Save this number for direct communication.`,
+      ``,
+      `— TechVyro Team`,
+    ]
+    return lines.join('\n')
+  }
+
+  const handleWhatsappBrand = async (b: Booking) => {
+    if (!b.phone) {
+      setToast({ type: 'warn', text: `${b.brandName} did not provide a phone number.` })
+      return
+    }
+    let digits = b.phone.replace(/\D/g, '').replace(/^0+/, '')
+    if (digits.length === 10) digits = '91' + digits
+    const text = encodeURIComponent(buildConfirmationMessage(b))
+    window.open(`https://wa.me/${digits}?text=${text}`, '_blank', 'noopener,noreferrer')
+    if (!b.confirmationSent) {
+      await mutate({ action: 'mark-confirmation-sent', id: b.id }, b.id)
+    }
+  }
+
+  const handleEmailBrand = async (b: Booking) => {
+    const subject = encodeURIComponent(`Booking Confirmed — ${b.brandName} (${b.reference})`)
+    const body = encodeURIComponent(buildConfirmationMessage(b))
+    window.open(`mailto:${b.email}?subject=${subject}&body=${body}`, '_self')
+    if (!b.confirmationSent) {
+      await mutate({ action: 'mark-confirmation-sent', id: b.id }, b.id)
+    }
+  }
   const handleRemove = (b: Booking) => {
     if (!confirm(`Remove booking for ${b.brandName} on ${b.date}?`)) return
     mutate({ action: 'remove', id: b.id }, b.id)
@@ -325,7 +356,7 @@ export default function AdminAvailabilityPage() {
                       <td className="px-4 py-3 text-xs text-muted-foreground">{b.collabType || '—'}</td>
                       <td className="px-4 py-3 text-xs text-muted-foreground font-mono">{b.reference}</td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center justify-end gap-1.5">
+                        <div className="flex items-center justify-end gap-1.5 flex-wrap">
                           {b.status === 'tentative' ? (
                             <button
                               onClick={() => handleConfirm(b)}
@@ -337,14 +368,35 @@ export default function AdminAvailabilityPage() {
                               Confirm
                             </button>
                           ) : (
-                            <button
-                              onClick={() => handleMakeTentative(b)}
-                              disabled={busy}
-                              title="Move back to tentative"
-                              className="px-2.5 py-1.5 rounded-md bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 text-xs disabled:opacity-50"
-                            >
-                              Tentative
-                            </button>
+                            <>
+                              <button
+                                onClick={() => handleWhatsappBrand(b)}
+                                disabled={busy || !b.phone}
+                                title={b.phone ? `Open WhatsApp with confirmation message for ${b.brandName}` : 'No phone number provided'}
+                                className="px-2.5 py-1.5 rounded-md bg-emerald-600/15 text-emerald-400 border border-emerald-600/30 hover:bg-emerald-600/25 text-xs flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                              >
+                                <MessageCircle className="h-3 w-3" />
+                                WhatsApp
+                                {b.confirmationSent && <CheckCircle2 className="h-3 w-3 ml-0.5 text-emerald-300" />}
+                              </button>
+                              <button
+                                onClick={() => handleEmailBrand(b)}
+                                disabled={busy}
+                                title={`Email confirmation to ${b.email}`}
+                                className="px-2.5 py-1.5 rounded-md bg-blue-500/15 text-blue-400 border border-blue-500/30 hover:bg-blue-500/25 text-xs flex items-center gap-1 disabled:opacity-50"
+                              >
+                                <Mail className="h-3 w-3" />
+                                Email
+                              </button>
+                              <button
+                                onClick={() => handleMakeTentative(b)}
+                                disabled={busy}
+                                title="Move back to tentative"
+                                className="px-2.5 py-1.5 rounded-md bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 text-xs disabled:opacity-50"
+                              >
+                                Tentative
+                              </button>
+                            </>
                           )}
                           <button
                             onClick={() => handleRemove(b)}

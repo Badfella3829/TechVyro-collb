@@ -7,7 +7,6 @@ import {
   updateBookingStatus,
   type SlotState,
 } from '@/lib/availability-store'
-import { sendBookingConfirmation } from '@/lib/whatsapp'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -38,7 +37,7 @@ export async function POST(req: Request) {
   if (!authorized(req)) return unauthorized()
   try {
     const body = (await req.json()) as {
-      action: 'add' | 'update' | 'remove'
+      action: 'add' | 'update' | 'remove' | 'mark-confirmation-sent'
       id?: string
       date?: string
       status?: SlotState
@@ -70,33 +69,15 @@ export async function POST(req: Request) {
       if (!body.id || !body.status) return NextResponse.json({ error: 'Missing id/status' }, { status: 400 })
       const result = await updateBookingStatus(body.id, body.status)
       if (!result) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-      const { entry, previousStatus } = result
-
-      // Auto-send WhatsApp confirmation when transitioning to "booked"
-      let confirmation:
-        | { sent: boolean; mode?: string; skipped?: boolean; reason?: string; error?: string }
-        | undefined
-      if (body.status === 'booked' && previousStatus !== 'booked') {
-        const r = await sendBookingConfirmation({
-          brandName: entry.brandName,
-          contactName: entry.contactName,
-          date: entry.date,
-          reference: entry.reference,
-          collabType: entry.collabType,
-          phone: entry.phone,
-        })
-        if (r.ok) {
-          confirmation = { sent: true, mode: r.mode }
-          await markConfirmationSent(entry.id)
-        } else if (r.skipped) {
-          confirmation = { sent: false, skipped: true, reason: r.reason }
-        } else {
-          confirmation = { sent: false, error: r.error }
-          console.error('[admin] Brand confirmation failed:', r.error, r.details)
-        }
-      }
-
-      return NextResponse.json({ ok: true, entry, confirmation })
+      const { entry } = result
+      // Confirmation messages are sent manually via WhatsApp/Email buttons in admin UI
+      return NextResponse.json({ ok: true, entry })
+    }
+    if (body.action === 'mark-confirmation-sent') {
+      if (!body.id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
+      const ok = await markConfirmationSent(body.id)
+      if (!ok) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      return NextResponse.json({ ok: true })
     }
     if (body.action === 'remove') {
       if (!body.id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
