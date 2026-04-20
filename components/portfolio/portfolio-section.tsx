@@ -12,17 +12,30 @@ import {
   MessageCircle,
   X,
   Instagram,
+  Facebook,
+  Share2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { useInstagram, type InstagramMedia } from '@/hooks/use-instagram'
+import { useFacebook, type FacebookPost } from '@/hooks/use-facebook'
 
-type FilterType = 'all' | 'reel' | 'video' | 'post'
+type Platform = 'instagram' | 'facebook'
+type FilterType = 'all' | 'reel' | 'post'
 
-function classify(m: InstagramMedia): FilterType {
-  if (m.media_type === 'VIDEO') return 'reel'
-  return 'post'
+type UnifiedItem = {
+  id: string
+  platform: Platform
+  type: FilterType
+  thumbnail?: string
+  title: string
+  permalink: string
+  likes: number
+  comments: number
+  shares?: number
+  timestamp: string
+  caption?: string
 }
 
 function formatCount(n: number): string {
@@ -31,38 +44,82 @@ function formatCount(n: number): string {
   return n.toLocaleString()
 }
 
-function captionTitle(caption: string | undefined): string {
-  if (!caption) return 'Instagram Post'
+function captionTitle(caption: string | undefined, fallback = 'Post'): string {
+  if (!caption) return fallback
   const firstLine = caption.split('\n')[0].trim()
   return firstLine.length > 80 ? firstLine.slice(0, 77) + '…' : firstLine
 }
 
-const filters: { id: FilterType; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: 'all', label: 'Top Performing', icon: Play },
-  { id: 'reel', label: 'Reels', icon: Film },
+function igToUnified(m: InstagramMedia): UnifiedItem {
+  return {
+    id: `ig-${m.id}`,
+    platform: 'instagram',
+    type: m.media_type === 'VIDEO' ? 'reel' : 'post',
+    thumbnail: m.thumbnail_url || m.media_url,
+    title: captionTitle(m.caption, 'Instagram Post'),
+    permalink: m.permalink,
+    likes: m.like_count || 0,
+    comments: m.comments_count || 0,
+    timestamp: m.timestamp,
+    caption: m.caption,
+  }
+}
+
+function fbToUnified(p: FacebookPost): UnifiedItem {
+  const att = p.attachments?.data?.[0]
+  const isVideo = att?.type?.includes('video') || p.permalink_url?.includes('/reel/') || p.permalink_url?.includes('/videos/')
+  return {
+    id: `fb-${p.id}`,
+    platform: 'facebook',
+    type: isVideo ? 'reel' : 'post',
+    thumbnail: p.full_picture || att?.media?.image?.src,
+    title: captionTitle(p.message || p.story, 'Facebook Post'),
+    permalink: p.permalink_url || `https://facebook.com/${p.id}`,
+    likes: p.reactions?.summary?.total_count || 0,
+    comments: p.comments?.summary?.total_count || 0,
+    shares: p.shares?.count,
+    timestamp: p.created_time,
+    caption: p.message || p.story,
+  }
+}
+
+const platformFilters: { id: Platform | 'all'; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { id: 'all', label: 'All Platforms', icon: Play },
+  { id: 'instagram', label: 'Instagram', icon: Instagram },
+  { id: 'facebook', label: 'Facebook', icon: Facebook },
+]
+
+const typeFilters: { id: FilterType; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { id: 'all', label: 'Top', icon: Play },
+  { id: 'reel', label: 'Reels/Videos', icon: Film },
   { id: 'post', label: 'Posts', icon: ImageIcon },
 ]
 
 export function PortfolioSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const [activeFilter, setActiveFilter] = useState<FilterType>('all')
-  const [selectedItem, setSelectedItem] = useState<InstagramMedia | null>(null)
-  const { data: ig, loading, error } = useInstagram()
+  const [platformFilter, setPlatformFilter] = useState<Platform | 'all'>('all')
+  const [typeFilter, setTypeFilter] = useState<FilterType>('all')
+  const [selectedItem, setSelectedItem] = useState<UnifiedItem | null>(null)
+  const { data: ig, loading: igLoading, error: igError } = useInstagram()
+  const { data: fb, loading: fbLoading, error: fbError } = useFacebook()
 
-  const sortedMedia = useMemo(() => {
-    if (!ig) return []
-    return [...ig.media].sort((a, b) => {
-      const aScore = (a.like_count || 0) + (a.comments_count || 0)
-      const bScore = (b.like_count || 0) + (b.comments_count || 0)
-      return bScore - aScore
-    })
-  }, [ig])
+  const allItems = useMemo<UnifiedItem[]>(() => {
+    const items: UnifiedItem[] = []
+    if (ig) items.push(...ig.media.map(igToUnified))
+    if (fb) items.push(...fb.posts.map(fbToUnified))
+    return items.sort((a, b) => (b.likes + b.comments) - (a.likes + a.comments))
+  }, [ig, fb])
 
   const filteredItems = useMemo(() => {
-    if (activeFilter === 'all') return sortedMedia.slice(0, 12)
-    return sortedMedia.filter((m) => classify(m) === activeFilter).slice(0, 12)
-  }, [sortedMedia, activeFilter])
+    let items = allItems
+    if (platformFilter !== 'all') items = items.filter((i) => i.platform === platformFilter)
+    if (typeFilter !== 'all') items = items.filter((i) => i.type === typeFilter)
+    return items.slice(0, 12)
+  }, [allItems, platformFilter, typeFilter])
+
+  const loading = igLoading || fbLoading
+  const hasError = !ig && !fb && (igError || fbError)
 
   return (
     <section id="portfolio" className="py-24 sm:py-32 relative">
@@ -81,30 +138,56 @@ export function PortfolioSection() {
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-2 mb-4">
             Best Performing
-            <span className="gradient-text"> Reels & Posts</span>
+            <span className="gradient-text"> Content</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Live from <span className="text-primary font-semibold">@{ig?.account.username || 'techvyro'}</span> — top content
-            ranked by real engagement (likes + comments).
+            Live top content from{' '}
+            <span className="text-pink-500 font-semibold">@{ig?.account.username || 'techvyro'}</span>
+            {' '}&{' '}
+            <span className="text-blue-500 font-semibold">{fb?.page.name || 'TechVyro'}</span>
+            {' '}— ranked by real engagement (likes/reactions + comments).
           </p>
         </motion.div>
 
-        {/* Filters */}
+        {/* Platform tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="flex flex-wrap justify-center gap-2 mb-4"
+        >
+          {platformFilters.map((f) => (
+            <Button
+              key={f.id}
+              variant={platformFilter === f.id ? 'default' : 'outline'}
+              onClick={() => setPlatformFilter(f.id)}
+              className={cn(
+                "rounded-full gap-2",
+                platformFilter === f.id && "bg-primary text-primary-foreground",
+                f.id === 'instagram' && platformFilter === 'instagram' && "bg-pink-500 hover:bg-pink-600",
+                f.id === 'facebook' && platformFilter === 'facebook' && "bg-blue-500 hover:bg-blue-600",
+              )}
+            >
+              <f.icon className="h-4 w-4" />
+              {f.label}
+            </Button>
+          ))}
+        </motion.div>
+
+        {/* Type tabs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="flex flex-wrap justify-center gap-2 mb-12"
         >
-          {filters.map((filter) => (
+          {typeFilters.map((filter) => (
             <Button
               key={filter.id}
-              variant={activeFilter === filter.id ? 'default' : 'outline'}
-              onClick={() => setActiveFilter(filter.id)}
-              className={cn(
-                "rounded-full gap-2",
-                activeFilter === filter.id && "bg-primary text-primary-foreground"
-              )}
+              variant={typeFilter === filter.id ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTypeFilter(filter.id)}
+              className="rounded-full gap-2"
             >
               <filter.icon className="h-4 w-4" />
               {filter.label}
@@ -113,110 +196,113 @@ export function PortfolioSection() {
         </motion.div>
 
         {/* Loading / Error */}
-        {loading && (
+        {loading && allItems.length === 0 && (
           <div className="text-center text-muted-foreground py-12">
-            Loading top content from Instagram…
+            Loading top content…
           </div>
         )}
-        {error && !loading && (
+        {hasError && (
           <div className="text-center text-destructive py-12">
-            Couldn&apos;t load Instagram content right now.
+            Couldn&apos;t load content right now.
           </div>
         )}
 
         {/* Grid */}
-        {!loading && !error && (
+        {allItems.length > 0 && (
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeFilter}
+              key={`${platformFilter}-${typeFilter}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
-              {filteredItems.map((item, index) => {
-                const thumb = item.thumbnail_url || item.media_url || ''
-                const type = classify(item)
-                const likes = item.like_count || 0
-                const comments = item.comments_count || 0
-                return (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.05 }}
-                    className="group cursor-pointer"
-                    onClick={() => setSelectedItem(item)}
-                  >
-                    <Card className="h-full overflow-hidden glass border-border/50 hover:border-primary/50 transition-all duration-300">
-                      <div className="relative aspect-[9/12] overflow-hidden bg-muted">
-                        {thumb ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={thumb}
-                            alt={captionTitle(item.caption)}
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                            <Instagram className="h-10 w-10" />
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+              {filteredItems.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  className="group cursor-pointer"
+                  onClick={() => setSelectedItem(item)}
+                >
+                  <Card className="h-full overflow-hidden glass border-border/50 hover:border-primary/50 transition-all duration-300">
+                    <div className="relative aspect-[9/12] overflow-hidden bg-muted">
+                      {item.thumbnail ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={item.thumbnail}
+                          alt={item.title}
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                          {item.platform === 'instagram' ? <Instagram className="h-10 w-10" /> : <Facebook className="h-10 w-10" />}
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
 
-                        {/* Type badge */}
-                        <div className="absolute top-3 left-3 flex items-center gap-2">
-                          <span className="glass text-xs font-medium px-2 py-1 rounded-full capitalize flex items-center gap-1">
-                            {type === 'reel' ? <Video className="h-3 w-3" /> : <ImageIcon className="h-3 w-3" />}
-                            {type}
+                      {/* Platform + Type badge */}
+                      <div className="absolute top-3 left-3 flex items-center gap-2">
+                        <span className={cn(
+                          "text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1 text-white",
+                          item.platform === 'instagram' ? "bg-pink-500/90" : "bg-blue-500/90"
+                        )}>
+                          {item.platform === 'instagram' ? <Instagram className="h-3 w-3" /> : <Facebook className="h-3 w-3" />}
+                          {item.type === 'reel' ? 'Reel' : 'Post'}
+                        </span>
+                      </div>
+
+                      {/* Rank badge for top 3 */}
+                      {platformFilter === 'all' && typeFilter === 'all' && index < 3 && (
+                        <div className="absolute top-3 right-3">
+                          <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full">
+                            #{index + 1}
                           </span>
                         </div>
+                      )}
 
-                        {/* Rank badge for top 3 */}
-                        {activeFilter === 'all' && index < 3 && (
-                          <div className="absolute top-3 right-3">
-                            <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full">
-                              #{index + 1}
-                            </span>
-                          </div>
-                        )}
-
-                        {/* Hover play */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center">
-                            <Play className="h-5 w-5 text-primary-foreground fill-current" />
-                          </div>
-                        </div>
-
-                        {/* Caption overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 p-3">
-                          <p className="text-sm font-medium line-clamp-2 text-foreground">
-                            {captionTitle(item.caption)}
-                          </p>
+                      {/* Hover play */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center">
+                          <Play className="h-5 w-5 text-primary-foreground fill-current" />
                         </div>
                       </div>
 
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Heart className="h-3.5 w-3.5 text-pink-500" />
-                            <span className="font-semibold">{formatCount(likes)}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MessageCircle className="h-3.5 w-3.5" />
-                            <span className="font-semibold">{formatCount(comments)}</span>
-                          </div>
-                          <div className="text-[10px] uppercase tracking-wider">
-                            {new Date(item.timestamp).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
-                          </div>
+                      {/* Caption overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <p className="text-sm font-medium line-clamp-2 text-foreground">
+                          {item.title}
+                        </p>
+                      </div>
+                    </div>
+
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Heart className="h-3.5 w-3.5 text-pink-500" />
+                          <span className="font-semibold">{formatCount(item.likes)}</span>
                         </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                )
-              })}
+                        <div className="flex items-center gap-1">
+                          <MessageCircle className="h-3.5 w-3.5" />
+                          <span className="font-semibold">{formatCount(item.comments)}</span>
+                        </div>
+                        {item.shares !== undefined && (
+                          <div className="flex items-center gap-1">
+                            <Share2 className="h-3.5 w-3.5" />
+                            <span className="font-semibold">{formatCount(item.shares)}</span>
+                          </div>
+                        )}
+                        <div className="text-[10px] uppercase tracking-wider">
+                          {new Date(item.timestamp).toLocaleDateString(undefined, { month: 'short', year: '2-digit' })}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </motion.div>
           </AnimatePresence>
         )}
@@ -226,20 +312,19 @@ export function PortfolioSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-12"
+          className="text-center mt-12 flex flex-wrap justify-center gap-3"
         >
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="rounded-full"
-          >
-            <a
-              href={`https://instagram.com/${ig?.account.username || 'techvyro'}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Full Instagram
+          <Button asChild variant="outline" size="lg" className="rounded-full">
+            <a href={`https://instagram.com/${ig?.account.username || 'techvyro'}`} target="_blank" rel="noopener noreferrer">
+              <Instagram className="h-4 w-4 mr-2 text-pink-500" />
+              Visit Instagram
+              <ExternalLink className="h-4 w-4 ml-2" />
+            </a>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="rounded-full">
+            <a href={fb?.page.link || 'https://facebook.com/techvyroclips'} target="_blank" rel="noopener noreferrer">
+              <Facebook className="h-4 w-4 mr-2 text-blue-500" />
+              Visit Facebook
               <ExternalLink className="h-4 w-4 ml-2" />
             </a>
           </Button>
@@ -274,10 +359,10 @@ export function PortfolioSection() {
               </button>
 
               <div className="relative aspect-video bg-muted">
-                {(selectedItem.thumbnail_url || selectedItem.media_url) && (
+                {selectedItem.thumbnail && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={selectedItem.thumbnail_url || selectedItem.media_url}
+                    src={selectedItem.thumbnail}
                     alt=""
                     className="absolute inset-0 w-full h-full object-cover"
                   />
@@ -297,8 +382,12 @@ export function PortfolioSection() {
 
               <div className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xs text-primary font-semibold uppercase tracking-wider px-2 py-1 bg-primary/10 rounded-full">
-                    {classify(selectedItem)}
+                  <span className={cn(
+                    "text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-full text-white flex items-center gap-1",
+                    selectedItem.platform === 'instagram' ? "bg-pink-500" : "bg-blue-500"
+                  )}>
+                    {selectedItem.platform === 'instagram' ? <Instagram className="h-3 w-3" /> : <Facebook className="h-3 w-3" />}
+                    {selectedItem.platform}
                   </span>
                   <span className="text-xs text-muted-foreground">
                     {new Date(selectedItem.timestamp).toLocaleDateString(undefined, {
@@ -317,12 +406,18 @@ export function PortfolioSection() {
                   <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
                       <Heart className="h-4 w-4 text-pink-500" />
-                      <span className="text-sm font-medium">{formatCount(selectedItem.like_count || 0)} likes</span>
+                      <span className="text-sm font-medium">{formatCount(selectedItem.likes)}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <MessageCircle className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">{formatCount(selectedItem.comments_count || 0)} comments</span>
+                      <span className="text-sm font-medium">{formatCount(selectedItem.comments)}</span>
                     </div>
+                    {selectedItem.shares !== undefined && (
+                      <div className="flex items-center gap-2">
+                        <Share2 className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">{formatCount(selectedItem.shares)}</span>
+                      </div>
+                    )}
                   </div>
                   <Button asChild size="sm" variant="outline" className="rounded-full">
                     <a href={selectedItem.permalink} target="_blank" rel="noopener noreferrer">

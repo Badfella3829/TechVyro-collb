@@ -6,6 +6,7 @@ import { Users, Play, Eye, Award, TrendingUp, Calendar, Heart, MessageCircle } f
 import { Card, CardContent } from '@/components/ui/card'
 import { AudienceDemographics } from './audience-demographics'
 import { useInstagram } from '@/hooks/use-instagram'
+import { useFacebook } from '@/hooks/use-facebook'
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
@@ -83,23 +84,26 @@ export function StatsSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const { data: ig, loading: igLoading } = useInstagram()
+  const { data: fb, loading: fbLoading } = useFacebook()
 
   const stats = useMemo(() => {
-    const followers = ig?.account.followers_count ?? 0
+    const igFollowers = ig?.account.followers_count ?? 0
+    const fbFollowers = fb?.page.followers_count ?? 0
+    const totalFollowers = igFollowers + fbFollowers
     const posts = ig?.account.media_count ?? 0
     const avgLikes = ig?.computed.avgLikes ?? 0
     const avgComments = ig?.computed.avgComments ?? 0
     const engagement = ig?.computed.avgEngagement ?? 0
 
     return [
-      { icon: Users, value: followers, suffix: '', label: 'Instagram Followers', color: 'bg-primary/20 text-primary' },
+      { icon: Users, value: totalFollowers, suffix: '', label: 'Total Followers', color: 'bg-primary/20 text-primary' },
       { icon: Play, value: posts, suffix: '', label: 'Posts Published', color: 'bg-secondary/20 text-secondary' },
       { icon: Heart, value: avgLikes, suffix: '', label: 'Avg. Likes / Post', color: 'bg-accent/20 text-accent' },
       { icon: MessageCircle, value: avgComments, suffix: '', label: 'Avg. Comments', color: 'bg-primary/20 text-primary' },
       { icon: TrendingUp, value: Math.round(engagement * 100) / 100, suffix: '%', label: 'Engagement Rate', color: 'bg-secondary/20 text-secondary' },
       { icon: Calendar, value: 5, suffix: '+', label: 'Years Creating', color: 'bg-accent/20 text-accent' },
     ]
-  }, [ig])
+  }, [ig, fb])
 
   const platformStats = useMemo(() => [
     {
@@ -110,20 +114,20 @@ export function StatsSection() {
       color: 'border-pink-500/30 bg-pink-500/10',
     },
     {
+      platform: 'Facebook',
+      followers: fb ? formatNumber(fb.page.followers_count) : '—',
+      avgViews: fb ? formatNumber(fb.computed.avgReactions) : '—',
+      engagement: fb ? `${fb.computed.avgEngagement.toFixed(2)}%` : '—',
+      color: 'border-blue-500/30 bg-blue-500/10',
+    },
+    {
       platform: 'YouTube',
       followers: 'Coming soon',
       avgViews: '—',
       engagement: '—',
       color: 'border-red-500/30 bg-red-500/10',
     },
-    {
-      platform: 'Twitter/X',
-      followers: 'Coming soon',
-      avgViews: '—',
-      engagement: '—',
-      color: 'border-foreground/30 bg-foreground/10',
-    },
-  ], [ig])
+  ], [ig, fb])
 
   return (
     <section id="stats" className="py-24 sm:py-32 relative">
@@ -163,7 +167,7 @@ export function StatsSection() {
               color={stat.color}
               delay={index * 0.1}
               isInView={isInView}
-              ready={!!ig || stat.label === 'Years Creating'}
+              ready={(!!ig && !!fb) || stat.label === 'Years Creating' || (stat.label !== 'Total Followers' && !!ig)}
             />
           ))}
         </div>
@@ -219,10 +223,10 @@ export function StatsSection() {
         >
           <span className="inline-flex items-center gap-2 text-xs text-muted-foreground glass px-4 py-2 rounded-full">
             <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-            {igLoading
-              ? 'Fetching live Instagram data…'
-              : ig
-              ? `Live from @${ig.account.username} • ${new Date(ig.fetchedAt).toLocaleString()}`
+            {igLoading || fbLoading
+              ? 'Fetching live data from Instagram & Facebook…'
+              : ig || fb
+              ? `Live from @${ig?.account.username || 'techvyro'} & ${fb?.page.name || 'Facebook'} • ${new Date(ig?.fetchedAt || fb?.fetchedAt || Date.now()).toLocaleString()}`
               : 'Last updated: April 2026'}
           </span>
         </motion.div>
