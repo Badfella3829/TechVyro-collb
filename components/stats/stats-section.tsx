@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
-import { Users, Play, Eye, TrendingUp, Heart, MessageCircle, ArrowRight } from 'lucide-react'
+import { Users, Play, Eye, TrendingUp, Heart, MessageCircle, ArrowRight, Instagram, Facebook, Youtube } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { useInstagram } from '@/hooks/use-instagram'
 import { useFacebook } from '@/hooks/use-facebook'
@@ -119,30 +119,48 @@ export function StatsSection() {
   const platformStats = useMemo(() => [
     {
       platform: 'Instagram',
+      handle: ig ? `@${ig.account.username}` : '',
+      icon: Instagram,
       href: '/analytics/instagram',
       followers: ig ? formatNumber(ig.account.followers_count) : '—',
-      avgViews: ig ? formatNumber(ig.computed.avgLikes) : '—',
+      secondMetricLabel: 'Avg. Likes',
+      secondMetric: ig ? formatNumber(ig.computed.avgLikes) : '—',
       engagement: ig ? `${ig.computed.avgEngagement.toFixed(2)}%` : '—',
-      color: 'border-pink-500/30 bg-pink-500/10',
-      hover: 'hover:border-pink-500/60',
+      iconBg: 'bg-gradient-to-br from-pink-500 via-fuchsia-500 to-orange-500 text-white',
+      hover: 'hover:border-pink-500/50',
+      accent: 'text-pink-500',
+      glow: 'group-hover:shadow-pink-500/20',
+      ready: !!ig,
     },
     {
       platform: 'Facebook',
+      handle: fb?.page.username ? `@${fb.page.username}` : fb?.page.name ?? '',
+      icon: Facebook,
       href: '/analytics/facebook',
       followers: fb ? formatNumber(fb.page.followers_count) : '—',
-      avgViews: fb ? formatNumber(fb.computed.avgReactions) : '—',
+      secondMetricLabel: 'Avg. Reactions',
+      secondMetric: fb ? formatNumber(fb.computed.avgReactions) : '—',
       engagement: fb ? `${fb.computed.avgEngagement.toFixed(2)}%` : '—',
-      color: 'border-blue-500/30 bg-blue-500/10',
-      hover: 'hover:border-blue-500/60',
+      iconBg: 'bg-gradient-to-br from-blue-600 to-cyan-500 text-white',
+      hover: 'hover:border-blue-500/50',
+      accent: 'text-blue-500',
+      glow: 'group-hover:shadow-blue-500/20',
+      ready: !!fb,
     },
     {
       platform: 'YouTube',
+      handle: yt?.channel.customUrl || yt?.channel.title || '',
+      icon: Youtube,
       href: '/analytics/youtube',
       followers: yt ? formatNumber(yt.channel.subscribers) : '—',
-      avgViews: yt ? formatNumber(yt.computed.avgViews) : '—',
+      secondMetricLabel: 'Avg. Views',
+      secondMetric: yt ? formatNumber(yt.computed.avgViews) : '—',
       engagement: yt ? `${yt.computed.avgEngagement.toFixed(2)}%` : '—',
-      color: 'border-red-500/30 bg-red-500/10',
-      hover: 'hover:border-red-500/60',
+      iconBg: 'bg-gradient-to-br from-red-600 to-orange-500 text-white',
+      hover: 'hover:border-red-500/50',
+      accent: 'text-red-500',
+      glow: 'group-hover:shadow-red-500/20',
+      ready: !!yt,
     },
   ], [ig, fb, yt])
 
@@ -203,44 +221,72 @@ export function StatsSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h3 className="text-xl font-semibold text-center mb-8">Platform Breakdown</h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            {platformStats.map((platform, index) => (
-              <motion.div
-                key={platform.platform}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-              >
-                <Link href={platform.href} className="block group h-full">
-                  <Card className={`border-2 ${platform.color} ${platform.hover} hover:scale-[1.02] transition-all cursor-pointer h-full`}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-lg font-semibold">{platform.platform}</h4>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+          <div className="text-center mb-10">
+            <span className="text-primary text-xs font-semibold tracking-wider uppercase">Platform Breakdown</span>
+            <h3 className="text-2xl sm:text-3xl font-bold mt-2">Performance Across <span className="gradient-text">Channels</span></h3>
+            <p className="text-sm text-muted-foreground mt-2">Tap any card for the full analytics dashboard</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+            {platformStats.map((platform, index) => {
+              const Icon = platform.icon
+              return (
+                <motion.div
+                  key={platform.platform}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                >
+                  <Link href={platform.href} className="block group h-full">
+                    <Card className={`glass border-border/50 ${platform.hover} hover:-translate-y-1 transition-all duration-300 cursor-pointer h-full overflow-hidden shadow-lg ${platform.glow}`}>
+                      {/* Header with icon + name */}
+                      <div className="p-5 sm:p-6 pb-4 flex items-center gap-4 border-b border-border/30">
+                        <div className={`p-3 rounded-xl ${platform.iconBg} shadow-md shrink-0`}>
+                          <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-base sm:text-lg font-bold leading-tight">{platform.platform}</h4>
+                          {platform.handle && (
+                            <p className="text-xs text-muted-foreground truncate">{platform.handle}</p>
+                          )}
+                        </div>
+                        <ArrowRight className={`h-4 w-4 text-muted-foreground group-hover:${platform.accent} group-hover:translate-x-1 transition-all shrink-0`} />
                       </div>
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground text-sm">Followers</span>
-                          <span className="font-semibold">{platform.followers}</span>
+
+                      <CardContent className="p-5 sm:p-6 pt-5">
+                        {/* Hero metric: followers */}
+                        <div className="mb-5">
+                          <div className="flex items-baseline gap-2">
+                            <span className={`text-3xl sm:text-4xl font-bold ${platform.ready ? '' : 'opacity-40'}`}>
+                              {platform.followers}
+                            </span>
+                            <span className="text-xs text-muted-foreground">followers</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground text-sm">Avg. {platform.platform === 'YouTube' ? 'Views' : platform.platform === 'Instagram' ? 'Likes' : 'Reactions'}</span>
-                          <span className="font-semibold">{platform.avgViews}</span>
+
+                        {/* Secondary metrics */}
+                        <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border/30">
+                          <div>
+                            <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1">{platform.secondMetricLabel}</p>
+                            <p className="text-base sm:text-lg font-semibold">{platform.secondMetric}</p>
+                          </div>
+                          <div>
+                            <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1">Engagement</p>
+                            <p className={`text-base sm:text-lg font-semibold ${platform.accent}`}>{platform.engagement}</p>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground text-sm">Engagement</span>
-                          <span className="font-semibold text-accent">{platform.engagement}</span>
+
+                        {/* CTA */}
+                        <div className={`mt-5 pt-4 border-t border-border/30 flex items-center justify-between text-xs font-medium ${platform.accent} group-hover:gap-3 transition-all`}>
+                          <span>View detailed analytics</span>
+                          <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                         </div>
-                      </div>
-                      <p className="text-[11px] text-muted-foreground mt-4 pt-3 border-t border-border/30 flex items-center gap-1">
-                        View full analytics <ArrowRight className="h-3 w-3" />
-                      </p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>
-            ))}
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              )
+            })}
           </div>
         </motion.div>
         
