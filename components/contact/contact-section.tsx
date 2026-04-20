@@ -175,8 +175,8 @@ export function ContactSection() {
         message: prev.message && !prev.message.startsWith("Hi! I'd like a quote") ? prev.message : prefilledMessage,
       }))
       setErrors({})
-      // Jump to the Campaign step so the user sees the autofilled fields immediately
-      setStep(1)
+      // Start from About Brand step so user fills brand details first
+      setStep(0)
     }
     window.addEventListener(PACKAGE_SELECTED_EVENT, handler as EventListener)
     return () => window.removeEventListener(PACKAGE_SELECTED_EVENT, handler as EventListener)
