@@ -30,3 +30,15 @@ export function selectPackage(pkg: SelectedPackage) {
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   })
 }
+
+// ─── Date selection from availability calendar ─────────────────────────────
+export const DATE_SELECTED_EVENT = 'techvyro:date-selected'
+
+export function selectDate(isoDate: string) {
+  if (typeof window === 'undefined') return
+  window.dispatchEvent(new CustomEvent<string>(DATE_SELECTED_EVENT, { detail: isoDate }))
+  requestAnimationFrame(() => {
+    const el = document.getElementById('contact')
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+  })
+}

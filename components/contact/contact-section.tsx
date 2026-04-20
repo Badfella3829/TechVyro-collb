@@ -37,7 +37,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
-import { PACKAGE_SELECTED_EVENT, mapPackageToCollabType, type SelectedPackage } from '@/lib/select-package'
+import { PACKAGE_SELECTED_EVENT, DATE_SELECTED_EVENT, mapPackageToCollabType, type SelectedPackage } from '@/lib/select-package'
 
 const COLLAB_EMAIL = 'techvyro@gmail.com'
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
@@ -180,6 +180,21 @@ export function ContactSection() {
     }
     window.addEventListener(PACKAGE_SELECTED_EVENT, handler as EventListener)
     return () => window.removeEventListener(PACKAGE_SELECTED_EVENT, handler as EventListener)
+  }, [])
+
+  // Listen for date selection from availability calendar
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const ce = e as CustomEvent<string>
+      const iso = ce.detail
+      if (!iso) return
+      setForm((prev) => ({ ...prev, startDate: iso }))
+      setErrors((prev) => ({ ...prev, startDate: undefined }))
+      // Jump to Brief step (index 2) where startDate lives
+      setStep(2)
+    }
+    window.addEventListener(DATE_SELECTED_EVENT, handler as EventListener)
+    return () => window.removeEventListener(DATE_SELECTED_EVENT, handler as EventListener)
   }, [])
 
   // Save draft on change (debounced)
@@ -696,6 +711,30 @@ export function ContactSection() {
 
                           {step === 1 && (
                             <div className="space-y-5">
+                              {!selectedPackage && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const el = document.getElementById('packages')
+                                    if (el) el.scrollIntoView({ behavior: 'smooth' })
+                                  }}
+                                  className="w-full rounded-xl border border-dashed border-primary/40 bg-gradient-to-r from-primary/5 via-secondary/5 to-transparent p-4 flex items-center gap-3 text-left hover:border-primary/70 hover:bg-primary/10 transition-all group"
+                                >
+                                  <div className="h-9 w-9 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                    <Sparkles className="h-4 w-4 text-primary" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-semibold text-foreground">
+                                      Choose Your Perfect Package
+                                    </p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">
+                                      Browse pricing — pick one and we&apos;ll auto-fill this form for you
+                                    </p>
+                                  </div>
+                                  <ChevronRight className="h-4 w-4 text-primary shrink-0 group-hover:translate-x-1 transition-transform" />
+                                </button>
+                              )}
+
                               <div className="grid sm:grid-cols-2 gap-4">
                                 <Field
                                   id="goal"

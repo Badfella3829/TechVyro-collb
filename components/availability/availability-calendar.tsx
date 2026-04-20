@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { useAvailability } from '@/hooks/use-availability'
+import { selectDate } from '@/lib/select-package'
 
 type SlotStatus = 'available' | 'booked' | 'tentative'
 
@@ -193,22 +194,33 @@ export function AvailabilityCalendar() {
                   const status: SlotStatus = past ? 'booked' : getStatusForDay(day)
                   const todayFlag = isToday(day)
 
+                  const clickable = status === 'available' && !past
                   return (
-                    <motion.div
+                    <motion.button
+                      type="button"
                       key={day}
+                      disabled={!clickable}
+                      onClick={() => clickable && selectDate(toIso(currentYear, currentMonth, day))}
+                      aria-label={
+                        clickable
+                          ? `Book ${monthNames[currentMonth]} ${day}, ${currentYear}`
+                          : `${monthNames[currentMonth]} ${day} – ${status}`
+                      }
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={isInView ? { opacity: 1, scale: 1 } : {}}
                       transition={{ delay: 0.3 + i * 0.01 }}
                       className={cn(
-                        "aspect-square rounded-lg flex items-center justify-center text-xs font-medium transition-all cursor-default relative",
-                        status === 'available' && "bg-accent/15 text-accent border border-accent/30 hover:bg-accent/25",
+                        "aspect-square rounded-lg flex items-center justify-center text-xs font-medium transition-all relative outline-none",
+                        clickable
+                          ? "bg-accent/15 text-accent border border-accent/30 hover:bg-accent/30 hover:scale-105 cursor-pointer focus-visible:ring-2 focus-visible:ring-accent active:scale-95"
+                          : "cursor-default",
                         status === 'booked' && "bg-muted/30 text-muted-foreground/50 line-through",
                         status === 'tentative' && "bg-amber-500/10 text-amber-400 border border-amber-500/20",
                         todayFlag && "ring-2 ring-primary ring-offset-1 ring-offset-background"
                       )}
                     >
                       {day}
-                    </motion.div>
+                    </motion.button>
                   )
                 })}
               </div>
