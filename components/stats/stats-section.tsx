@@ -203,12 +203,10 @@ export function StatsSection() {
               delay={index * 0.1}
               isInView={isInView}
               ready={
-                stat.label === 'Total Followers'
-                  ? !!ig && !!fb && !!yt
-                  : stat.label === 'Total Views'
-                  ? !!ig && !!fb && !!yt
-                  : stat.label === 'Total Content'
-                  ? !!ig && !!fb && !!yt
+                // For aggregate cards, show whatever loaded (don't gate on all 3 platforms,
+                // so a single expired token doesn't blank out the whole card).
+                stat.label === 'Total Followers' || stat.label === 'Total Views' || stat.label === 'Total Content'
+                  ? !!ig || !!fb || !!yt
                   : !!ig
               }
             />
