@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 export type InstagramMedia = {
   id: string
   media_type: string
+  media_product_type?: string
   media_url?: string
   thumbnail_url?: string
   permalink: string
@@ -12,6 +13,7 @@ export type InstagramMedia = {
   timestamp: string
   like_count?: number
   comments_count?: number
+  view_count?: number
 }
 
 export type InstagramData = {

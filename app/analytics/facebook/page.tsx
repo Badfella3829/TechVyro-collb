@@ -45,14 +45,13 @@ export default function FacebookAnalyticsPage() {
     )
   }
 
-  const { page, posts, computed } = data
+  const { page, posts, videos = [], computed } = data
   const totalReactions = posts.reduce((s, p) => s + (p.reactions?.summary?.total_count ?? 0), 0)
   const totalComments = posts.reduce((s, p) => s + (p.comments?.summary?.total_count ?? 0), 0)
   const totalShares = posts.reduce((s, p) => s + (p.shares?.count ?? 0), 0)
-  const sortedPosts = [...posts]
-    .sort((a, b) => (b.reactions?.summary?.total_count ?? 0) - (a.reactions?.summary?.total_count ?? 0))
-  const topPosts = sortedPosts.slice(0, 3)
-  const top50 = sortedPosts.slice(0, 50)
+  const sortedVideos = [...videos].sort((a, b) => (b.views ?? 0) - (a.views ?? 0))
+  const topPosts = sortedVideos.slice(0, 3)
+  const top50 = sortedVideos.slice(0, 50)
 
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
@@ -132,22 +131,20 @@ export default function FacebookAnalyticsPage() {
 
         {topPosts.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-8">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Trophy className="h-5 w-5 text-amber-500" />Top Performing Posts</h2>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Trophy className="h-5 w-5 text-amber-500" />Top Performing Videos</h2>
             <div className="grid sm:grid-cols-3 gap-4">
-              {topPosts.map((post) => (
-                <a key={post.id} href={post.permalink_url} target="_blank" rel="noopener noreferrer" className="group">
+              {topPosts.map((v) => (
+                <a key={v.id} href={v.permalink_url} target="_blank" rel="noopener noreferrer" className="group">
                   <Card className="glass hover:border-blue-500/50 transition-colors overflow-hidden h-full">
-                    {post.full_picture && (
+                    {v.picture && (
                       <div className="relative aspect-video bg-muted">
-                        <Image src={post.full_picture} alt="" fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover group-hover:scale-105 transition-transform" />
+                        <Image src={v.picture} alt={v.title || ''} fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover group-hover:scale-105 transition-transform" />
                       </div>
                     )}
                     <CardContent className="p-3">
-                      {post.message && <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{post.message}</p>}
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-red-500" />{fmt(post.reactions?.summary?.total_count ?? 0)}</span>
-                        <span className="flex items-center gap-1"><MessageCircle className="h-3 w-3 text-blue-500" />{fmt(post.comments?.summary?.total_count ?? 0)}</span>
-                        <span className="flex items-center gap-1"><Share2 className="h-3 w-3 text-green-500" />{fmt(post.shares?.count ?? 0)}</span>
+                      {(v.title || v.description) && <p className="text-xs font-medium line-clamp-2 mb-2">{v.title || v.description}</p>}
+                      <div className="flex items-center gap-1 text-sm font-bold text-primary">
+                        <Eye className="h-4 w-4" />{fmt(v.views ?? 0)} views
                       </div>
                     </CardContent>
                   </Card>
@@ -159,34 +156,38 @@ export default function FacebookAnalyticsPage() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <div className="flex items-baseline justify-between flex-wrap gap-2 mb-4">
-            <h2 className="text-xl font-semibold">Top Performing Posts ({top50.length})</h2>
-            <span className="text-xs text-muted-foreground">sorted by Reactions</span>
+            <h2 className="text-xl font-semibold">Top Performing Videos ({top50.length})</h2>
+            <span className="text-xs text-muted-foreground">sorted by Views</span>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {top50.map((post, idx) => (
-              <a key={post.id} href={post.permalink_url} target="_blank" rel="noopener noreferrer" className="group">
-                <Card className="glass hover:border-blue-500/50 transition-colors overflow-hidden h-full flex flex-col relative">
-                  <span className="absolute top-2 left-2 z-10 bg-black/70 backdrop-blur text-white text-[10px] font-bold px-1.5 py-0.5 rounded">#{idx + 1}</span>
-                  {post.full_picture && (
-                    <div className="relative aspect-video bg-muted">
-                      <Image src={post.full_picture} alt="" fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover group-hover:scale-105 transition-transform" />
-                    </div>
-                  )}
-                  <CardContent className="p-3 flex-1 flex flex-col">
-                    {(post.message || post.story) && <p className="text-xs text-muted-foreground line-clamp-3 mb-2 flex-1">{post.message || post.story}</p>}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-red-500" />{fmt(post.reactions?.summary?.total_count ?? 0)}</span>
-                      <span className="flex items-center gap-1"><MessageCircle className="h-3 w-3 text-blue-500" />{fmt(post.comments?.summary?.total_count ?? 0)}</span>
-                      <span className="flex items-center gap-1"><Share2 className="h-3 w-3 text-green-500" />{fmt(post.shares?.count ?? 0)}</span>
-                    </div>
-                    <p className="text-[10px] text-muted-foreground flex items-center gap-1 mt-2">
-                      <Calendar className="h-2.5 w-2.5" />{new Date(post.created_time).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </p>
-                  </CardContent>
-                </Card>
-              </a>
-            ))}
-          </div>
+          {top50.length === 0 ? (
+            <Card className="glass"><CardContent className="p-8 text-center text-sm text-muted-foreground">No video data available from Facebook API</CardContent></Card>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {top50.map((v, idx) => (
+                <a key={v.id} href={v.permalink_url} target="_blank" rel="noopener noreferrer" className="group">
+                  <Card className="glass hover:border-blue-500/50 transition-colors overflow-hidden h-full flex flex-col relative">
+                    <span className="absolute top-2 left-2 z-10 bg-black/70 backdrop-blur text-white text-[10px] font-bold px-1.5 py-0.5 rounded">#{idx + 1}</span>
+                    {v.picture && (
+                      <div className="relative aspect-video bg-muted">
+                        <Image src={v.picture} alt={v.title || ''} fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover group-hover:scale-105 transition-transform" />
+                      </div>
+                    )}
+                    <CardContent className="p-3 flex-1 flex flex-col">
+                      {(v.title || v.description) && <p className="text-xs font-medium line-clamp-2 mb-2 flex-1">{v.title || v.description}</p>}
+                      <div className="flex items-center gap-1 text-sm font-bold text-primary mb-1">
+                        <Eye className="h-4 w-4" />{fmt(v.views ?? 0)} views
+                      </div>
+                      {v.created_time && (
+                        <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                          <Calendar className="h-2.5 w-2.5" />{new Date(v.created_time).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </a>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         <p className="text-xs text-center text-muted-foreground mt-8">

@@ -22,6 +22,17 @@ export type FacebookPost = {
   shares?: { count?: number }
 }
 
+export type FacebookVideo = {
+  id: string
+  views?: number
+  length?: number
+  description?: string
+  title?: string
+  picture?: string
+  permalink_url?: string
+  created_time?: string
+}
+
 export type FacebookData = {
   page: {
     id: string
@@ -33,6 +44,7 @@ export type FacebookData = {
     link: string
   }
   posts: FacebookPost[]
+  videos?: FacebookVideo[]
   computed: {
     avgReactions: number
     avgComments: number

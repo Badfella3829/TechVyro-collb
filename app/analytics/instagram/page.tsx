@@ -48,9 +48,9 @@ export default function InstagramAnalyticsPage() {
   const { account, media, computed } = data
   const totalLikes = media.reduce((s, m) => s + (m.like_count ?? 0), 0)
   const totalComments = media.reduce((s, m) => s + (m.comments_count ?? 0), 0)
-  const sortedByLikes = [...media].sort((a, b) => (b.like_count ?? 0) - (a.like_count ?? 0))
-  const topPosts = sortedByLikes.slice(0, 3)
-  const top50 = sortedByLikes.slice(0, 50)
+  const sortedByViews = [...media].sort((a, b) => (b.view_count ?? b.like_count ?? 0) - (a.view_count ?? a.like_count ?? 0))
+  const topPosts = sortedByViews.slice(0, 3)
+  const top50 = sortedByViews.slice(0, 50)
 
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
@@ -165,7 +165,7 @@ export default function InstagramAnalyticsPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <div className="flex items-baseline justify-between flex-wrap gap-2 mb-4">
             <h2 className="text-xl font-semibold">Top Performing Posts ({top50.length})</h2>
-            <span className="text-xs text-muted-foreground">sorted by Likes</span>
+            <span className="text-xs text-muted-foreground">sorted by Views</span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {top50.map((post, idx) => (
@@ -178,6 +178,11 @@ export default function InstagramAnalyticsPage() {
                     )}
                   </div>
                   <CardContent className="p-2.5">
+                    {(post.view_count ?? 0) > 0 && (
+                      <div className="flex items-center gap-1 text-xs mb-1 text-primary font-semibold">
+                        <Eye className="h-3 w-3" />{fmt(post.view_count!)} views
+                      </div>
+                    )}
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-red-500" />{fmt(post.like_count ?? 0)}</span>
                       <span className="flex items-center gap-1"><MessageCircle className="h-3 w-3 text-blue-500" />{fmt(post.comments_count ?? 0)}</span>

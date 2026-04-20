@@ -90,13 +90,23 @@ export async function GET() {
       }
     }
 
-    // Try to fetch video view counts from page videos endpoint (works without read_insights)
+    // Fetch video list with view counts (works without read_insights)
+    let videos: Array<{
+      id: string
+      views?: number
+      length?: number
+      description?: string
+      title?: string
+      picture?: string
+      permalink_url?: string
+      created_time?: string
+    }> = []
     try {
-      const videosUrl = `https://graph.facebook.com/v23.0/${pageId}/videos?fields=id,views,length&limit=100&access_token=${token}`
+      const videosUrl = `https://graph.facebook.com/v23.0/${pageId}/videos?fields=id,views,length,description,title,picture,permalink_url,created_time&limit=100&access_token=${token}`
       const vRes = await fetch(videosUrl, { next: { revalidate: 3600 } })
       if (vRes.ok) {
         const vJson = await vRes.json()
-        const videos: Array<{ views?: number }> = vJson.data || []
+        videos = vJson.data || []
         totalViews = videos.reduce((s, v) => s + (v.views || 0), 0)
       }
     } catch {}
@@ -112,6 +122,7 @@ export async function GET() {
         link: page.link || `https://www.facebook.com/${page.username || page.id}`,
       },
       posts,
+      videos,
       computed: {
         avgReactions,
         avgComments,
