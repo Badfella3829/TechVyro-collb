@@ -180,6 +180,73 @@ export function buildInquiryAckEmail(d: InquiryEmailData): { subject: string; te
   return { subject, text, html }
 }
 
+// ─── OWNER ALERT (sent to TechVyro owner when a new inquiry arrives) ──────────
+
+export function buildOwnerAlertEmail(d: InquiryEmailData): { subject: string; text: string; html: string } {
+  const subject = `🔔 New Inquiry: ${d.brandName} (${d.reference})`
+
+  const text = [
+    `New collaboration inquiry received!`,
+    ``,
+    `Reference   : ${d.reference}`,
+    `Brand       : ${d.brandName}`,
+    `Contact     : ${d.contactName}`,
+    `Email       : ${d.email}`,
+    ...(d.phone ? [`WhatsApp    : ${d.phone}`] : []),
+    ...(d.website ? [`Website     : ${d.website}`] : []),
+    `Goal        : ${d.campaignGoal}`,
+    `Type        : ${d.collabType}`,
+    ...(d.deliverables?.length ? [`Deliverables: ${d.deliverables.join(', ')}`] : []),
+    ...(d.budget ? [`Budget      : ${d.budget}`] : []),
+    ...(d.timeline ? [`Timeline    : ${d.timeline}`] : []),
+    ...(d.startDate ? [`Start Date  : ${d.startDate}`] : []),
+    ``,
+    `Brief:`,
+    d.message,
+    ``,
+    `Open admin panel: https://techvyro.com/admin/availability`,
+  ].join('\n')
+
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>${escapeHtml(subject)}</title></head>
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 12px;">
+  <tr><td align="center">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+      <tr><td style="background:linear-gradient(135deg,#f59e0b 0%,#d97706 100%);padding:20px 28px;color:#fff;">
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.9;">TechVyro Admin Alert</div>
+        <div style="font-size:22px;font-weight:700;margin-top:4px;">🔔 New Collaboration Inquiry</div>
+        <div style="font-size:13px;opacity:0.9;margin-top:4px;font-family:monospace;">Ref: ${escapeHtml(d.reference)}</div>
+      </td></tr>
+      <tr><td style="padding:20px 28px;color:#111827;font-size:14px;line-height:1.55;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+          ${row('Brand', d.brandName)}
+          ${row('Contact', d.contactName)}
+          ${row('Email', d.email)}
+          ${row('WhatsApp', d.phone)}
+          ${row('Website', d.website)}
+          ${row('Goal', d.campaignGoal)}
+          ${row('Type', d.collabType)}
+          ${row('Deliverables', d.deliverables?.join(', '))}
+          ${row('Budget', d.budget)}
+          ${row('Timeline', d.timeline)}
+          ${row('Start Date', d.startDate)}
+        </table>
+        <h3 style="font-size:13px;color:#374151;text-transform:uppercase;letter-spacing:0.5px;margin:18px 0 6px;">Brief</h3>
+        <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 14px;font-size:13.5px;color:#374151;white-space:pre-wrap;line-height:1.5;">${escapeHtml(d.message)}</div>
+        <div style="margin-top:20px;text-align:center;">
+          <a href="https://techvyro.com/admin/availability" style="display:inline-block;background:#0d9488;color:#fff;text-decoration:none;padding:11px 22px;border-radius:8px;font-weight:600;font-size:14px;">Open Admin Panel →</a>
+        </div>
+        <p style="margin:14px 0 0;color:#6b7280;font-size:12px;text-align:center;">Quick replies: <a href="mailto:${escapeHtml(d.email)}" style="color:#0d9488;">Email ${escapeHtml(d.contactName.split(' ')[0])}</a>${d.phone ? ` · <a href="https://wa.me/${d.phone.replace(/\\D/g, '')}" style="color:#0d9488;">WhatsApp</a>` : ''}</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`
+
+  return { subject, text, html }
+}
+
 // ─── BOOKING CONFIRMATION (sent when admin confirms a booking) ───────────────
 
 export interface ConfirmationEmailData {

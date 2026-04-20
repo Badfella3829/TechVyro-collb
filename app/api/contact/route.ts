@@ -3,7 +3,9 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import { sendInquiryWhatsapp } from '@/lib/whatsapp'
 import { addBooking } from '@/lib/availability-store'
-import { sendEmail, buildInquiryAckEmail } from '@/lib/email'
+import { sendEmail, buildInquiryAckEmail, buildOwnerAlertEmail } from '@/lib/email'
+
+const OWNER_EMAIL = process.env.OWNER_EMAIL || 'techvyro@gmail.com'
 
 export const runtime = 'nodejs'
 
@@ -152,6 +154,39 @@ export async function POST(req: Request) {
       console.error('[contact] WhatsApp notify threw:', err)
     }
 
+    // Send owner alert email (to techvyro@gmail.com)
+    let ownerAlert: { delivered: boolean; error?: string } = { delivered: false }
+    try {
+      const ownerBuilt = buildOwnerAlertEmail({
+        reference,
+        brandName: inquiry.brandName,
+        contactName: inquiry.contactName,
+        email: inquiry.email,
+        phone: inquiry.phone,
+        website: inquiry.website,
+        campaignGoal: inquiry.campaignGoal,
+        collabType: inquiry.collabType,
+        deliverables: inquiry.deliverables,
+        budget: inquiry.budget,
+        timeline: inquiry.timeline,
+        startDate: inquiry.startDate,
+        message: inquiry.message,
+      })
+      const r = await sendEmail({
+        to: OWNER_EMAIL,
+        subject: ownerBuilt.subject,
+        text: ownerBuilt.text,
+        html: ownerBuilt.html,
+        replyTo: inquiry.email,
+      })
+      if (r.ok) ownerAlert = { delivered: true }
+      else if ('skipped' in r) ownerAlert = { delivered: false, error: r.reason }
+      else { ownerAlert = { delivered: false, error: r.error }; console.error('[contact] Owner alert email failed:', r.error) }
+    } catch (err) {
+      ownerAlert = { delivered: false, error: String(err) }
+      console.error('[contact] Owner alert email threw:', err)
+    }
+
     // Send acknowledgement email to brand
     let ack: { delivered: boolean; error?: string } = { delivered: false }
     try {
@@ -190,6 +225,7 @@ export async function POST(req: Request) {
       reference,
       notification,
       ack,
+      ownerAlert,
     })
   } catch (err) {
     return NextResponse.json(
