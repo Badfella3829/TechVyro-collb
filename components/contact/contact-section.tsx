@@ -235,17 +235,51 @@ export function ContactSection() {
     const newErrors: Partial<Record<keyof FormState, string>> = {}
     if (s === 0) {
       if (!form.brandName.trim()) newErrors.brandName = 'Brand name is required'
+      else if (form.brandName.trim().length < 2) newErrors.brandName = 'Brand name is too short'
+
       if (!form.contactName.trim()) newErrors.contactName = 'Your name is required'
+      else if (form.contactName.trim().length < 2) newErrors.contactName = 'Name is too short'
+
       if (!form.email.trim()) newErrors.email = 'Email is required'
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = 'Enter a valid email'
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim()))
+        newErrors.email = 'Enter a valid email like name@company.com'
+
+      // WhatsApp number — REQUIRED, E.164-ish format
+      const phoneDigits = form.phone.replace(/\D/g, '')
+      if (!form.phone.trim()) newErrors.phone = 'WhatsApp number is required'
+      else if (phoneDigits.length < 10 || phoneDigits.length > 15)
+        newErrors.phone = 'Enter a valid WhatsApp number with country code (e.g. +91 9876543210)'
+      else if (!/^\+?[\d\s\-()]{10,20}$/.test(form.phone.trim()))
+        newErrors.phone = 'Only digits, spaces, +, -, () allowed'
+
+      // Website / Social — REQUIRED with basic format check
+      const w = form.website.trim()
+      if (!w) newErrors.website = 'Website or social handle is required'
+      else if (
+        !/^@[A-Za-z0-9_.]{2,}$/.test(w) &&
+        !/^(https?:\/\/)?([\w-]+\.)+[A-Za-z]{2,}([\/?#].*)?$/.test(w)
+      )
+        newErrors.website = 'Enter a domain (yourbrand.com) or @handle'
     }
     if (s === 1) {
       if (!form.campaignGoal) newErrors.campaignGoal = 'Pick a campaign goal'
       if (!form.collabType) newErrors.collabType = 'Pick a collab type'
+      if (!form.deliverables || form.deliverables.length === 0)
+        newErrors.deliverables = 'Pick at least one deliverable'
+      if (!form.budget) newErrors.budget = 'Pick a budget range'
     }
     if (s === 2) {
-      if (!form.message.trim() || form.message.trim().length < 20)
-        newErrors.message = 'Tell me a bit more (at least 20 characters)'
+      if (!form.timeline) newErrors.timeline = 'Pick a timeline'
+      if (!form.startDate) newErrors.startDate = 'Pick a preferred start date'
+      else {
+        const today = new Date(); today.setHours(0, 0, 0, 0)
+        const picked = new Date(form.startDate)
+        if (isNaN(picked.getTime()) || picked < today) newErrors.startDate = 'Pick today or a future date'
+      }
+      const m = form.message.trim()
+      if (!m) newErrors.message = 'Brief is required'
+      else if (m.length < 20) newErrors.message = 'Tell me a bit more (at least 20 characters)'
+      else if (m.length > 2000) newErrors.message = 'Brief must be under 2000 characters'
     }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -618,17 +652,37 @@ export function ContactSection() {
                                     className="bg-background/50"
                                   />
                                 </Field>
-                                <Field id="phone" label="Phone (optional)" icon={Phone}>
+                                <Field
+                                  id="phone"
+                                  label="WhatsApp Number"
+                                  required
+                                  icon={Phone}
+                                  error={errors.phone}
+                                >
                                   <Input
                                     id="phone"
-                                    placeholder="+91 98xxxxxxxx"
+                                    type="tel"
+                                    inputMode="tel"
+                                    autoComplete="tel"
+                                    placeholder="+91 98765 43210"
                                     value={form.phone}
                                     onChange={(e) => update('phone', e.target.value)}
                                     className="bg-background/50"
                                   />
+                                  {!errors.phone && (
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                      Include country code. We&apos;ll send confirmation here.
+                                    </p>
+                                  )}
                                 </Field>
                               </div>
-                              <Field id="website" label="Website / Social Handle" icon={Globe}>
+                              <Field
+                                id="website"
+                                label="Website / Social Handle"
+                                required
+                                icon={Globe}
+                                error={errors.website}
+                              >
                                 <Input
                                   id="website"
                                   placeholder="@yourbrand or yourbrand.com"
@@ -692,7 +746,9 @@ export function ContactSection() {
                               </div>
 
                               <div>
-                                <Label className="text-sm mb-3 inline-block">Deliverables (pick all that apply)</Label>
+                                <Label className="text-sm mb-3 inline-block">
+                                  Deliverables (pick all that apply) <span className="text-primary">*</span>
+                                </Label>
                                 <div className="flex flex-wrap gap-2">
                                   {deliverableOptions.map((d) => {
                                     const active = form.deliverables.includes(d)
@@ -717,9 +773,15 @@ export function ContactSection() {
                                     )
                                   })}
                                 </div>
+                                {errors.deliverables && (
+                                  <p className="text-xs text-red-400 mt-2 flex items-center gap-1" role="alert">
+                                    <AlertCircle className="h-3 w-3" />
+                                    {errors.deliverables}
+                                  </p>
+                                )}
                               </div>
 
-                              <Field id="budget" label="Budget Range" icon={Wallet}>
+                              <Field id="budget" label="Budget Range" required icon={Wallet} error={errors.budget}>
                                 <Select
                                   value={form.budget}
                                   onValueChange={(v) => update('budget', v)}
@@ -742,7 +804,7 @@ export function ContactSection() {
                           {step === 2 && (
                             <div className="space-y-5">
                               <div className="grid sm:grid-cols-2 gap-4">
-                                <Field id="timeline" label="Timeline" icon={Clock}>
+                                <Field id="timeline" label="Timeline" required icon={Clock} error={errors.timeline}>
                                   <Select
                                     value={form.timeline}
                                     onValueChange={(v) => update('timeline', v)}
@@ -759,7 +821,7 @@ export function ContactSection() {
                                     </SelectContent>
                                   </Select>
                                 </Field>
-                                <Field id="startDate" label="Preferred Start Date" icon={Calendar}>
+                                <Field id="startDate" label="Preferred Start Date" required icon={Calendar} error={errors.startDate}>
                                   <Input
                                     id="startDate"
                                     type="date"

@@ -29,15 +29,56 @@ export async function POST(req: Request) {
     const body = (await req.json()) as Partial<Inquiry>
 
     const fieldErrors: Record<string, string> = {}
-    if (!body.brandName?.toString().trim()) fieldErrors.brandName = 'Brand name is required'
-    if (!body.contactName?.toString().trim()) fieldErrors.contactName = 'Contact name is required'
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!body.email?.toString().trim()) fieldErrors.email = 'Email is required'
-    else if (!emailRegex.test(String(body.email))) fieldErrors.email = 'Invalid email address'
-    if (!body.campaignGoal?.toString().trim()) fieldErrors.campaignGoal = 'Campaign goal is required'
-    if (!body.collabType?.toString().trim()) fieldErrors.collabType = 'Collab type is required'
+    const brand = body.brandName?.toString().trim() || ''
+    const contact = body.contactName?.toString().trim() || ''
+    const email = body.email?.toString().trim() || ''
+    const phone = body.phone?.toString().trim() || ''
+    const website = body.website?.toString().trim() || ''
+    const goal = body.campaignGoal?.toString().trim() || ''
+    const type = body.collabType?.toString().trim() || ''
+    const budget = body.budget?.toString().trim() || ''
+    const timeline = body.timeline?.toString().trim() || ''
+    const startDate = body.startDate?.toString().trim() || ''
     const msg = body.message?.toString().trim() || ''
-    if (msg.length < 20) fieldErrors.message = 'Message must be at least 20 characters'
+    const deliverables = Array.isArray(body.deliverables) ? body.deliverables : []
+
+    if (!brand || brand.length < 2) fieldErrors.brandName = 'Brand name is required'
+    if (!contact || contact.length < 2) fieldErrors.contactName = 'Contact name is required'
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+    if (!email) fieldErrors.email = 'Email is required'
+    else if (!emailRegex.test(email)) fieldErrors.email = 'Invalid email address'
+
+    const phoneDigits = phone.replace(/\D/g, '')
+    if (!phone) fieldErrors.phone = 'WhatsApp number is required'
+    else if (phoneDigits.length < 10 || phoneDigits.length > 15)
+      fieldErrors.phone = 'Enter a valid WhatsApp number with country code'
+    else if (!/^\+?[\d\s\-()]{10,20}$/.test(phone))
+      fieldErrors.phone = 'Only digits, spaces, +, -, () allowed'
+
+    if (!website) fieldErrors.website = 'Website or social handle is required'
+    else if (
+      !/^@[A-Za-z0-9_.]{2,}$/.test(website) &&
+      !/^(https?:\/\/)?([\w-]+\.)+[A-Za-z]{2,}([\/?#].*)?$/.test(website)
+    ) fieldErrors.website = 'Enter a domain or @handle'
+
+    if (!goal) fieldErrors.campaignGoal = 'Campaign goal is required'
+    if (!type) fieldErrors.collabType = 'Collab type is required'
+    if (deliverables.length === 0) fieldErrors.deliverables = 'Pick at least one deliverable'
+    if (!budget) fieldErrors.budget = 'Budget range is required'
+    if (!timeline) fieldErrors.timeline = 'Timeline is required'
+
+    if (!startDate) fieldErrors.startDate = 'Start date is required'
+    else if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) fieldErrors.startDate = 'Use YYYY-MM-DD format'
+    else {
+      const picked = new Date(startDate)
+      const today = new Date(); today.setHours(0, 0, 0, 0)
+      if (isNaN(picked.getTime()) || picked < today) fieldErrors.startDate = 'Pick today or a future date'
+    }
+
+    if (!msg) fieldErrors.message = 'Brief is required'
+    else if (msg.length < 20) fieldErrors.message = 'Brief must be at least 20 characters'
+    else if (msg.length > 2000) fieldErrors.message = 'Brief must be under 2000 characters'
 
     if (Object.keys(fieldErrors).length > 0) {
       return NextResponse.json(
