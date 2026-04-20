@@ -3,22 +3,21 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import { motion, useInView } from 'framer-motion'
-import { Youtube, Instagram, Twitter, Linkedin, CheckCircle } from 'lucide-react'
+import { Youtube, Instagram, Facebook, CheckCircle } from 'lucide-react'
 
 const platforms = [
   { icon: Youtube, label: 'YouTube', color: 'text-red-500' },
   { icon: Instagram, label: 'Instagram', color: 'text-pink-500' },
-  { icon: Twitter, label: 'Twitter/X', color: 'text-foreground' },
-  { icon: Linkedin, label: 'LinkedIn', color: 'text-blue-500' },
+  { icon: Facebook, label: 'Facebook', color: 'text-blue-500' },
 ]
 
 const highlights = [
-  'Tech Reviews & Unboxings',
-  'Gadget Comparisons',
-  'Brand Storytelling',
-  'Product Launches',
-  'Tutorial Content',
-  'Live Tech Events',
+  'Tech Tips & Tutorials',
+  'AI Tools & Automation',
+  'Blogging & SEO',
+  'Freelancing Guides',
+  'Make Money Online',
+  'Digital Skills',
 ]
 
 export function AboutSection() {

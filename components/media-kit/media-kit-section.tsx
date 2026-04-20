@@ -4,56 +4,50 @@ import { useRef } from 'react'
 import Image from 'next/image'
 import { motion, useInView } from 'framer-motion'
 import {
-  Download,
   Share2,
   Eye,
   Users,
   Play,
-  Award,
+  Heart,
   BarChart3,
   ExternalLink,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-} from 'recharts'
-
-const platformData = [
-  { name: 'YouTube', value: 250, unit: 'K', color: '#FF0000' },
-  { name: 'Instagram', value: 200, unit: 'K', color: '#E1306C' },
-  { name: 'Twitter/X', value: 50, unit: 'K', color: '#1DA1F2' },
-]
-
-const audiencePie = [
-  { name: '18-24', value: 38, fill: 'oklch(0.85 0.18 195)' },
-  { name: '25-34', value: 32, fill: 'oklch(0.65 0.25 310)' },
-  { name: '35+', value: 30, fill: 'oklch(0.85 0.22 130)' },
-]
+import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
 
 const contentStyles = [
-  'Tech Reviews',
-  'Unboxings',
-  'Comparisons',
-  'Tutorials',
-  'Live Streams',
-  'Short-form Content',
-]
-
-const quickStats = [
-  { icon: Users, label: 'Total Reach', value: '500K+' },
-  { icon: Eye, label: 'Monthly Views', value: '5M+' },
-  { icon: Play, label: 'Videos', value: '1000+' },
-  { icon: Award, label: 'Brand Collabs', value: '100+' },
-  { icon: BarChart3, label: 'Avg. Engagement', value: '8%' },
+  'Tech Tips & Tricks',
+  'AI Tools (ChatGPT, Canva, Bard)',
+  'Computer & Mobile Tutorials',
+  'Blogging & SEO',
+  'Freelancing & Make Money Online',
+  'Short-form Reels & Shorts',
 ]
 
 export function MediaKitSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const { ig, fb, yt, totals, ready } = useCombinedStats()
+
+  const platformData = [
+    { name: 'YouTube', value: totals.ytSubs, color: '#FF0000', link: yt?.channel.link },
+    { name: 'Instagram', value: totals.igFollowers, color: '#E1306C', link: ig ? `https://instagram.com/${ig.account.username}` : undefined },
+    { name: 'Facebook', value: totals.fbFollowers, color: '#1877F2', link: fb?.page.link },
+  ]
+
+  const igEng = ig?.computed.avgEngagement ?? 0
+  const fbEng = fb?.computed.avgEngagement ?? 0
+  const ytEng = yt?.computed.avgEngagement ?? 0
+  const avgEng = ready ? ((igEng + fbEng + ytEng) / 3).toFixed(2) : '—'
+
+  const quickStats = [
+    { icon: Users, label: 'Total Followers', value: ready ? formatBig(totals.followers) : '—' },
+    { icon: Eye, label: 'YouTube Views', value: ready ? formatBig(totals.youtubeViews) : '—' },
+    { icon: Play, label: 'Total Content', value: ready ? formatBig(totals.content) : '—' },
+    { icon: Heart, label: 'Avg. Likes/Post', value: ig ? formatBig(ig.computed.avgLikes) : '—' },
+    { icon: BarChart3, label: 'Avg. Engagement', value: ready ? `${avgEng}%` : '—' },
+  ]
 
   return (
     <section id="media-kit" className="py-24 sm:py-32 relative overflow-hidden">
@@ -72,11 +66,11 @@ export function MediaKitSection() {
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-2 mb-4">
             Everything You Need,
-            <span className="gradient-text"> One Click</span>
+            <span className="gradient-text"> One Place</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            A comprehensive overview of TechVyro&apos;s reach, audience, and collaboration capabilities.
-            Always up-to-date, always accurate.
+            Live stats from TechVyro&apos;s Instagram, Facebook & YouTube — pulled directly
+            from each platform&apos;s API. Always real, always up-to-date.
           </p>
         </motion.div>
 
@@ -106,18 +100,23 @@ export function MediaKitSection() {
                       India&apos;s Premier Tech Content Creator
                     </p>
                     <p className="text-sm text-muted-foreground mt-2 max-w-xl">
-                      Specializing in honest tech reviews, unboxings, and brand storytelling 
-                      that drives engagement and conversions.
+                      Practical Hinglish content on Tech, AI Tools, Blogging,
+                      Freelancing & Make Money Online — for India&apos;s digital learners.
                     </p>
                   </div>
                   <div className="flex gap-3 shrink-0">
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      onClick={() => {
+                        if (typeof navigator !== 'undefined' && navigator.share) {
+                          navigator.share({ title: 'TechVyro', url: window.location.href }).catch(() => {})
+                        }
+                      }}
+                    >
                       <Share2 className="h-4 w-4" />
                       Share
-                    </Button>
-                    <Button size="sm" className="bg-primary text-primary-foreground gap-2">
-                      <Download className="h-4 w-4" />
-                      Download PDF
                     </Button>
                   </div>
                 </div>
@@ -141,7 +140,7 @@ export function MediaKitSection() {
               </div>
 
               {/* Content Area */}
-              <div className="grid md:grid-cols-3 gap-0">
+              <div className="grid md:grid-cols-2 gap-0">
                 {/* Platform Stats */}
                 <div className="p-6 sm:p-8 border-r border-border/30">
                   <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
@@ -149,12 +148,15 @@ export function MediaKitSection() {
                   </h4>
                   <div className="space-y-4">
                     {platformData.map((platform, index) => (
-                      <motion.div
+                      <motion.a
                         key={platform.name}
+                        href={platform.link || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         initial={{ opacity: 0, x: -10 }}
                         animate={isInView ? { opacity: 1, x: 0 } : {}}
                         transition={{ delay: 0.6 + index * 0.1 }}
-                        className="flex items-center justify-between"
+                        className="flex items-center justify-between hover:bg-muted/20 rounded-lg p-2 -mx-2 transition-colors"
                       >
                         <div className="flex items-center gap-3">
                           <div
@@ -164,58 +166,19 @@ export function MediaKitSection() {
                           <span className="text-sm text-foreground">{platform.name}</span>
                         </div>
                         <span className="font-bold text-foreground">
-                          {platform.value}{platform.unit}
+                          {ready ? formatBig(platform.value) : '—'}
                         </span>
-                      </motion.div>
+                      </motion.a>
                     ))}
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-border/30">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Total Followers</span>
-                      <span className="font-bold text-primary">500K+</span>
+                      <span className="text-muted-foreground">Combined Followers</span>
+                      <span className="font-bold text-primary">
+                        {ready ? formatBig(totals.followers) : '—'}
+                      </span>
                     </div>
-                  </div>
-                </div>
-
-                {/* Audience Overview */}
-                <div className="p-6 sm:p-8 border-r border-border/30">
-                  <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-                    Audience
-                  </h4>
-                  <div className="h-32">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={audiencePie}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={30}
-                          outerRadius={55}
-                          paddingAngle={3}
-                          dataKey="value"
-                        >
-                          {audiencePie.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.fill} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="space-y-2 mt-2">
-                    {audiencePie.map((entry) => (
-                      <div key={entry.name} className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full" style={{ background: entry.fill }} />
-                          <span className="text-muted-foreground">{entry.name}</span>
-                        </div>
-                        <span className="text-foreground font-medium">{entry.value}%</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-border/30 text-xs text-muted-foreground">
-                    <p>72% Male / 24% Female</p>
-                    <p className="mt-1">Top: Mumbai, Delhi, Bangalore</p>
                   </div>
                 </div>
 
@@ -241,10 +204,10 @@ export function MediaKitSection() {
 
                   <div className="mt-6 pt-4 border-t border-border/30">
                     <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                      Collab Types
+                      Collab Formats
                     </h5>
                     <div className="flex flex-wrap gap-1.5">
-                      {['Videos', 'Reels', 'Posts', 'Stories', 'Live', 'UGC'].map((type) => (
+                      {['Reels', 'Shorts', 'Long Videos', 'Posts', 'Stories', 'Tutorials'].map((type) => (
                         <span
                           key={type}
                           className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20"
@@ -261,7 +224,7 @@ export function MediaKitSection() {
               <div className="p-6 sm:p-8 border-t border-border/30 bg-muted/10 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                  Last updated: April 2026
+                  Live data • {ready ? new Date(ig?.fetchedAt || Date.now()).toLocaleString() : 'Loading…'}
                 </div>
                 <div className="flex items-center gap-3">
                   <Button
@@ -275,10 +238,6 @@ export function MediaKitSection() {
                   >
                     <ExternalLink className="h-3.5 w-3.5" />
                     Request Rate Card
-                  </Button>
-                  <Button size="sm" className="bg-primary text-primary-foreground gap-2">
-                    <Download className="h-3.5 w-3.5" />
-                    Download Full Kit
                   </Button>
                 </div>
               </div>

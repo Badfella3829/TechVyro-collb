@@ -2,56 +2,44 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Rocket, Users, Award, TrendingUp, Zap, Crown } from 'lucide-react'
+import { Rocket, Users, Instagram, Facebook, Youtube, Crown } from 'lucide-react'
 
 const milestones = [
   {
-    year: '2020',
     title: 'The Beginning',
-    description: 'Started creating tech content with a passion for making technology accessible to everyone.',
+    description: 'Started TechVyro with a passion for making tech, AI tools, blogging and online earning accessible in simple Hinglish content.',
     icon: Rocket,
     color: 'bg-primary/20 text-primary border-primary/30',
-    lineColor: 'from-primary',
   },
   {
-    year: '2021',
-    title: 'First 10K Followers',
-    description: 'Hit 10,000 followers across platforms. The community started growing with genuine tech enthusiasts.',
+    title: 'Building the Community',
+    description: 'Started publishing consistent practical tutorials — Computer tips, mobile tricks, and beginner-friendly tech content.',
     icon: Users,
     color: 'bg-secondary/20 text-secondary border-secondary/30',
-    lineColor: 'from-secondary',
   },
   {
-    year: '2022',
-    title: 'First Brand Deal',
-    description: 'Landed the first major brand collaboration. Started working with top tech companies in India.',
-    icon: Award,
-    color: 'bg-accent/20 text-accent border-accent/30',
-    lineColor: 'from-accent',
+    title: 'Instagram @techvyro',
+    description: 'Grew the Instagram presence with daily reels covering AI tools, ChatGPT, Canva, and digital skills.',
+    icon: Instagram,
+    color: 'bg-pink-500/20 text-pink-500 border-pink-500/30',
   },
   {
-    year: '2023',
-    title: '1 Lakh Milestone',
-    description: 'Crossed 1 lakh followers! Multiple viral videos and recognition from industry leaders.',
-    icon: TrendingUp,
-    color: 'bg-primary/20 text-primary border-primary/30',
-    lineColor: 'from-primary',
+    title: 'Facebook Expansion',
+    description: 'Launched the Facebook page to reach a wider Hindi-speaking audience with reels and tech updates.',
+    icon: Facebook,
+    color: 'bg-blue-500/20 text-blue-500 border-blue-500/30',
   },
   {
-    year: '2024',
-    title: 'Viral Moment',
-    description: 'Content went massively viral with 50M+ total views. Became a go-to creator for tech brands.',
-    icon: Zap,
-    color: 'bg-secondary/20 text-secondary border-secondary/30',
-    lineColor: 'from-secondary',
+    title: 'YouTube @techvyro',
+    description: 'Built the YouTube channel with detailed long-form tutorials and Shorts on tech, freelancing, and online income.',
+    icon: Youtube,
+    color: 'bg-red-500/20 text-red-500 border-red-500/30',
   },
   {
-    year: '2025',
     title: 'Today & Beyond',
-    description: 'Leading tech content creation in India with 500K+ community. Building the future of tech storytelling.',
+    description: 'Continuing to publish 100% practical content across Instagram, Facebook & YouTube — helping people learn and earn online.',
     icon: Crown,
     color: 'bg-accent/20 text-accent border-accent/30',
-    lineColor: 'from-accent',
   },
 ]
 
@@ -94,7 +82,7 @@ export function JourneyTimeline() {
 
             return (
               <motion.div
-                key={milestone.year}
+                key={milestone.title}
                 initial={{ opacity: 0, x: isLeft ? -40 : 40 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.15 }}
@@ -105,8 +93,7 @@ export function JourneyTimeline() {
                 {/* Content card - desktop adjustments */}
                 <div className={`flex-1 ml-12 md:ml-0 ${isLeft ? 'md:text-right' : 'md:text-left'}`}>
                   <div className={`glass p-6 rounded-xl border border-border/50 hover:border-primary/30 transition-colors inline-block ${isLeft ? 'md:ml-auto' : ''}`}>
-                    <span className="text-xs font-mono text-primary tracking-wider">{milestone.year}</span>
-                    <h3 className="text-lg font-bold mt-1 mb-2 text-foreground">{milestone.title}</h3>
+                    <h3 className="text-lg font-bold mb-2 text-foreground">{milestone.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{milestone.description}</p>
                   </div>
                 </div>

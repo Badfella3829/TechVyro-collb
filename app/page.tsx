@@ -7,7 +7,6 @@ import { PackagesSection } from '@/components/packages/packages-section'
 import { ROICalculator } from '@/components/calculators/roi-calculator'
 import { PortfolioSection } from '@/components/portfolio/portfolio-section'
 import { WhyMeSection } from '@/components/why-me/why-me-section'
-import { TestimonialsSection } from '@/components/testimonials/testimonials-section'
 import { MediaKitSection } from '@/components/media-kit/media-kit-section'
 import { CollabProcess } from '@/components/process/collab-process'
 import { AvailabilityCalendar } from '@/components/availability/availability-calendar'
@@ -28,7 +27,6 @@ export default function Home() {
       <ROICalculator />
       <PortfolioSection />
       <WhyMeSection />
-      <TestimonialsSection />
       <MediaKitSection />
       <CollabProcess />
       <AvailabilityCalendar />

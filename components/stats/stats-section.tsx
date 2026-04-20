@@ -2,9 +2,8 @@
 
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Users, Play, Eye, Award, TrendingUp, Calendar, Heart, MessageCircle } from 'lucide-react'
+import { Users, Play, Eye, TrendingUp, Heart, MessageCircle } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
-import { AudienceDemographics } from './audience-demographics'
 import { useInstagram } from '@/hooks/use-instagram'
 import { useFacebook } from '@/hooks/use-facebook'
 import { useYouTube } from '@/hooks/use-youtube'
@@ -102,13 +101,14 @@ export function StatsSection() {
     const avgComments = ig?.computed.avgComments ?? 0
     const engagement = ig?.computed.avgEngagement ?? 0
 
+    const avgComm = avgComments
     return [
       { icon: Users, value: totalFollowers, suffix: '', label: 'Total Followers', color: 'bg-primary/20 text-primary' },
       { icon: Eye, value: ytTotalViews, suffix: '', label: 'YouTube Views', color: 'bg-red-500/20 text-red-500' },
       { icon: Play, value: totalPosts, suffix: '', label: 'Total Content', color: 'bg-secondary/20 text-secondary' },
       { icon: Heart, value: avgLikes, suffix: '', label: 'Avg. Likes / Post', color: 'bg-accent/20 text-accent' },
+      { icon: MessageCircle, value: avgComm, suffix: '', label: 'Avg. Comments', color: 'bg-primary/20 text-primary' },
       { icon: TrendingUp, value: Math.round(engagement * 100) / 100, suffix: '%', label: 'Engagement Rate', color: 'bg-secondary/20 text-secondary' },
-      { icon: Calendar, value: 5, suffix: '+', label: 'Years Creating', color: 'bg-accent/20 text-accent' },
     ]
   }, [ig, fb, yt])
 
@@ -175,9 +175,7 @@ export function StatsSection() {
               delay={index * 0.1}
               isInView={isInView}
               ready={
-                stat.label === 'Years Creating'
-                  ? true
-                  : stat.label === 'Total Followers'
+                stat.label === 'Total Followers'
                   ? !!ig && !!fb && !!yt
                   : stat.label === 'YouTube Views'
                   ? !!yt
@@ -228,9 +226,6 @@ export function StatsSection() {
           </div>
         </motion.div>
         
-        {/* Audience Demographics Charts */}
-        <AudienceDemographics />
-
         {/* Last updated badge */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -244,7 +239,7 @@ export function StatsSection() {
               ? 'Fetching live data from Instagram, Facebook & YouTube…'
               : ig || fb || yt
               ? `Live from Instagram, Facebook & YouTube • ${new Date(ig?.fetchedAt || fb?.fetchedAt || yt?.fetchedAt || Date.now()).toLocaleString()}`
-              : 'Last updated: April 2026'}
+              : 'Live data temporarily unavailable'}
           </span>
         </motion.div>
       </div>

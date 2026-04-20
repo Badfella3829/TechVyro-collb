@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { ChevronDown, Play, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ParticleField } from './particle-field'
+import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -35,6 +36,7 @@ const glowVariants = {
 export function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const { totals, ready } = useCombinedStats()
 
   useEffect(() => {
     setIsLoaded(true)
@@ -149,9 +151,9 @@ export function HeroSection() {
           className="flex flex-wrap items-center justify-center gap-8 sm:gap-12"
         >
           {[
-            { value: '500K+', label: 'Followers' },
-            { value: '100+', label: 'Brand Collabs' },
-            { value: '50M+', label: 'Total Views' },
+            { value: ready ? formatBig(totals.followers) : '—', label: 'Total Followers' },
+            { value: ready ? formatBig(totals.youtubeViews) : '—', label: 'YouTube Views' },
+            { value: ready ? formatBig(totals.content) : '—', label: 'Posts & Videos' },
           ].map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-primary">
