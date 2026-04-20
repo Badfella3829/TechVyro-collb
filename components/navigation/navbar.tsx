@@ -56,11 +56,11 @@ export function Navbar() {
             >
               <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-background">
                 <Image
-                  src="/images/techvyro-logo.jpg"
+                  src="/images/techvyro-icon.jpg"
                   alt="TechVyro"
                   fill
                   sizes="40px"
-                  className="object-cover scale-[1.45] origin-top"
+                  className="object-contain"
                 />
               </div>
               <span className="text-lg sm:text-xl font-bold gradient-text">

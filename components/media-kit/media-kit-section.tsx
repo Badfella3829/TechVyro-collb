@@ -88,11 +88,11 @@ export function MediaKitSection() {
                 <div className="flex flex-col sm:flex-row items-center gap-6">
                   <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 shrink-0 bg-background">
                     <Image
-                      src="/images/techvyro-logo.jpg"
+                      src="/images/techvyro-icon.jpg"
                       alt="TechVyro"
                       fill
                       sizes="96px"
-                      className="object-cover scale-[1.45] origin-top"
+                      className="object-contain"
                     />
                   </div>
                   <div className="text-center sm:text-left flex-1">

@@ -79,11 +79,11 @@ export function BrandDetector() {
             <div className="flex justify-center mb-6">
               <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-background">
                 <Image
-                  src="/images/techvyro-logo.jpg"
+                  src="/images/techvyro-icon.jpg"
                   alt="TechVyro"
                   fill
                   sizes="64px"
-                  className="object-cover scale-[1.45] origin-top"
+                  className="object-contain"
                 />
               </div>
             </div>

@@ -75,11 +75,11 @@ export function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-background">
                 <Image
-                  src="/images/techvyro-logo.jpg"
+                  src="/images/techvyro-icon.jpg"
                   alt="TechVyro"
                   fill
                   sizes="48px"
-                  className="object-cover scale-[1.45] origin-top"
+                  className="object-contain"
                 />
               </div>
               <span className="text-2xl font-bold gradient-text">TechVyro</span>

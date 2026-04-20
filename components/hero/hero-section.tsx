@@ -65,11 +65,11 @@ export function HeroSection() {
           {/* Logo */}
           <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-6">
             <Image
-              src="/images/techvyro-logo.jpg"
+              src="/images/techvyro-icon.jpg"
               alt="TechVyro Logo"
               fill
               sizes="(max-width: 640px) 128px, 160px"
-              className="object-cover scale-[1.45] origin-top rounded-2xl"
+              className="object-contain rounded-2xl"
               priority
             />
             {/* Glow effect behind logo */}
