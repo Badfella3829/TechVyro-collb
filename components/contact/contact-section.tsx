@@ -277,6 +277,8 @@ export function ContactSection() {
         newErrors.website = 'Enter a domain (yourbrand.com) or @handle'
     }
     if (s === 1) {
+      if (!selectedPackage)
+        newErrors.collabType = 'Please choose a package first (tap the card above)'
       if (!form.campaignGoal) newErrors.campaignGoal = 'Pick a campaign goal'
       if (!form.collabType) newErrors.collabType = 'Pick a collab type'
       if (!form.deliverables || form.deliverables.length === 0)
@@ -712,27 +714,39 @@ export function ContactSection() {
                           {step === 1 && (
                             <div className="space-y-5">
                               {!selectedPackage && (
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const el = document.getElementById('packages')
-                                    if (el) el.scrollIntoView({ behavior: 'smooth' })
-                                  }}
-                                  className="w-full rounded-xl border border-dashed border-primary/40 bg-gradient-to-r from-primary/5 via-secondary/5 to-transparent p-4 flex items-center gap-3 text-left hover:border-primary/70 hover:bg-primary/10 transition-all group"
-                                >
-                                  <div className="h-9 w-9 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                    <Sparkles className="h-4 w-4 text-primary" />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-foreground">
-                                      Choose Your Perfect Package
+                                <div>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const el = document.getElementById('packages')
+                                      if (el) el.scrollIntoView({ behavior: 'smooth' })
+                                    }}
+                                    className={`w-full rounded-xl border-2 border-dashed p-4 flex items-center gap-3 text-left transition-all group ${
+                                      errors.collabType
+                                        ? 'border-red-500/60 bg-red-500/10 animate-pulse'
+                                        : 'border-primary/40 bg-gradient-to-r from-primary/5 via-secondary/5 to-transparent hover:border-primary/70 hover:bg-primary/10'
+                                    }`}
+                                  >
+                                    <div className="h-9 w-9 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                      <Sparkles className="h-4 w-4 text-primary" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-sm font-semibold text-foreground">
+                                        Choose Your Perfect Package <span className="text-primary">*</span>
+                                      </p>
+                                      <p className="text-xs text-muted-foreground mt-0.5">
+                                        Required — tap to browse pricing and pick one
+                                      </p>
+                                    </div>
+                                    <ChevronRight className="h-4 w-4 text-primary shrink-0 group-hover:translate-x-1 transition-transform" />
+                                  </button>
+                                  {errors.collabType && !form.collabType && (
+                                    <p className="text-xs text-red-400 mt-2 flex items-center gap-1" role="alert">
+                                      <AlertCircle className="h-3 w-3" />
+                                      Please choose a package first
                                     </p>
-                                    <p className="text-xs text-muted-foreground mt-0.5">
-                                      Browse pricing — pick one and we&apos;ll auto-fill this form for you
-                                    </p>
-                                  </div>
-                                  <ChevronRight className="h-4 w-4 text-primary shrink-0 group-hover:translate-x-1 transition-transform" />
-                                </button>
+                                  )}
+                                </div>
                               )}
 
                               <div className="grid sm:grid-cols-2 gap-4">
