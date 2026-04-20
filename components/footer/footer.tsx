@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { 
   Youtube, 
@@ -155,12 +156,12 @@ export function Footer() {
           </p>
           
           <div className="flex items-center gap-6">
-            <button className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Privacy Policy
-            </button>
-            <button className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            </Link>
+            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Terms of Service
-            </button>
+            </Link>
           </div>
 
           <p className="text-xs text-muted-foreground flex items-center gap-1">
