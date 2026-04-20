@@ -9,8 +9,8 @@ const items = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/analytics', label: 'Stats', icon: BarChart3 },
   { href: '/recommender', label: 'Match', icon: Sparkles, accent: true },
-  { href: '/portfolio', label: 'Work', icon: Briefcase },
-  { href: '/contact', label: 'Contact', icon: MessageCircle },
+  { href: '/#portfolio', label: 'Work', icon: Briefcase },
+  { href: '/#contact', label: 'Contact', icon: MessageCircle },
 ]
 
 export function BottomNav() {
@@ -24,7 +24,8 @@ export function BottomNav() {
     >
       <ul className="grid grid-cols-5">
         {items.map(({ href, label, icon: Icon, accent }) => {
-          const active = href === '/' ? pathname === '/' : pathname?.startsWith(href)
+          const cleanHref = href.split('#')[0] || '/'
+          const active = cleanHref === '/' ? pathname === '/' && !href.includes('#') : pathname?.startsWith(cleanHref)
           return (
             <li key={href} className="flex">
               <Link
