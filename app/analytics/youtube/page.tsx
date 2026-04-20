@@ -1,6 +1,7 @@
 "use client"
 
 import Link from 'next/link'
+import { RefreshButton } from '@/components/analytics/refresh-button'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
@@ -66,9 +67,12 @@ export default function YouTubeAnalyticsPage() {
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Link href="/#stats" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-6 transition-colors">
-          <ArrowLeft className="h-4 w-4" />Back to overview
-        </Link>
+        <div className="flex items-center justify-between mb-6">
+          <Link href="/#stats" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <ArrowLeft className="h-4 w-4" />Back to overview
+          </Link>
+          <RefreshButton endpoint="/api/youtube?refresh=1" />
+        </div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <Card className="glass border-red-500/30 bg-gradient-to-br from-red-500/10 via-orange-500/10 to-red-700/10 mb-8">

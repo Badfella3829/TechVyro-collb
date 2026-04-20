@@ -1,0 +1,42 @@
+{
+  "name": "TechVyro — Tech Content Creator",
+  "short_name": "TechVyro",
+  "description": "India's premier tech content creator. Brand collaborations, tech reviews, and content that converts.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00ffff",
+  "orientation": "portrait-primary",
+  "categories": ["business", "entertainment", "social"],
+  "icons": [
+    {
+      "src": "/images/techvyro-icon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/techvyro-icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Instagram Analytics",
+      "short_name": "Instagram",
+      "url": "/analytics/instagram"
+    },
+    {
+      "name": "YouTube Analytics",
+      "short_name": "YouTube",
+      "url": "/analytics/youtube"
+    },
+    {
+      "name": "Book a Call",
+      "short_name": "Contact",
+      "url": "/#contact"
+    }
+  ]
+}

@@ -45,7 +45,8 @@ function parseDuration(iso?: string): number | null {
   return h * 3600 + m * 60 + s
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const _u = new URL(req.url); const forceRefresh = _u.searchParams.has("refresh") || _u.searchParams.has("_t");
   const apiKey = process.env.YOUTUBE_API_KEY
   const channelId = process.env.YOUTUBE_CHANNEL_ID
 
@@ -58,7 +59,7 @@ export async function GET() {
 
   try {
     const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${channelId}&key=${apiKey}`
-    const channelRes = await fetch(channelUrl, { next: { revalidate: 3600 } })
+    const channelRes = await fetch(channelUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } })
 
     if (!channelRes.ok) {
       const text = await channelRes.text()
@@ -76,14 +77,14 @@ export async function GET() {
 
     // Get most popular videos via search (ordered by viewCount)
     const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=viewCount&maxResults=20&type=video&key=${apiKey}`
-    const searchRes = await fetch(searchUrl, { next: { revalidate: 3600 } })
+    const searchRes = await fetch(searchUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } })
     const searchJson = searchRes.ok ? await searchRes.json() : { items: [] }
     const videoIds: string[] = (searchJson.items || []).map((it: { id: { videoId: string } }) => it.id.videoId).filter(Boolean)
 
     let videos: YTVideo[] = []
     if (videoIds.length > 0) {
       const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoIds.join(',')}&key=${apiKey}`
-      const videosRes = await fetch(videosUrl, { next: { revalidate: 3600 } })
+      const videosRes = await fetch(videosUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } })
       if (videosRes.ok) {
         const videosJson = await videosRes.json()
         videos = videosJson.items || []

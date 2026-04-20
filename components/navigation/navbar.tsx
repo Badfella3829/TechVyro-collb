@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
+import { LangToggle } from '@/components/i18n/lang-toggle'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -82,8 +84,10 @@ export function Navbar() {
               ))}
             </div>
 
-            {/* CTA Button */}
-            <div className="hidden md:block">
+            {/* CTA Button + toggles */}
+            <div className="hidden md:flex items-center gap-2">
+              <LangToggle />
+              <ThemeToggle />
               <Button
                 onClick={() => scrollToSection('#contact')}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -133,11 +137,20 @@ export function Navbar() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: navLinks.length * 0.1 }}
+                  className="flex items-center gap-2 mt-2"
+                >
+                  <ThemeToggle />
+                  <LangToggle />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navLinks.length + 1) * 0.1 }}
                 >
                   <Button
                     onClick={() => scrollToSection('#contact')}
                     size="lg"
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground mt-4"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground mt-2"
                   >
                     Get in Touch
                   </Button>

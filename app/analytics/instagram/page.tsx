@@ -1,6 +1,7 @@
 "use client"
 
 import Link from 'next/link'
+import { RefreshButton } from '@/components/analytics/refresh-button'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
@@ -56,9 +57,12 @@ export default function InstagramAnalyticsPage() {
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back nav */}
-        <Link href="/#stats" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-6 transition-colors">
-          <ArrowLeft className="h-4 w-4" />Back to overview
-        </Link>
+        <div className="flex items-center justify-between mb-6">
+          <Link href="/#stats" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <ArrowLeft className="h-4 w-4" />Back to overview
+          </Link>
+          <RefreshButton endpoint="/api/instagram?refresh=1" />
+        </div>
 
         {/* Header */}
         <motion.div

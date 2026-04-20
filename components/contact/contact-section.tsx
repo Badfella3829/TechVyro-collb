@@ -37,6 +37,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
+import { CalendlyEmbed } from '@/components/booking/calendly-embed'
 import { PACKAGE_SELECTED_EVENT, DATE_SELECTED_EVENT, mapPackageToCollabType, type SelectedPackage } from '@/lib/select-package'
 
 const COLLAB_EMAIL = 'techvyro@gmail.com'
@@ -408,6 +409,7 @@ export function ContactSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-1 space-y-4 lg:sticky lg:top-24 self-start"
           >
+            <CalendlyEmbed />
             {/* Live reach card */}
             <Card className="glass border-primary/30 bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent">
               <CardContent className="p-5">

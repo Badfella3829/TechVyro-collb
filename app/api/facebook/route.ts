@@ -39,7 +39,8 @@ type FBPost = {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const _u = new URL(req.url); const forceRefresh = _u.searchParams.has("refresh") || _u.searchParams.has("_t");
   const token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
   const pageId = process.env.FACEBOOK_PAGE_ID
 
@@ -58,8 +59,8 @@ export async function GET() {
     const postsUrl = `https://graph.facebook.com/v23.0/${pageId}/posts?fields=${postFields}&limit=50&access_token=${token}`
 
     const [pageRes, postsRes] = await Promise.all([
-      fetch(pageUrl, { next: { revalidate: 3600 } }),
-      fetch(postsUrl, { next: { revalidate: 3600 } }),
+      fetch(pageUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } }),
+      fetch(postsUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } }),
     ])
 
     if (!pageRes.ok) {
@@ -103,7 +104,7 @@ export async function GET() {
     }> = []
     try {
       const videosUrl = `https://graph.facebook.com/v23.0/${pageId}/videos?fields=id,views,length,description,title,picture,permalink_url,created_time&limit=100&access_token=${token}`
-      const vRes = await fetch(videosUrl, { next: { revalidate: 3600 } })
+      const vRes = await fetch(videosUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } })
       if (vRes.ok) {
         const vJson = await vRes.json()
         videos = vJson.data || []

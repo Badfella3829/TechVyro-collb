@@ -25,7 +25,9 @@ type IGMedia = {
   view_count?: number
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const url = new URL(req.url)
+  const forceRefresh = url.searchParams.has('refresh') || url.searchParams.has('_t')
   const token = process.env.INSTAGRAM_ACCESS_TOKEN
   const userId = process.env.INSTAGRAM_USER_ID
 
@@ -43,8 +45,8 @@ export async function GET() {
     const mediaUrl = `https://graph.instagram.com/v23.0/${userId}/media?fields=${mediaFields}&limit=50&access_token=${token}`
 
     const [accountRes, mediaRes] = await Promise.all([
-      fetch(accountUrl, { next: { revalidate: 3600 } }),
-      fetch(mediaUrl, { next: { revalidate: 3600 } }),
+      fetch(accountUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } }),
+      fetch(mediaUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } }),
     ])
 
     if (!accountRes.ok) {

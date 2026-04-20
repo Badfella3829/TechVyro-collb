@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useCombinedStats } from '@/hooks/use-combined-stats'
+import { ROIEmailForm } from './roi-email-form'
 
 const productTypes = [
   { value: 'smartphone', label: 'Smartphone / Gadget', multiplier: 1.2, ctr: 0.38 },
@@ -89,7 +90,8 @@ export function ROICalculator() {
     // Industry standard: ~65% of impressions are unique reach on social
     const reach = Math.round(impressions * 0.65)
     // Engagement uses REAL engagement rate from APIs
-    const engagement = Math.round(impressions * (realMetrics.avgEngagementRate / 100) * m)
+    // (impressions already includes product multiplier `m`, so don't multiply again)
+    const engagement = Math.round(impressions * (realMetrics.avgEngagementRate / 100))
     // CTR varies by product category (research-based)
     const clicks = Math.round(engagement * typeData.ctr)
     const cpm = amount > 0 && impressions > 0
@@ -299,6 +301,17 @@ export function ROICalculator() {
                   >
                     Start Campaign
                   </Button>
+
+                  {results && (
+                    <ROIEmailForm
+                      budget={budget[0]}
+                      contentPieces={results.pieces}
+                      estReach={results.reach}
+                      estEngagement={(results.engagement / Math.max(results.impressions, 1)) * 100}
+                      estROI={results.impressions / Math.max(budget[0] / 1000, 1) / 100}
+                      packageName={productTypes.find((p) => p.value === productType)?.label}
+                    />
+                  )}
                 </div>
               </div>
             </CardContent>
