@@ -61,11 +61,11 @@ function generateReportHTML(p: Payload): string {
   </div>
   ${p.package ? `<p style="text-align:center;color:#aaa;margin:16px 0">Recommended package: <strong style="color:#00ffff">${p.package}</strong></p>` : ''}
   <div style="text-align:center;margin:32px 0">
-    <a href="https://wa.me/919696094707" class="cta">Book a Free 30-min Strategy Call →</a>
+    <a href="https://wa.me/916396094707" class="cta">Book a Free 30-min Strategy Call →</a>
   </div>
   <div class="footer">
     <p>TechVyro &mdash; India&rsquo;s Premier Tech Content Creator</p>
-    <p>techvyro@gmail.com &middot; +91 96960 94707</p>
+    <p>techvyro@gmail.com &middot; +91 63960 94707</p>
     <p style="margin-top:8px;color:#444">This report is auto-generated using real engagement data.</p>
   </div>
 </body>
@@ -106,7 +106,7 @@ export async function POST(req: Request) {
 
     const html = generateReportHTML(data)
 
-    const text = `Hi ${data.name || 'there'},\n\nYour TechVyro ROI report:\n- Budget: ₹${data.budget.toLocaleString('en-IN')}\n- Content pieces: ${data.contentPieces}\n- Estimated reach: ${data.estReach.toLocaleString('en-IN')}\n- Engagement lift: ${data.estEngagement.toFixed(2)}%\n- Projected ROI: ${data.estROI.toFixed(1)}×\n\nReply to this email or WhatsApp +91 96960 94707 to discuss.\n\n— TechVyro`
+    const text = `Hi ${data.name || 'there'},\n\nYour TechVyro ROI report:\n- Budget: ₹${data.budget.toLocaleString('en-IN')}\n- Content pieces: ${data.contentPieces}\n- Estimated reach: ${data.estReach.toLocaleString('en-IN')}\n- Engagement lift: ${data.estEngagement.toFixed(2)}%\n- Projected ROI: ${data.estROI.toFixed(1)}×\n\nReply to this email or WhatsApp +91 63960 94707 to discuss.\n\n— TechVyro`
 
     const emailRes = await sendEmail({
       to: data.email,

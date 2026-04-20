@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X } from 'lucide-react'
 
-const OWNER_PHONE = '919696094707'
+const OWNER_PHONE = '916396094707'
 const PRESET_MESSAGE = encodeURIComponent(
   "Hi Akansh! 👋 I saw your TechVyro portfolio and I'd love to discuss a brand collaboration."
 )

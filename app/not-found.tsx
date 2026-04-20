@@ -20,7 +20,7 @@ export default function NotFound() {
             <Home className="h-4 w-4" /> Home Page
           </Link>
           <a
-            href="https://wa.me/919696094707"
+            href="https://wa.me/916396094707"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-5 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors"

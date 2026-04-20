@@ -34,7 +34,7 @@ export function organizationJsonLd() {
       '@type': 'ContactPoint',
       contactType: 'customer support',
       email: 'techvyro@gmail.com',
-      telephone: '+91-96960-94707',
+      telephone: '+91-63960-94707',
       areaServed: 'IN',
       availableLanguage: ['en', 'hi'],
     },

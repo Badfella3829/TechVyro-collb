@@ -68,7 +68,7 @@ function buildHtmlMediaKit() {
 
   <div class="cta">
     <a href="https://techvyro.com/contact">📩 Start a Collaboration → techvyro.com/contact</a><br>
-    <span style="color:#fff;font-size:13px;opacity:.9">WhatsApp: +91 96960 94707 · Email: techvyro@gmail.com</span>
+    <span style="color:#fff;font-size:13px;opacity:.9">WhatsApp: +91 63960 94707 · Email: techvyro@gmail.com</span>
   </div>
 
   <p style="text-align:center;color:#666;font-size:12px;margin-top:32px">© ${new Date().getFullYear()} TechVyro · All rights reserved</p>
