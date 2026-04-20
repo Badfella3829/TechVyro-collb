@@ -117,7 +117,7 @@ export function buildInquiryAckEmail(d: InquiryEmailData): { subject: string; te
     ``,
     `Warm regards,`,
     ``,
-    `Vyom`,
+    `Akansh Chahal`,
     `Founder, TechVyro`,
     `Email: techvyro@gmail.com`,
     `WhatsApp: +91 63960 94707`,
@@ -167,7 +167,7 @@ export function buildInquiryAckEmail(d: InquiryEmailData): { subject: string; te
         <p style="margin:24px 0 0;color:#6b7280;font-size:14px;">Have a question in the meantime? Just reply to this email or message me on WhatsApp at <a href="https://wa.me/916396094707" style="color:#0d9488;text-decoration:none;">+91 63960 94707</a>.</p>
       </td></tr>
       <tr><td style="background:#f9fafb;padding:20px 32px;border-top:1px solid #e5e7eb;text-align:center;color:#6b7280;font-size:13px;line-height:1.6;">
-        <strong style="color:#111827;">Vyom</strong> · Founder, TechVyro<br>
+        <strong style="color:#111827;">Akansh Chahal</strong> · Founder, TechVyro<br>
         <a href="mailto:techvyro@gmail.com" style="color:#0d9488;text-decoration:none;">techvyro@gmail.com</a> · 
         <a href="https://wa.me/916396094707" style="color:#0d9488;text-decoration:none;">+91 63960 94707</a>
       </td></tr>
@@ -283,7 +283,7 @@ export function buildConfirmationEmail(d: ConfirmationEmailData): { subject: str
     ``,
     `Warm regards,`,
     ``,
-    `Vyom`,
+    `Akansh Chahal`,
     `Founder, TechVyro`,
     `Email: techvyro@gmail.com`,
     `WhatsApp: +91 63960 94707`,
@@ -320,7 +320,7 @@ export function buildConfirmationEmail(d: ConfirmationEmailData): { subject: str
         <p style="margin:16px 0 0;color:#374151;font-size:15px;">Looking forward to creating something great together.</p>
       </td></tr>
       <tr><td style="background:#f9fafb;padding:20px 32px;border-top:1px solid #e5e7eb;text-align:center;color:#6b7280;font-size:13px;line-height:1.6;">
-        <strong style="color:#111827;">Vyom</strong> · Founder, TechVyro<br>
+        <strong style="color:#111827;">Akansh Chahal</strong> · Founder, TechVyro<br>
         <a href="mailto:techvyro@gmail.com" style="color:#0d9488;text-decoration:none;">techvyro@gmail.com</a> · 
         <a href="https://wa.me/916396094707" style="color:#0d9488;text-decoration:none;">+91 63960 94707</a>
       </td></tr>
