@@ -10,7 +10,7 @@ import { LangToggle } from '@/components/i18n/lang-toggle'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
-  { href: '#about', label: 'About' },
+  { href: '/about', label: 'About', external: true },
   { href: '#stats', label: 'Stats' },
   { href: '#packages', label: 'Packages' },
   { href: '/recommender', label: 'Match', external: true },
