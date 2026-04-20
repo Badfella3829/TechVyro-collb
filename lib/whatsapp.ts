@@ -202,5 +202,33 @@ export async function sendBookingConfirmation(
   // Fallback: hello_world template — pings the brand. Owner should follow up
   // manually with details once brand replies (which opens the 24h window).
   const tplResult = await sendHelloWorldTemplate(phoneNumberId, token, to)
+  if (!tplResult.ok) {
+    // Translate common Meta errors into user-friendly skip reasons
+    const detailsStr = typeof tplResult.details === 'string' ? tplResult.details : JSON.stringify(tplResult.details || '')
+    if (/131030|not in allowed list|allowed list/i.test(detailsStr)) {
+      return {
+        ok: false,
+        skipped: true,
+        reason: `Brand number ${c.phone} not in WhatsApp test allowlist. Either add it in Meta dashboard (Test numbers) or move WABA to production. Owner should DM brand manually for now.`,
+        error: 'Recipient not in allowed list',
+      }
+    }
+    if (/131026|not registered|not.*whatsapp/i.test(detailsStr)) {
+      return {
+        ok: false,
+        skipped: true,
+        reason: `${c.phone} doesn't have WhatsApp. Reach out via email/phone instead.`,
+        error: 'Number not on WhatsApp',
+      }
+    }
+    if (/access token|expired|OAuthException.*190/i.test(detailsStr)) {
+      return {
+        ok: false,
+        skipped: true,
+        reason: 'WhatsApp access token expired. Generate a new one in Meta dashboard and update WHATSAPP_ACCESS_TOKEN.',
+        error: 'Token expired',
+      }
+    }
+  }
   return tplResult
 }
