@@ -1,5 +1,7 @@
 import { Navbar } from '@/components/navigation/navbar'
 import { HeroSection } from '@/components/hero/hero-section'
+import { TrustBar } from '@/components/trust-bar/trust-bar'
+import { SectionDivider } from '@/components/section-divider/section-divider'
 import { AboutSection } from '@/components/about/about-section'
 import { StatsSection } from '@/components/stats/stats-section'
 import { BrandsSection } from '@/components/brands/brands-section'
@@ -25,40 +27,88 @@ export default function Home() {
       <ClientEffects />
       <Navbar />
 
-      {/* 1. HOOK — Grab attention */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 1 — IMPACT: First impression in 5 seconds                  */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <HeroSection />
+      <TrustBar />
 
-      {/* 2. PROOF — Live numbers build instant credibility */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 2 — PROOF: Live numbers + brand logos                      */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="01 — PROOF"
+        title="Numbers Don't Lie"
+        subtitle="Real-time stats from live platforms"
+      />
       <StatsSection />
-
-      {/* 3. SOCIAL PROOF — Brand logos */}
       <BrandsSection />
 
-      {/* 4. WORK — Show what we deliver */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 3 — WORK: Show what we deliver                             */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="02 — WORK"
+        title="Featured Productions"
+        subtitle="From idea to viral — explore our latest"
+      />
       <PortfolioSection />
       <LatestFeed />
 
-      {/* 5. STORY — Now context makes sense */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 4 — STORY: Who we are & why we win                         */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="03 — STORY"
+        title="The TechVyro Edge"
+        subtitle="Built different. Engineered for ROI."
+      />
       <AboutSection />
       <WhyMeSection />
       <JourneyTimeline />
 
-      {/* 6. VALIDATION — Words from clients & press */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 5 — VALIDATION: Voices that matter                         */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="04 — VALIDATION"
+        title="Brands & Press Speak"
+        subtitle="What partners and media say about working with us"
+      />
       <TestimonialsSection />
       <PressSection />
 
-      {/* 7. OFFER — Packages + interactive value */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 6 — OFFER: Packages + interactive ROI                      */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="05 — OFFER"
+        title="Pick Your Growth Pack"
+        subtitle="Transparent pricing. Calculate your ROI live."
+      />
       <PackagesSection />
       <ROICalculator />
 
-      {/* 8. PROCESS — How collaboration works */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 7 — PROCESS: How we collaborate                            */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="06 — PROCESS"
+        title="From Brief to Viral"
+        subtitle="A frictionless 4-step collaboration flow"
+      />
       <CollabProcess />
       <MediaKitSection />
 
-      {/* 9. ENGAGE — Stay connected */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 8 — CONVERT: Engage, book, contact                         */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="07 — CONNECT"
+        title="Let's Build Something Big"
+        subtitle="Newsletter · Book a call · Send a brief"
+      />
       <NewsletterInline />
-
-      {/* 10. ACTION — Book & contact */}
       <AvailabilityCalendar />
       <ContactSection />
 
