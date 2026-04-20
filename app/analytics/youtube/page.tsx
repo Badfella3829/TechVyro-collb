@@ -59,7 +59,9 @@ export default function YouTubeAnalyticsPage() {
   const totalComments = videos.reduce((s, v) => s + v.comments, 0)
   const shortsCount = videos.filter(v => v.isShort).length
   const longCount = videos.length - shortsCount
-  const topVideos = [...videos].sort((a, b) => b.views - a.views).slice(0, 3)
+  const sortedVideos = [...videos].sort((a, b) => b.views - a.views)
+  const topVideos = sortedVideos.slice(0, 3)
+  const top50 = sortedVideos.slice(0, 50)
 
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
@@ -175,20 +177,21 @@ export default function YouTubeAnalyticsPage() {
         )}
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-          <h2 className="text-xl font-semibold mb-4">Recent Videos ({videos.length})</h2>
+          <h2 className="text-xl font-semibold mb-4">Top Performing Videos ({top50.length})</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {videos.map((v) => (
+            {top50.map((v, idx) => (
               <a key={v.id} href={v.permalink} target="_blank" rel="noopener noreferrer" className="group">
                 <Card className="glass hover:border-red-500/50 transition-colors overflow-hidden h-full flex flex-col">
                   <div className="relative aspect-video bg-muted">
                     {v.thumbnail && <Image src={v.thumbnail} alt={v.title} fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover group-hover:scale-105 transition-transform" />}
+                    <span className="absolute top-2 left-2 bg-black/70 backdrop-blur text-white text-[10px] font-bold px-1.5 py-0.5 rounded">#{idx + 1}</span>
                     {v.duration && (
                       <span className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">
                         {fmtDuration(v.duration)}
                       </span>
                     )}
                     {v.isShort && (
-                      <span className="absolute top-2 left-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">SHORT</span>
+                      <span className="absolute top-2 right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">SHORT</span>
                     )}
                   </div>
                   <CardContent className="p-3 flex-1 flex flex-col">

@@ -50,6 +50,7 @@ export default function InstagramAnalyticsPage() {
   const totalComments = media.reduce((s, m) => s + (m.comments_count ?? 0), 0)
   const sortedByLikes = [...media].sort((a, b) => (b.like_count ?? 0) - (a.like_count ?? 0))
   const topPosts = sortedByLikes.slice(0, 3)
+  const top50 = sortedByLikes.slice(0, 50)
 
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
@@ -162,11 +163,12 @@ export default function InstagramAnalyticsPage() {
 
         {/* Recent posts grid */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-          <h2 className="text-xl font-semibold mb-4">Recent Content ({media.length})</h2>
+          <h2 className="text-xl font-semibold mb-4">Top Performing Posts ({top50.length})</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {media.map((post) => (
+            {top50.map((post, idx) => (
               <a key={post.id} href={post.permalink} target="_blank" rel="noopener noreferrer" className="group">
-                <Card className="glass hover:border-pink-500/50 transition-colors overflow-hidden">
+                <Card className="glass hover:border-pink-500/50 transition-colors overflow-hidden relative">
+                  <span className="absolute top-2 left-2 z-10 bg-black/70 backdrop-blur text-white text-[10px] font-bold px-1.5 py-0.5 rounded">#{idx + 1}</span>
                   <div className="relative aspect-square bg-muted">
                     {(post.thumbnail_url || post.media_url) && (
                       <Image src={post.thumbnail_url || post.media_url!} alt="" fill sizes="(max-width:640px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform" />

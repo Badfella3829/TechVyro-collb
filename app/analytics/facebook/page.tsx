@@ -49,9 +49,10 @@ export default function FacebookAnalyticsPage() {
   const totalReactions = posts.reduce((s, p) => s + (p.reactions?.summary?.total_count ?? 0), 0)
   const totalComments = posts.reduce((s, p) => s + (p.comments?.summary?.total_count ?? 0), 0)
   const totalShares = posts.reduce((s, p) => s + (p.shares?.count ?? 0), 0)
-  const topPosts = [...posts]
+  const sortedPosts = [...posts]
     .sort((a, b) => (b.reactions?.summary?.total_count ?? 0) - (a.reactions?.summary?.total_count ?? 0))
-    .slice(0, 3)
+  const topPosts = sortedPosts.slice(0, 3)
+  const top50 = sortedPosts.slice(0, 50)
 
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
@@ -157,11 +158,12 @@ export default function FacebookAnalyticsPage() {
         )}
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-          <h2 className="text-xl font-semibold mb-4">Recent Posts ({posts.length})</h2>
+          <h2 className="text-xl font-semibold mb-4">Top Performing Posts ({top50.length})</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {posts.map((post) => (
+            {top50.map((post, idx) => (
               <a key={post.id} href={post.permalink_url} target="_blank" rel="noopener noreferrer" className="group">
-                <Card className="glass hover:border-blue-500/50 transition-colors overflow-hidden h-full flex flex-col">
+                <Card className="glass hover:border-blue-500/50 transition-colors overflow-hidden h-full flex flex-col relative">
+                  <span className="absolute top-2 left-2 z-10 bg-black/70 backdrop-blur text-white text-[10px] font-bold px-1.5 py-0.5 rounded">#{idx + 1}</span>
                   {post.full_picture && (
                     <div className="relative aspect-video bg-muted">
                       <Image src={post.full_picture} alt="" fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover group-hover:scale-105 transition-transform" />
