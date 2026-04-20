@@ -190,8 +190,8 @@ export function ContactSection() {
       if (!iso) return
       setForm((prev) => ({ ...prev, startDate: iso }))
       setErrors((prev) => ({ ...prev, startDate: undefined }))
-      // Jump to Brief step (index 2) where startDate lives
-      setStep(2)
+      // Start from the beginning so user fills brand details first
+      setStep(0)
     }
     window.addEventListener(DATE_SELECTED_EVENT, handler as EventListener)
     return () => window.removeEventListener(DATE_SELECTED_EVENT, handler as EventListener)
