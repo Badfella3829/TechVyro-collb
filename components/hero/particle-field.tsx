@@ -1,9 +1,22 @@
 "use client"
 
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
+
+function hasWebGL(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext('webgl2') || canvas.getContext('webgl'))
+    )
+  } catch {
+    return false
+  }
+}
 
 function Particles({ count = 3000 }) {
   const ref = useRef<THREE.Points>(null)
@@ -101,15 +114,26 @@ function Particles({ count = 3000 }) {
 }
 
 export function ParticleField() {
+  const [webglOk, setWebglOk] = useState(false)
+
+  useEffect(() => {
+    setWebglOk(hasWebGL())
+  }, [])
+
   return (
     <div className="absolute inset-0 -z-10">
-      <Canvas
-        camera={{ position: [0, 0, 6], fov: 75 }}
-        dpr={[1, 2]}
-        style={{ background: 'transparent' }}
-      >
-        <Particles />
-      </Canvas>
+      {webglOk && (
+        <Canvas
+          camera={{ position: [0, 0, 6], fov: 75 }}
+          dpr={[1, 2]}
+          style={{ background: 'transparent' }}
+          onCreated={({ gl }) => {
+            gl.domElement.addEventListener('webglcontextlost', (e) => e.preventDefault())
+          }}
+        >
+          <Particles />
+        </Canvas>
+      )}
       
       {/* Gradient overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background pointer-events-none" />
