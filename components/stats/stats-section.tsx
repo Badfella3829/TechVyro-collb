@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { AudienceDemographics } from './audience-demographics'
 import { useInstagram } from '@/hooks/use-instagram'
 import { useFacebook } from '@/hooks/use-facebook'
+import { useYouTube } from '@/hooks/use-youtube'
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
@@ -85,25 +86,31 @@ export function StatsSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const { data: ig, loading: igLoading } = useInstagram()
   const { data: fb, loading: fbLoading } = useFacebook()
+  const { data: yt, loading: ytLoading } = useYouTube()
 
   const stats = useMemo(() => {
     const igFollowers = ig?.account.followers_count ?? 0
     const fbFollowers = fb?.page.followers_count ?? 0
-    const totalFollowers = igFollowers + fbFollowers
-    const posts = ig?.account.media_count ?? 0
+    const ytSubs = yt?.channel.subscribers ?? 0
+    const totalFollowers = igFollowers + fbFollowers + ytSubs
+    const totalPosts =
+      (ig?.account.media_count ?? 0) +
+      (fb?.computed.postCount ?? fb?.posts.length ?? 0) +
+      (yt?.channel.videoCount ?? 0)
+    const ytTotalViews = yt?.channel.totalViews ?? 0
     const avgLikes = ig?.computed.avgLikes ?? 0
     const avgComments = ig?.computed.avgComments ?? 0
     const engagement = ig?.computed.avgEngagement ?? 0
 
     return [
       { icon: Users, value: totalFollowers, suffix: '', label: 'Total Followers', color: 'bg-primary/20 text-primary' },
-      { icon: Play, value: posts, suffix: '', label: 'Posts Published', color: 'bg-secondary/20 text-secondary' },
+      { icon: Eye, value: ytTotalViews, suffix: '', label: 'YouTube Views', color: 'bg-red-500/20 text-red-500' },
+      { icon: Play, value: totalPosts, suffix: '', label: 'Total Content', color: 'bg-secondary/20 text-secondary' },
       { icon: Heart, value: avgLikes, suffix: '', label: 'Avg. Likes / Post', color: 'bg-accent/20 text-accent' },
-      { icon: MessageCircle, value: avgComments, suffix: '', label: 'Avg. Comments', color: 'bg-primary/20 text-primary' },
       { icon: TrendingUp, value: Math.round(engagement * 100) / 100, suffix: '%', label: 'Engagement Rate', color: 'bg-secondary/20 text-secondary' },
       { icon: Calendar, value: 5, suffix: '+', label: 'Years Creating', color: 'bg-accent/20 text-accent' },
     ]
-  }, [ig, fb])
+  }, [ig, fb, yt])
 
   const platformStats = useMemo(() => [
     {
@@ -122,12 +129,12 @@ export function StatsSection() {
     },
     {
       platform: 'YouTube',
-      followers: 'Coming soon',
-      avgViews: '—',
-      engagement: '—',
+      followers: yt ? formatNumber(yt.channel.subscribers) : '—',
+      avgViews: yt ? formatNumber(yt.computed.avgViews) : '—',
+      engagement: yt ? `${yt.computed.avgEngagement.toFixed(2)}%` : '—',
       color: 'border-red-500/30 bg-red-500/10',
     },
-  ], [ig, fb])
+  ], [ig, fb, yt])
 
   return (
     <section id="stats" className="py-24 sm:py-32 relative">
@@ -167,7 +174,17 @@ export function StatsSection() {
               color={stat.color}
               delay={index * 0.1}
               isInView={isInView}
-              ready={(!!ig && !!fb) || stat.label === 'Years Creating' || (stat.label !== 'Total Followers' && !!ig)}
+              ready={
+                stat.label === 'Years Creating'
+                  ? true
+                  : stat.label === 'Total Followers'
+                  ? !!ig && !!fb && !!yt
+                  : stat.label === 'YouTube Views'
+                  ? !!yt
+                  : stat.label === 'Total Content'
+                  ? !!ig && !!fb && !!yt
+                  : !!ig
+              }
             />
           ))}
         </div>
@@ -223,10 +240,10 @@ export function StatsSection() {
         >
           <span className="inline-flex items-center gap-2 text-xs text-muted-foreground glass px-4 py-2 rounded-full">
             <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-            {igLoading || fbLoading
-              ? 'Fetching live data from Instagram & Facebook…'
-              : ig || fb
-              ? `Live from @${ig?.account.username || 'techvyro'} & ${fb?.page.name || 'Facebook'} • ${new Date(ig?.fetchedAt || fb?.fetchedAt || Date.now()).toLocaleString()}`
+            {igLoading || fbLoading || ytLoading
+              ? 'Fetching live data from Instagram, Facebook & YouTube…'
+              : ig || fb || yt
+              ? `Live from Instagram, Facebook & YouTube • ${new Date(ig?.fetchedAt || fb?.fetchedAt || yt?.fetchedAt || Date.now()).toLocaleString()}`
               : 'Last updated: April 2026'}
           </span>
         </motion.div>

@@ -6,22 +6,24 @@ import {
   Play,
   Heart,
   ExternalLink,
-  Video,
   Film,
   ImageIcon,
   MessageCircle,
   X,
   Instagram,
   Facebook,
+  Youtube,
   Share2,
+  Eye,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { useInstagram, type InstagramMedia } from '@/hooks/use-instagram'
 import { useFacebook, type FacebookPost } from '@/hooks/use-facebook'
+import { useYouTube, type YouTubeVideo } from '@/hooks/use-youtube'
 
-type Platform = 'instagram' | 'facebook'
+type Platform = 'instagram' | 'facebook' | 'youtube'
 type FilterType = 'all' | 'reel' | 'post'
 
 type UnifiedItem = {
@@ -34,6 +36,7 @@ type UnifiedItem = {
   likes: number
   comments: number
   shares?: number
+  views?: number
   timestamp: string
   caption?: string
 }
@@ -65,6 +68,22 @@ function igToUnified(m: InstagramMedia): UnifiedItem {
   }
 }
 
+function ytToUnified(v: YouTubeVideo): UnifiedItem {
+  return {
+    id: `yt-${v.id}`,
+    platform: 'youtube',
+    type: v.isShort ? 'reel' : 'post',
+    thumbnail: v.thumbnail,
+    title: v.title,
+    permalink: v.permalink,
+    likes: v.likes,
+    comments: v.comments,
+    views: v.views,
+    timestamp: v.publishedAt,
+    caption: v.description,
+  }
+}
+
 function fbToUnified(p: FacebookPost): UnifiedItem {
   const att = p.attachments?.data?.[0]
   const isVideo = att?.type?.includes('video') || p.permalink_url?.includes('/reel/') || p.permalink_url?.includes('/videos/')
@@ -87,13 +106,32 @@ const platformFilters: { id: Platform | 'all'; label: string; icon: React.Compon
   { id: 'all', label: 'All Platforms', icon: Play },
   { id: 'instagram', label: 'Instagram', icon: Instagram },
   { id: 'facebook', label: 'Facebook', icon: Facebook },
+  { id: 'youtube', label: 'YouTube', icon: Youtube },
 ]
 
 const typeFilters: { id: FilterType; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'all', label: 'Top', icon: Play },
-  { id: 'reel', label: 'Reels/Videos', icon: Film },
-  { id: 'post', label: 'Posts', icon: ImageIcon },
+  { id: 'reel', label: 'Reels/Shorts', icon: Film },
+  { id: 'post', label: 'Posts/Long Videos', icon: ImageIcon },
 ]
+
+function platformIcon(p: Platform) {
+  if (p === 'instagram') return Instagram
+  if (p === 'facebook') return Facebook
+  return Youtube
+}
+
+function platformBg(p: Platform) {
+  if (p === 'instagram') return 'bg-pink-500/90'
+  if (p === 'facebook') return 'bg-blue-500/90'
+  return 'bg-red-500/90'
+}
+
+function platformSolidBg(p: Platform) {
+  if (p === 'instagram') return 'bg-pink-500'
+  if (p === 'facebook') return 'bg-blue-500'
+  return 'bg-red-500'
+}
 
 export function PortfolioSection() {
   const ref = useRef(null)
@@ -103,13 +141,17 @@ export function PortfolioSection() {
   const [selectedItem, setSelectedItem] = useState<UnifiedItem | null>(null)
   const { data: ig, loading: igLoading, error: igError } = useInstagram()
   const { data: fb, loading: fbLoading, error: fbError } = useFacebook()
+  const { data: yt, loading: ytLoading, error: ytError } = useYouTube()
 
   const allItems = useMemo<UnifiedItem[]>(() => {
     const items: UnifiedItem[] = []
     if (ig) items.push(...ig.media.map(igToUnified))
     if (fb) items.push(...fb.posts.map(fbToUnified))
-    return items.sort((a, b) => (b.likes + b.comments) - (a.likes + a.comments))
-  }, [ig, fb])
+    if (yt) items.push(...yt.videos.map(ytToUnified))
+    const score = (i: UnifiedItem) =>
+      i.platform === 'youtube' ? (i.views ?? 0) : (i.likes + i.comments) * 10
+    return items.sort((a, b) => score(b) - score(a))
+  }, [ig, fb, yt])
 
   const filteredItems = useMemo(() => {
     let items = allItems
@@ -118,8 +160,8 @@ export function PortfolioSection() {
     return items.slice(0, 12)
   }, [allItems, platformFilter, typeFilter])
 
-  const loading = igLoading || fbLoading
-  const hasError = !ig && !fb && (igError || fbError)
+  const loading = igLoading || fbLoading || ytLoading
+  const hasError = !ig && !fb && !yt && (igError || fbError || ytError)
 
   return (
     <section id="portfolio" className="py-24 sm:py-32 relative">
@@ -142,10 +184,10 @@ export function PortfolioSection() {
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Live top content from{' '}
-            <span className="text-pink-500 font-semibold">@{ig?.account.username || 'techvyro'}</span>
-            {' '}&{' '}
-            <span className="text-blue-500 font-semibold">{fb?.page.name || 'TechVyro'}</span>
-            {' '}— ranked by real engagement (likes/reactions + comments).
+            <span className="text-pink-500 font-semibold">Instagram</span>,{' '}
+            <span className="text-blue-500 font-semibold">Facebook</span> &{' '}
+            <span className="text-red-500 font-semibold">YouTube</span>
+            {' '}— ranked by real performance.
           </p>
         </motion.div>
 
@@ -166,6 +208,7 @@ export function PortfolioSection() {
                 platformFilter === f.id && "bg-primary text-primary-foreground",
                 f.id === 'instagram' && platformFilter === 'instagram' && "bg-pink-500 hover:bg-pink-600",
                 f.id === 'facebook' && platformFilter === 'facebook' && "bg-blue-500 hover:bg-blue-600",
+                f.id === 'youtube' && platformFilter === 'youtube' && "bg-red-500 hover:bg-red-600",
               )}
             >
               <f.icon className="h-4 w-4" />
@@ -239,7 +282,7 @@ export function PortfolioSection() {
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                          {item.platform === 'instagram' ? <Instagram className="h-10 w-10" /> : <Facebook className="h-10 w-10" />}
+                          {(() => { const Icon = platformIcon(item.platform); return <Icon className="h-10 w-10" /> })()}
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
@@ -248,10 +291,10 @@ export function PortfolioSection() {
                       <div className="absolute top-3 left-3 flex items-center gap-2">
                         <span className={cn(
                           "text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1 text-white",
-                          item.platform === 'instagram' ? "bg-pink-500/90" : "bg-blue-500/90"
+                          platformBg(item.platform)
                         )}>
-                          {item.platform === 'instagram' ? <Instagram className="h-3 w-3" /> : <Facebook className="h-3 w-3" />}
-                          {item.type === 'reel' ? 'Reel' : 'Post'}
+                          {(() => { const Icon = platformIcon(item.platform); return <Icon className="h-3 w-3" /> })()}
+                          {item.platform === 'youtube' ? (item.type === 'reel' ? 'Short' : 'Video') : (item.type === 'reel' ? 'Reel' : 'Post')}
                         </span>
                       </div>
 
@@ -280,7 +323,13 @@ export function PortfolioSection() {
                     </div>
 
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground flex-wrap gap-2">
+                        {item.views !== undefined && (
+                          <div className="flex items-center gap-1">
+                            <Eye className="h-3.5 w-3.5 text-red-500" />
+                            <span className="font-semibold">{formatCount(item.views)}</span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-1">
                           <Heart className="h-3.5 w-3.5 text-pink-500" />
                           <span className="font-semibold">{formatCount(item.likes)}</span>
@@ -295,9 +344,9 @@ export function PortfolioSection() {
                             <span className="font-semibold">{formatCount(item.shares)}</span>
                           </div>
                         )}
-                        <div className="text-[10px] uppercase tracking-wider">
-                          {new Date(item.timestamp).toLocaleDateString(undefined, { month: 'short', year: '2-digit' })}
-                        </div>
+                      </div>
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-2">
+                        {new Date(item.timestamp).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
                       </div>
                     </CardContent>
                   </Card>
@@ -325,6 +374,13 @@ export function PortfolioSection() {
             <a href={fb?.page.link || 'https://facebook.com/techvyroclips'} target="_blank" rel="noopener noreferrer">
               <Facebook className="h-4 w-4 mr-2 text-blue-500" />
               Visit Facebook
+              <ExternalLink className="h-4 w-4 ml-2" />
+            </a>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="rounded-full">
+            <a href={yt?.channel.link || 'https://youtube.com/@techvyro'} target="_blank" rel="noopener noreferrer">
+              <Youtube className="h-4 w-4 mr-2 text-red-500" />
+              Visit YouTube
               <ExternalLink className="h-4 w-4 ml-2" />
             </a>
           </Button>
@@ -384,9 +440,9 @@ export function PortfolioSection() {
                 <div className="flex items-center gap-3 mb-4">
                   <span className={cn(
                     "text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-full text-white flex items-center gap-1",
-                    selectedItem.platform === 'instagram' ? "bg-pink-500" : "bg-blue-500"
+                    platformSolidBg(selectedItem.platform)
                   )}>
-                    {selectedItem.platform === 'instagram' ? <Instagram className="h-3 w-3" /> : <Facebook className="h-3 w-3" />}
+                    {(() => { const Icon = platformIcon(selectedItem.platform); return <Icon className="h-3 w-3" /> })()}
                     {selectedItem.platform}
                   </span>
                   <span className="text-xs text-muted-foreground">
@@ -402,8 +458,14 @@ export function PortfolioSection() {
                   </p>
                 )}
 
-                <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <div className="flex items-center gap-6">
+                <div className="flex items-center justify-between pt-4 border-t border-border flex-wrap gap-4">
+                  <div className="flex items-center gap-6 flex-wrap">
+                    {selectedItem.views !== undefined && (
+                      <div className="flex items-center gap-2">
+                        <Eye className="h-4 w-4 text-red-500" />
+                        <span className="text-sm font-medium">{formatCount(selectedItem.views)}</span>
+                      </div>
+                    )}
                     <div className="flex items-center gap-2">
                       <Heart className="h-4 w-4 text-pink-500" />
                       <span className="text-sm font-medium">{formatCount(selectedItem.likes)}</span>
