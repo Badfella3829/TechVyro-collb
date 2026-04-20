@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { KeyRound, RefreshCw, CheckCircle2, AlertCircle, Instagram, Facebook, Youtube, Loader2 } from 'lucide-react'
+import { KeyRound, RefreshCw, CheckCircle2, AlertCircle, Instagram, Facebook, Youtube, Loader2, MessageCircle, Mail, Activity } from 'lucide-react'
 
 type Status = {
   instagram: { source: string; updatedAt?: string; ageDays?: number; note?: string }
   facebook: { source: string; updatedAt?: string; pageId?: string; neverExpires?: boolean; note?: string }
   youtube: { source: string; neverExpires: boolean; note?: string }
+  whatsapp?: { source: string; neverExpires: boolean; note?: string }
+  gmail?: { source: string; neverExpires: boolean; note?: string }
+  keepAlive?: { running: boolean; lastRunAt: string | null; intervalHours: number }
   appConfigured: boolean
 }
 
@@ -77,18 +80,33 @@ export function TokenManager({ token }: { token: string }) {
           </Button>
         </div>
 
+        {/* Keep-alive banner */}
+        {status?.keepAlive && (
+          <div className={`mb-4 flex items-start gap-2 p-3 rounded-lg text-xs ${status.keepAlive.running ? 'bg-green-500/10 text-green-700 dark:text-green-400' : 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400'}`}>
+            <Activity className={`h-4 w-4 shrink-0 mt-0.5 ${status.keepAlive.running ? 'animate-pulse' : ''}`} />
+            <div>
+              <strong>{status.keepAlive.running ? 'Keep-alive cron running' : 'Keep-alive cron stopped'}</strong>
+              {' — '}
+              checks every {status.keepAlive.intervalHours}h to keep Instagram token alive forever (zero-traffic safe).
+              {status.keepAlive.lastRunAt && (
+                <span className="block opacity-75 mt-0.5">Last run: {new Date(status.keepAlive.lastRunAt).toLocaleString()}</span>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Platform status grid */}
-        <div className="grid sm:grid-cols-3 gap-3 mb-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
           <PlatformCard
             icon={Instagram}
             label="Instagram"
             color="text-pink-500"
             ok={status?.instagram.source === 'stored' || status?.instagram.source === 'env'}
-            permanent={status?.instagram.source === 'stored'}
+            permanent={status?.instagram.source === 'stored' && !!status?.keepAlive?.running}
             detail={
               status?.instagram.updatedAt
-                ? `Last refreshed ${status.instagram.ageDays}d ago — auto-extends every 50d`
-                : 'Using env token — auto-refresh starts on first API call'
+                ? `Refreshed ${status.instagram.ageDays}d ago • cron auto-extends every 50d → never expires`
+                : 'Will be saved + auto-refresh on first API call'
             }
           />
           <PlatformCard
@@ -100,7 +118,7 @@ export function TokenManager({ token }: { token: string }) {
             detail={
               status?.facebook.updatedAt
                 ? `Saved ${new Date(status.facebook.updatedAt).toLocaleDateString()} — never expires ✓`
-                : 'Using env token (expires in ~60d) — exchange below for permanent'
+                : 'Env token (expires in ~60d). Exchange below for permanent ↓'
             }
           />
           <PlatformCard
@@ -109,7 +127,23 @@ export function TokenManager({ token }: { token: string }) {
             color="text-red-500"
             ok={true}
             permanent={true}
-            detail="API key — never expires ✓"
+            detail="API key — Google never expires it"
+          />
+          <PlatformCard
+            icon={MessageCircle}
+            label="WhatsApp"
+            color="text-green-500"
+            ok={true}
+            permanent={true}
+            detail="System User token — permanent until you revoke"
+          />
+          <PlatformCard
+            icon={Mail}
+            label="Gmail"
+            color="text-orange-500"
+            ok={true}
+            permanent={true}
+            detail="App Password — permanent until you revoke"
           />
         </div>
 

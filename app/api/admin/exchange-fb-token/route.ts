@@ -128,8 +128,10 @@ export async function GET(req: Request) {
   if (!bearer || bearer !== expected) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { getStoredTokens, instagramTokenAgeDays } = await import('@/lib/token-store')
+  const { getKeepAliveStatus } = await import('@/lib/token-keepalive')
   const tokens = await getStoredTokens()
   const igAge = await instagramTokenAgeDays()
+  const keepAlive = getKeepAliveStatus()
   return NextResponse.json({
     instagram: tokens.instagram
       ? { updatedAt: tokens.instagram.updatedAt, ageDays: Math.round(igAge), source: 'stored' }
@@ -143,6 +145,9 @@ export async function GET(req: Request) {
         }
       : { source: 'env', note: 'Use POST to exchange a User Token for a never-expiring Page Token.' },
     youtube: { source: 'env', neverExpires: true, note: 'YouTube API keys never expire.' },
+    whatsapp: { source: 'env', neverExpires: true, note: 'System User token — never expires unless revoked.' },
+    gmail: { source: 'env', neverExpires: true, note: 'App Password — never expires unless revoked.' },
+    keepAlive: { running: keepAlive.started, lastRunAt: keepAlive.lastRunAt || null, intervalHours: 24 },
     appConfigured: !!(process.env.FACEBOOK_APP_ID && process.env.FACEBOOK_APP_SECRET),
   })
 }
