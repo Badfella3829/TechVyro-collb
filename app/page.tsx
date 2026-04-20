@@ -17,6 +17,7 @@ import { MediaKitSection } from '@/components/media-kit/media-kit-section'
 import { CollabProcess } from '@/components/process/collab-process'
 import { AvailabilityCalendar } from '@/components/availability/availability-calendar'
 import { ContactSection } from '@/components/contact/contact-section'
+import { FaqSection } from '@/components/faq/faq-section'
 import { Footer } from '@/components/footer/footer'
 import { ClientEffects } from '@/components/effects/client-effects'
 
@@ -55,7 +56,7 @@ export default function Home() {
       <LatestFeed />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 4 — STORY: Who we are & why we win                         */}
+      {/* ACT 4 — STORY: Why we win                                      */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
         label="03 — STORY"
@@ -96,21 +97,29 @@ export default function Home() {
         subtitle="A frictionless 4-step collaboration flow"
       />
       <CollabProcess />
+      <MediaKitSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 8 — CONVERT: Engage, book, contact                         */}
+      {/* ACT 8 — ANSWERS: Common questions, clear answers               */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="07 — CONNECT"
+        label="07 — ANSWERS"
+        title="Frequently Asked"
+        subtitle="Everything you wanted to know — answered"
+      />
+      <FaqSection />
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 9 — CONNECT: Final conversion stack (right above footer)   */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="08 — CONNECT"
         title="Let's Build Something Big"
         subtitle="Newsletter · Book a call · Send a brief"
       />
       <NewsletterInline />
       <AvailabilityCalendar />
       <ContactSection />
-
-      {/* Final CTA — Media Kit right above footer */}
-      <MediaKitSection />
 
       <Footer />
     </main>
