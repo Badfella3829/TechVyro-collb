@@ -152,7 +152,7 @@ export function HeroSection() {
         >
           {[
             { value: ready ? formatBig(totals.followers) : '—', label: 'Total Followers' },
-            { value: ready ? formatBig(totals.youtubeViews) : '—', label: 'YouTube Views' },
+            { value: ready ? formatBig(totals.totalViews) : '—', label: 'Total Views' },
             { value: ready ? formatBig(totals.content) : '—', label: 'Posts & Videos' },
           ].map((stat, index) => (
             <div key={index} className="text-center">

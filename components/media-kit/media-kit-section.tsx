@@ -43,7 +43,7 @@ export function MediaKitSection() {
 
   const quickStats = [
     { icon: Users, label: 'Total Followers', value: ready ? formatBig(totals.followers) : '—' },
-    { icon: Eye, label: 'YouTube Views', value: ready ? formatBig(totals.youtubeViews) : '—' },
+    { icon: Eye, label: 'Total Views', value: ready ? formatBig(totals.totalViews) : '—' },
     { icon: Play, label: 'Total Content', value: ready ? formatBig(totals.content) : '—' },
     { icon: Heart, label: 'Avg. Likes/Post', value: ig ? formatBig(ig.computed.avgLikes) : '—' },
     { icon: BarChart3, label: 'Avg. Engagement', value: ready ? `${avgEng}%` : '—' },

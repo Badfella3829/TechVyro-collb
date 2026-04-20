@@ -20,6 +20,9 @@ export function useCombinedStats() {
   const totalContent = igPosts + fbPosts + ytVideos
 
   const ytTotalViews = yt?.channel.totalViews ?? 0
+  const igTotalViews = ig?.computed.totalViews ?? 0
+  const fbTotalViews = fb?.computed.totalViews ?? 0
+  const totalViews = ytTotalViews + igTotalViews + fbTotalViews
 
   const ready = !!ig && !!fb && !!yt
   const loading = igLoading || fbLoading || ytLoading
@@ -34,6 +37,9 @@ export function useCombinedStats() {
       followers: totalFollowers,
       content: totalContent,
       youtubeViews: ytTotalViews,
+      igViews: igTotalViews,
+      fbViews: fbTotalViews,
+      totalViews,
       igFollowers,
       fbFollowers,
       ytSubs,

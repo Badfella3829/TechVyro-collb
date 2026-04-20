@@ -31,6 +31,12 @@ type FBPost = {
   reactions?: { summary?: { total_count?: number } }
   comments?: { summary?: { total_count?: number } }
   shares?: { count?: number }
+  insights?: {
+    data?: Array<{
+      name?: string
+      values?: Array<{ value?: number }>
+    }>
+  }
 }
 
 export async function GET() {
@@ -48,7 +54,7 @@ export async function GET() {
     const pageFields = 'id,name,username,fan_count,followers_count,picture.width(300),about,link'
     const pageUrl = `https://graph.facebook.com/v23.0/${pageId}?fields=${pageFields}&access_token=${token}`
 
-    const postFields = 'id,message,story,created_time,permalink_url,full_picture,attachments{type,media,url,title},reactions.summary(true),comments.summary(true),shares'
+    const postFields = 'id,message,story,created_time,permalink_url,full_picture,attachments{type,media,url,title,subattachments},reactions.summary(true),comments.summary(true),shares'
     const postsUrl = `https://graph.facebook.com/v23.0/${pageId}/posts?fields=${postFields}&limit=50&access_token=${token}`
 
     const [pageRes, postsRes] = await Promise.all([
@@ -73,6 +79,7 @@ export async function GET() {
     let avgReactions = 0
     let avgComments = 0
     let avgEngagement = 0
+    let totalViews = 0
     if (posts.length > 0) {
       const totalReactions = posts.reduce((s, p) => s + (p.reactions?.summary?.total_count || 0), 0)
       const totalComments = posts.reduce((s, p) => s + (p.comments?.summary?.total_count || 0), 0)
@@ -82,6 +89,17 @@ export async function GET() {
         avgEngagement = ((avgReactions + avgComments) / followers) * 100
       }
     }
+
+    // Try to fetch video view counts from page videos endpoint (works without read_insights)
+    try {
+      const videosUrl = `https://graph.facebook.com/v23.0/${pageId}/videos?fields=id,views,length&limit=100&access_token=${token}`
+      const vRes = await fetch(videosUrl, { next: { revalidate: 3600 } })
+      if (vRes.ok) {
+        const vJson = await vRes.json()
+        const videos: Array<{ views?: number }> = vJson.data || []
+        totalViews = videos.reduce((s, v) => s + (v.views || 0), 0)
+      }
+    } catch {}
 
     return NextResponse.json({
       page: {
@@ -99,6 +117,7 @@ export async function GET() {
         avgComments,
         avgEngagement: Number(avgEngagement.toFixed(2)),
         postCount: posts.length,
+        totalViews,
       },
       fetchedAt: new Date().toISOString(),
     })

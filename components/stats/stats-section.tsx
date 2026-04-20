@@ -97,6 +97,9 @@ export function StatsSection() {
       (fb?.computed.postCount ?? fb?.posts.length ?? 0) +
       (yt?.channel.videoCount ?? 0)
     const ytTotalViews = yt?.channel.totalViews ?? 0
+    const igTotalViews = ig?.computed.totalViews ?? 0
+    const fbTotalViews = fb?.computed.totalViews ?? 0
+    const allViews = ytTotalViews + igTotalViews + fbTotalViews
     const avgLikes = ig?.computed.avgLikes ?? 0
     const avgComments = ig?.computed.avgComments ?? 0
     const engagement = ig?.computed.avgEngagement ?? 0
@@ -104,7 +107,7 @@ export function StatsSection() {
     const avgComm = avgComments
     return [
       { icon: Users, value: totalFollowers, suffix: '', label: 'Total Followers', color: 'bg-primary/20 text-primary' },
-      { icon: Eye, value: ytTotalViews, suffix: '', label: 'YouTube Views', color: 'bg-red-500/20 text-red-500' },
+      { icon: Eye, value: allViews, suffix: '', label: 'Total Views', color: 'bg-red-500/20 text-red-500' },
       { icon: Play, value: totalPosts, suffix: '', label: 'Total Content', color: 'bg-secondary/20 text-secondary' },
       { icon: Heart, value: avgLikes, suffix: '', label: 'Avg. Likes / Post', color: 'bg-accent/20 text-accent' },
       { icon: MessageCircle, value: avgComm, suffix: '', label: 'Avg. Comments', color: 'bg-primary/20 text-primary' },
@@ -177,8 +180,8 @@ export function StatsSection() {
               ready={
                 stat.label === 'Total Followers'
                   ? !!ig && !!fb && !!yt
-                  : stat.label === 'YouTube Views'
-                  ? !!yt
+                  : stat.label === 'Total Views'
+                  ? !!ig && !!fb && !!yt
                   : stat.label === 'Total Content'
                   ? !!ig && !!fb && !!yt
                   : !!ig

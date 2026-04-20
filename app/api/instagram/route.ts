@@ -14,6 +14,7 @@ type IGAccount = {
 type IGMedia = {
   id: string
   media_type: string
+  media_product_type?: string
   media_url?: string
   thumbnail_url?: string
   permalink: string
@@ -21,6 +22,7 @@ type IGMedia = {
   timestamp: string
   like_count?: number
   comments_count?: number
+  view_count?: number
 }
 
 export async function GET() {
@@ -37,7 +39,7 @@ export async function GET() {
   try {
     const accountFields = 'username,followers_count,media_count,profile_picture_url,biography,name'
     const accountUrl = `https://graph.instagram.com/v23.0/${userId}?fields=${accountFields}&access_token=${token}`
-    const mediaFields = 'id,media_type,media_url,thumbnail_url,permalink,caption,timestamp,like_count,comments_count'
+    const mediaFields = 'id,media_type,media_product_type,media_url,thumbnail_url,permalink,caption,timestamp,like_count,comments_count,view_count'
     const mediaUrl = `https://graph.instagram.com/v23.0/${userId}/media?fields=${mediaFields}&limit=50&access_token=${token}`
 
     const [accountRes, mediaRes] = await Promise.all([
@@ -60,6 +62,7 @@ export async function GET() {
     let avgEngagement = 0
     let avgLikes = 0
     let avgComments = 0
+    let totalViews = 0
     if (media.length > 0) {
       const totalLikes = media.reduce((s, m) => s + (m.like_count || 0), 0)
       const totalComments = media.reduce((s, m) => s + (m.comments_count || 0), 0)
@@ -68,6 +71,27 @@ export async function GET() {
       if (account.followers_count > 0) {
         avgEngagement = ((avgLikes + avgComments) / account.followers_count) * 100
       }
+
+      // Fetch view insights for each REELS media (parallel)
+      const reels = media.filter((m) => m.media_product_type === 'REELS')
+      const insightResults = await Promise.allSettled(
+        reels.map((m) =>
+          fetch(
+            `https://graph.instagram.com/v23.0/${m.id}/insights?metric=views&access_token=${token}`,
+            { next: { revalidate: 3600 } }
+          ).then((r) => (r.ok ? r.json() : null))
+        )
+      )
+      let reelViews = 0
+      insightResults.forEach((res, i) => {
+        if (res.status === 'fulfilled' && res.value?.data) {
+          const v = res.value.data.find((d: { name?: string }) => d.name === 'views')
+          const count = v?.values?.[0]?.value || 0
+          reelViews += count
+          if (reels[i]) reels[i].view_count = count
+        }
+      })
+      totalViews = reelViews
     }
 
     return NextResponse.json({
@@ -77,6 +101,7 @@ export async function GET() {
         avgLikes,
         avgComments,
         avgEngagement: Number(avgEngagement.toFixed(2)),
+        totalViews,
       },
       fetchedAt: new Date().toISOString(),
     })

@@ -28,6 +28,7 @@ export type InstagramData = {
     avgLikes: number
     avgComments: number
     avgEngagement: number
+    totalViews: number
   }
   fetchedAt: string
 }

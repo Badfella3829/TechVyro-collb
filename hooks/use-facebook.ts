@@ -38,6 +38,7 @@ export type FacebookData = {
     avgComments: number
     avgEngagement: number
     postCount: number
+    totalViews: number
   }
   fetchedAt: string
 }
