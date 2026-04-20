@@ -24,23 +24,44 @@ export default function Home() {
     <main className="relative min-h-screen">
       <ClientEffects />
       <Navbar />
+
+      {/* 1. HOOK — Grab attention */}
       <HeroSection />
-      <AboutSection />
+
+      {/* 2. PROOF — Live numbers build instant credibility */}
       <StatsSection />
+
+      {/* 3. SOCIAL PROOF — Brand logos */}
       <BrandsSection />
-      <JourneyTimeline />
-      <PackagesSection />
-      <ROICalculator />
+
+      {/* 4. WORK — Show what we deliver */}
       <PortfolioSection />
       <LatestFeed />
+
+      {/* 5. STORY — Now context makes sense */}
+      <AboutSection />
       <WhyMeSection />
+      <JourneyTimeline />
+
+      {/* 6. VALIDATION — Words from clients & press */}
       <TestimonialsSection />
       <PressSection />
-      <NewsletterInline />
-      <MediaKitSection />
+
+      {/* 7. OFFER — Packages + interactive value */}
+      <PackagesSection />
+      <ROICalculator />
+
+      {/* 8. PROCESS — How collaboration works */}
       <CollabProcess />
+      <MediaKitSection />
+
+      {/* 9. ENGAGE — Stay connected */}
+      <NewsletterInline />
+
+      {/* 10. ACTION — Book & contact */}
       <AvailabilityCalendar />
       <ContactSection />
+
       <Footer />
     </main>
   )
