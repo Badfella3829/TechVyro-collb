@@ -94,10 +94,7 @@ export async function POST(req: Request) {
       )
     }
 
-    // Step 3: persist the never-expiring page token
-    await setFacebookToken(matched.access_token, matched.id, true)
-
-    // Verify by checking debug_token (best-effort, non-fatal)
+    // Step 3a: check expiry of the page token via debug_token
     let expiresAt: number | null = null
     try {
       const dbgUrl = `https://graph.facebook.com/debug_token?input_token=${encodeURIComponent(matched.access_token)}&access_token=${encodeURIComponent(appId + '|' + appSecret)}`
@@ -106,13 +103,27 @@ export async function POST(req: Request) {
       expiresAt = dbgJson.data?.expires_at ?? 0
     } catch {}
 
+    // Step 3b: persist token + the long-lived user token + app creds for auto-refresh
+    await setFacebookToken(matched.access_token, {
+      pageId: matched.id,
+      neverExpires: expiresAt === 0,
+      expiresAt: expiresAt ?? undefined,
+      longLivedUserToken: longUserToken,
+      appId,
+      appSecret,
+    })
+
     return NextResponse.json({
       ok: true,
       pageId: matched.id,
       pageName: matched.name,
       neverExpires: expiresAt === 0,
       expiresAt,
-      message: 'Page Access Token saved. Facebook stats will work indefinitely.',
+      autoRefreshEnabled: true,
+      message:
+        expiresAt === 0
+          ? 'Page Access Token saved — never expires.'
+          : 'Page Access Token saved. Auto-refresh cron will renew it every 50 days, so Facebook stats stay live forever.',
     })
   } catch (err) {
     return NextResponse.json({ error: 'Exchange request failed', details: String(err) }, { status: 500 })
@@ -127,10 +138,11 @@ export async function GET(req: Request) {
   const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : ''
   if (!bearer || bearer !== expected) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { getStoredTokens, instagramTokenAgeDays } = await import('@/lib/token-store')
+  const { getStoredTokens, instagramTokenAgeDays, facebookTokenDaysUntilExpiry } = await import('@/lib/token-store')
   const { getKeepAliveStatus } = await import('@/lib/token-keepalive')
   const tokens = await getStoredTokens()
   const igAge = await instagramTokenAgeDays()
+  const fbDaysLeft = await facebookTokenDaysUntilExpiry()
   const keepAlive = getKeepAliveStatus()
   return NextResponse.json({
     instagram: tokens.instagram
@@ -141,6 +153,8 @@ export async function GET(req: Request) {
           updatedAt: tokens.facebook.updatedAt,
           pageId: tokens.facebook.pageId,
           neverExpires: tokens.facebook.neverExpires ?? false,
+          daysUntilExpiry: Number.isFinite(fbDaysLeft) ? Math.round(fbDaysLeft) : null,
+          autoRefreshReady: !!(tokens.facebook.longLivedUserToken && (tokens.facebook.appId || process.env.FACEBOOK_APP_ID) && (tokens.facebook.appSecret || process.env.FACEBOOK_APP_SECRET)),
           source: 'stored',
         }
       : { source: 'env', note: 'Use POST to exchange a User Token for a never-expiring Page Token.' },

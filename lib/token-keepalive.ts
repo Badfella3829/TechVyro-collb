@@ -1,4 +1,4 @@
-import { maybeRefreshInstagramToken, instagramTokenAgeDays } from './token-store'
+import { maybeRefreshInstagramToken, instagramTokenAgeDays, maybeRefreshFacebookToken, facebookTokenDaysUntilExpiry } from './token-store'
 
 /**
  * Server-side daily keep-alive that guarantees the Instagram long-lived token
@@ -25,10 +25,12 @@ export function startTokenKeepAlive() {
 
   const tick = async () => {
     try {
-      const ageBefore = await instagramTokenAgeDays()
+      const igAge = await instagramTokenAgeDays()
+      const fbDaysLeft = await facebookTokenDaysUntilExpiry()
       await maybeRefreshInstagramToken()
+      await maybeRefreshFacebookToken()
       g[KEY]!.lastRunAt = new Date().toISOString()
-      console.log(`[keep-alive] IG token check — age ${Math.round(ageBefore)}d`)
+      console.log(`[keep-alive] IG age=${Math.round(igAge)}d, FB expires in ${Number.isFinite(fbDaysLeft) ? Math.round(fbDaysLeft) + 'd' : 'never'}`)
     } catch (e) {
       console.warn('[keep-alive] tick failed:', e)
     }

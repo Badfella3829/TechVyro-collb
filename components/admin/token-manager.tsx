@@ -8,7 +8,7 @@ import { KeyRound, RefreshCw, CheckCircle2, AlertCircle, Instagram, Facebook, Yo
 
 type Status = {
   instagram: { source: string; updatedAt?: string; ageDays?: number; note?: string }
-  facebook: { source: string; updatedAt?: string; pageId?: string; neverExpires?: boolean; note?: string }
+  facebook: { source: string; updatedAt?: string; pageId?: string; neverExpires?: boolean; daysUntilExpiry?: number | null; autoRefreshReady?: boolean; note?: string }
   youtube: { source: string; neverExpires: boolean; note?: string }
   whatsapp?: { source: string; neverExpires: boolean; note?: string }
   gmail?: { source: string; neverExpires: boolean; note?: string }
@@ -114,11 +114,15 @@ export function TokenManager({ token }: { token: string }) {
             label="Facebook"
             color="text-blue-500"
             ok={!!status?.facebook}
-            permanent={status?.facebook.neverExpires === true}
+            permanent={status?.facebook.neverExpires === true || status?.facebook.autoRefreshReady === true}
             detail={
-              status?.facebook.updatedAt
-                ? `Saved ${new Date(status.facebook.updatedAt).toLocaleDateString()} — never expires ✓`
-                : 'Env token (expires in ~60d). Exchange below for permanent ↓'
+              status?.facebook.neverExpires
+                ? `Never expires ✓`
+                : status?.facebook.autoRefreshReady
+                ? `${status.facebook.daysUntilExpiry}d left • cron auto-refreshes every 50d → never expires`
+                : status?.facebook.updatedAt
+                ? `${status.facebook.daysUntilExpiry}d left — re-exchange below for auto-refresh`
+                : 'Env token (~60d). Exchange below for permanent ↓'
             }
           />
           <PlatformCard

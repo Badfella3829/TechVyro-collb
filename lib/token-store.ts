@@ -4,7 +4,16 @@ import crypto from 'crypto'
 
 type Tokens = {
   instagram?: { token: string; updatedAt: string }
-  facebook?: { token: string; updatedAt: string; pageId?: string; neverExpires?: boolean }
+  facebook?: {
+    token: string
+    updatedAt: string
+    pageId?: string
+    neverExpires?: boolean
+    expiresAt?: number // unix seconds; 0/undefined = never
+    longLivedUserToken?: string // for auto re-exchange every 50 days
+    appId?: string
+    appSecret?: string
+  }
 }
 
 const DATA_DIR = path.join(process.cwd(), '.data')
@@ -91,10 +100,31 @@ export async function setInstagramToken(token: string): Promise<void> {
   })
 }
 
-export async function setFacebookToken(token: string, pageId?: string, neverExpires = true): Promise<void> {
+export async function setFacebookToken(
+  token: string,
+  opts: {
+    pageId?: string
+    neverExpires?: boolean
+    expiresAt?: number
+    longLivedUserToken?: string
+    appId?: string
+    appSecret?: string
+  } = {}
+): Promise<void> {
   return withLock(async () => {
     const data = await read()
-    data.facebook = { token, updatedAt: new Date().toISOString(), pageId, neverExpires }
+    // Preserve previously-stored long-lived user token / app creds if not re-supplied
+    const prev = data.facebook
+    data.facebook = {
+      token,
+      updatedAt: new Date().toISOString(),
+      pageId: opts.pageId ?? prev?.pageId,
+      neverExpires: opts.neverExpires ?? false,
+      expiresAt: opts.expiresAt,
+      longLivedUserToken: opts.longLivedUserToken ?? prev?.longLivedUserToken,
+      appId: opts.appId ?? prev?.appId,
+      appSecret: opts.appSecret ?? prev?.appSecret,
+    }
     await write(data)
   })
 }
@@ -140,4 +170,76 @@ export async function maybeRefreshInstagramToken(): Promise<void> {
   } catch (e) {
     console.warn('[token-store] IG refresh failed:', e)
   }
+}
+
+/**
+ * Refreshes the Facebook page token (and underlying long-lived user token) before they expire.
+ * Same flow as initial exchange:
+ *   1. fb_exchange_token: long-lived user token -> fresh long-lived user token (60 more days)
+ *   2. /me/accounts with new user token -> fresh page tokens (60 more days)
+ * Only fires if the current page token is within 10 days of expiry.
+ */
+export async function maybeRefreshFacebookToken(): Promise<void> {
+  try {
+    const data = await getStoredTokens()
+    const fb = data.facebook
+    if (!fb || fb.neverExpires) return
+    if (!fb.expiresAt || !fb.longLivedUserToken || !fb.pageId) return
+    const appId = fb.appId || process.env.FACEBOOK_APP_ID
+    const appSecret = fb.appSecret || process.env.FACEBOOK_APP_SECRET
+    if (!appId || !appSecret) return
+
+    const secondsLeft = fb.expiresAt - Math.floor(Date.now() / 1000)
+    if (secondsLeft / 86400 > 10) return // >10 days left, skip
+
+    const exchUrl =
+      `https://graph.facebook.com/v23.0/oauth/access_token?grant_type=fb_exchange_token` +
+      `&client_id=${encodeURIComponent(appId)}&client_secret=${encodeURIComponent(appSecret)}` +
+      `&fb_exchange_token=${encodeURIComponent(fb.longLivedUserToken)}`
+    const exchRes = await fetch(exchUrl, { cache: 'no-store' })
+    const exchJson = await exchRes.json() as { access_token?: string; expires_in?: number }
+    if (!exchRes.ok || !exchJson.access_token) {
+      console.warn('[token-store] FB user-token refresh failed:', exchJson)
+      return
+    }
+    const freshUserToken = exchJson.access_token
+
+    const accountsUrl = `https://graph.facebook.com/v23.0/me/accounts?access_token=${encodeURIComponent(freshUserToken)}`
+    const accountsRes = await fetch(accountsUrl, { cache: 'no-store' })
+    const accountsJson = await accountsRes.json() as { data?: Array<{ id: string; access_token: string; name: string }> }
+    const matched = accountsJson.data?.find((a) => a.id === fb.pageId)
+    if (!matched) {
+      console.warn('[token-store] FB page not found in fresh /me/accounts')
+      return
+    }
+
+    let newExpiresAt: number | undefined
+    try {
+      const dbgUrl = `https://graph.facebook.com/debug_token?input_token=${encodeURIComponent(matched.access_token)}&access_token=${encodeURIComponent(appId + '|' + appSecret)}`
+      const dbgRes = await fetch(dbgUrl, { cache: 'no-store' })
+      const dbgJson = await dbgRes.json() as { data?: { expires_at?: number } }
+      newExpiresAt = dbgJson.data?.expires_at
+    } catch {}
+
+    await setFacebookToken(matched.access_token, {
+      pageId: matched.id,
+      neverExpires: newExpiresAt === 0,
+      expiresAt: newExpiresAt,
+      longLivedUserToken: freshUserToken,
+      appId,
+      appSecret,
+    })
+    console.log('[token-store] Facebook token auto-refreshed')
+  } catch (e) {
+    console.warn('[token-store] FB refresh failed:', e)
+  }
+}
+
+/** Days until the Facebook page token expires (Infinity if never-expires or unknown). */
+export async function facebookTokenDaysUntilExpiry(): Promise<number> {
+  const data = await getStoredTokens()
+  const fb = data.facebook
+  if (!fb) return Infinity
+  if (fb.neverExpires || !fb.expiresAt) return Infinity
+  return (fb.expiresAt - Math.floor(Date.now() / 1000)) / 86400
 }
