@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { sendInquiryWhatsapp } from '@/lib/whatsapp'
 
 export const runtime = 'nodejs'
 
@@ -72,10 +73,28 @@ export async function POST(req: Request) {
       // Filesystem write failed (read-only env). Continue silently — response still goes back.
     }
 
+    const reference = `TV-${Date.now().toString(36).toUpperCase()}`
+
+    // Fire-and-record WhatsApp notification (non-blocking failure).
+    let notification: { delivered: boolean; mode?: string; error?: string } = { delivered: false }
+    try {
+      const r = await sendInquiryWhatsapp({ ...inquiry, reference })
+      if (r.ok) {
+        notification = { delivered: true, mode: r.mode }
+      } else {
+        notification = { delivered: false, error: r.error }
+        console.error('[contact] WhatsApp notify failed:', r.error, r.details)
+      }
+    } catch (err) {
+      notification = { delivered: false, error: String(err) }
+      console.error('[contact] WhatsApp notify threw:', err)
+    }
+
     return NextResponse.json({
       ok: true,
       message: 'Inquiry received. You will hear back within 24 hours.',
-      reference: `TV-${Date.now().toString(36).toUpperCase()}`,
+      reference,
+      notification,
     })
   } catch (err) {
     return NextResponse.json(
