@@ -58,7 +58,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50">
+    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50 mb-2 md:mb-0">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
       
@@ -187,7 +187,7 @@ export function Footer() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="fixed bottom-8 right-8 z-40"
+              className="fixed right-4 sm:right-8 bottom-[calc(88px+env(safe-area-inset-bottom))] md:bottom-8 z-40"
             >
               <Button
                 onClick={scrollToTop}

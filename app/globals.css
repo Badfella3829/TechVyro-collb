@@ -126,7 +126,7 @@
     /* Prevent horizontal overflow on mobile (long marquees, wide tables, etc.) */
     overflow-x: hidden;
     /* Reserve space for the mobile bottom nav so footer/last section is never hidden */
-    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
   }
 
   @media (min-width: 768px) {

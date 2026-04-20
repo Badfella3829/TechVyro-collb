@@ -21,15 +21,39 @@ const navLinks = [
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isHidden, setIsHidden] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+    let lastY = typeof window !== 'undefined' ? window.scrollY : 0
+    let ticking = false
+
+    const update = () => {
+      const y = window.scrollY
+      setIsScrolled(y > 50)
+
+      // Auto-hide on scroll down (after 120px), show on scroll up.
+      // Always show when mobile menu is open or near the top.
+      if (isMobileMenuOpen || y < 120) {
+        setIsHidden(false)
+      } else if (y > lastY + 6) {
+        setIsHidden(true)
+      } else if (y < lastY - 6) {
+        setIsHidden(false)
+      }
+      lastY = y
+      ticking = false
     }
-    window.addEventListener('scroll', handleScroll)
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update)
+        ticking = true
+      }
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isMobileMenuOpen])
 
   const scrollToSection = (href: string) => {
     if (href.startsWith('/')) {
@@ -50,10 +74,10 @@ export function Navbar() {
     <>
       <motion.header
         initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        animate={{ y: isHidden ? -120 : 0 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          "fixed top-0 left-0 right-0 z-50 transition-[background,padding] duration-300",
           isScrolled ? "glass py-2 sm:py-3" : "bg-transparent py-3 sm:py-4"
         )}
       >
