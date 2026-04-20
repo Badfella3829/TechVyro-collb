@@ -163,7 +163,7 @@ export function StatsSection() {
               color={stat.color}
               delay={index * 0.1}
               isInView={isInView}
-              ready={!igLoading || stat.label === 'Years Creating'}
+              ready={!!ig || stat.label === 'Years Creating'}
             />
           ))}
         </div>

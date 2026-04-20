@@ -38,7 +38,7 @@ export async function GET() {
     const accountFields = 'username,followers_count,media_count,profile_picture_url,biography,name'
     const accountUrl = `https://graph.instagram.com/v23.0/${userId}?fields=${accountFields}&access_token=${token}`
     const mediaFields = 'id,media_type,media_url,thumbnail_url,permalink,caption,timestamp,like_count,comments_count'
-    const mediaUrl = `https://graph.instagram.com/v23.0/${userId}/media?fields=${mediaFields}&limit=12&access_token=${token}`
+    const mediaUrl = `https://graph.instagram.com/v23.0/${userId}/media?fields=${mediaFields}&limit=50&access_token=${token}`
 
     const [accountRes, mediaRes] = await Promise.all([
       fetch(accountUrl, { next: { revalidate: 3600 } }),
