@@ -130,7 +130,7 @@ export function PackageRecommender() {
 
         <div className="flex flex-wrap gap-2 mt-6">
           <Button asChild className="flex-1 min-w-[180px]">
-            <a href={`/contact?pkg=${r.pkg}`}>Start with {pkg.name} <ArrowRight className="h-4 w-4 ml-1" /></a>
+            <a href={`/?pkg=${r.pkg}#contact`}>Start with {pkg.name} <ArrowRight className="h-4 w-4 ml-1" /></a>
           </Button>
           <Button variant="outline" onClick={restart}><RefreshCw className="h-3.5 w-3.5 mr-1" /> Try again</Button>
         </div>
