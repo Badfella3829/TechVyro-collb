@@ -41,3 +41,8 @@ WHATSAPP_PHONE_NUMBER_ID = "1041013432434876"
 WHATSAPP_RECIPIENT_NUMBER = "916396094707"
 ADMIN_PASSWORD = "TechVyro@3829"
 NEXT_PUBLIC_SITE_URL = ""
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["pnpm", "run", "start"]
+build = ["pnpm", "run", "build"]
