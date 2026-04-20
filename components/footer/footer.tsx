@@ -15,14 +15,14 @@ import {
 import { Button } from '@/components/ui/button'
 
 const navLinks = [
-  { href: '#about', label: 'About' },
+  { href: '/about', label: 'About', external: true },
   { href: '#stats', label: 'Stats' },
   { href: '#packages', label: 'Packages' },
   { href: '#portfolio', label: 'Portfolio' },
   { href: '#media-kit', label: 'Media Kit' },
   { href: '#availability', label: 'Availability' },
   { href: '#contact', label: 'Contact' },
-]
+] as { href: string; label: string; external?: boolean }[]
 
 const socialLinks = [
   { icon: Youtube, href: 'https://youtube.com/@techvyro', label: 'YouTube', color: 'hover:text-red-500' },
@@ -111,12 +111,21 @@ export function Footer() {
             <ul className="space-y-3">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <button
-                    onClick={() => scrollToSection(link.href)}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
-                    {link.label}
-                  </button>
+                  {link.external ? (
+                    <Link
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => scrollToSection(link.href)}
+                      className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                    >
+                      {link.label}
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

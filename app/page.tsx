@@ -2,7 +2,6 @@ import { Navbar } from '@/components/navigation/navbar'
 import { HeroSection } from '@/components/hero/hero-section'
 import { TrustBar } from '@/components/trust-bar/trust-bar'
 import { SectionDivider } from '@/components/section-divider/section-divider'
-import { AboutSection } from '@/components/about/about-section'
 import { StatsSection } from '@/components/stats/stats-section'
 import { BrandsSection } from '@/components/brands/brands-section'
 import { JourneyTimeline } from '@/components/journey/journey-timeline'
@@ -63,7 +62,6 @@ export default function Home() {
         title="The TechVyro Edge"
         subtitle="Built different. Engineered for ROI."
       />
-      <AboutSection />
       <WhyMeSection />
       <JourneyTimeline />
 
