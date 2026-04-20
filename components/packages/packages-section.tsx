@@ -16,6 +16,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { selectPackage } from '@/lib/select-package'
 
 type CategoryKey = 'all' | 'video' | 'shorts' | 'social' | 'live' | 'premium' | 'bundles'
 
@@ -313,7 +314,12 @@ export function PackagesSection() {
                           <Button 
                             variant="outline" 
                             className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                            onClick={scrollToContact}
+                            onClick={() => selectPackage({
+                              name: pkg.name,
+                              description: pkg.description,
+                              features: pkg.features,
+                              category: category.label,
+                            })}
                           >
                             Get Quote
                             <ChevronRight className="h-4 w-4 ml-1" />

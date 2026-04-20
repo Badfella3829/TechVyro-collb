@@ -37,6 +37,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
+import { PACKAGE_SELECTED_EVENT, mapPackageToCollabType, type SelectedPackage } from '@/lib/select-package'
 
 const COLLAB_EMAIL = 'collab@techvyro.com'
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
@@ -140,6 +141,7 @@ export function ContactSection() {
   const [reference, setReference] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [draftSaved, setDraftSaved] = useState(false)
+  const [selectedPackage, setSelectedPackage] = useState<SelectedPackage | null>(null)
 
   // Restore draft from localStorage
   useEffect(() => {
@@ -152,6 +154,32 @@ export function ContactSection() {
         }
       }
     } catch {}
+  }, [])
+
+  // Listen for package selection from Packages section
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const ce = e as CustomEvent<SelectedPackage>
+      const pkg = ce.detail
+      if (!pkg) return
+      setSelectedPackage(pkg)
+      const mappedType = mapPackageToCollabType(pkg.name)
+      const featureLines = pkg.features?.length
+        ? `\n\nWhat's included in this package:\n${pkg.features.map((f) => `• ${f}`).join('\n')}`
+        : ''
+      const prefilledMessage = `Hi! I'd like a quote for the "${pkg.name}" package${pkg.category ? ` (${pkg.category})` : ''}.\n\n${pkg.description}${featureLines}\n\nPlease share pricing, availability, and next steps.`
+      setForm((prev) => ({
+        ...prev,
+        collabType: mappedType,
+        // Only overwrite message if it's empty or also auto-generated previously
+        message: prev.message && !prev.message.startsWith("Hi! I'd like a quote") ? prev.message : prefilledMessage,
+      }))
+      setErrors({})
+      // Jump to the Campaign step so the user sees the autofilled fields immediately
+      setStep(1)
+    }
+    window.addEventListener(PACKAGE_SELECTED_EVENT, handler as EventListener)
+    return () => window.removeEventListener(PACKAGE_SELECTED_EVENT, handler as EventListener)
   }, [])
 
   // Save draft on change (debounced)
@@ -446,6 +474,49 @@ export function ContactSection() {
                   />
                 ) : (
                   <>
+                    {/* Selected package banner */}
+                    <AnimatePresence>
+                      {selectedPackage && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mx-6 sm:mx-8 mt-6 rounded-xl border border-primary/40 bg-gradient-to-r from-primary/15 via-secondary/10 to-transparent p-4 flex items-start gap-3">
+                            <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs uppercase tracking-wider text-primary font-semibold">
+                                Package Selected
+                              </p>
+                              <p className="text-sm font-bold text-foreground mt-0.5 truncate">
+                                {selectedPackage.name}
+                              </p>
+                              {selectedPackage.category && (
+                                <p className="text-xs text-muted-foreground mt-0.5">
+                                  {selectedPackage.category} • Auto-filled in your brief below
+                                </p>
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedPackage(null)
+                                setForm((prev) => ({
+                                  ...prev,
+                                  collabType: '',
+                                  message: prev.message.startsWith("Hi! I'd like a quote") ? '' : prev.message,
+                                }))
+                              }}
+                              className="text-muted-foreground hover:text-foreground text-xs underline shrink-0"
+                            >
+                              Clear
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     {/* Stepper */}
                     <div className="px-6 sm:px-8 pt-6">
                       <div className="flex items-center gap-2">
