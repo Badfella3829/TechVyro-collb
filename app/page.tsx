@@ -4,9 +4,11 @@ import { TrustBar } from '@/components/trust-bar/trust-bar'
 import { SectionDivider } from '@/components/section-divider/section-divider'
 import { StatsSection } from '@/components/stats/stats-section'
 import { BrandsSection } from '@/components/brands/brands-section'
+import { ServicesGrid } from '@/components/services/services-grid'
 import { JourneyTimeline } from '@/components/journey/journey-timeline'
 import { PackagesSection } from '@/components/packages/packages-section'
 import { ROICalculator } from '@/components/calculators/roi-calculator'
+import { ComparisonTable } from '@/components/comparison/comparison-table'
 import { PortfolioSection } from '@/components/portfolio/portfolio-section'
 import { LatestFeed } from '@/components/feed/latest-feed'
 import { WhyMeSection } from '@/components/why-me/why-me-section'
@@ -20,6 +22,7 @@ import { ContactSection } from '@/components/contact/contact-section'
 import { FaqSection } from '@/components/faq/faq-section'
 import { Footer } from '@/components/footer/footer'
 import { ClientEffects } from '@/components/effects/client-effects'
+import { StickyMobileCta } from '@/components/floating/sticky-mobile-cta'
 
 export default function Home() {
   return (
@@ -45,10 +48,20 @@ export default function Home() {
       <BrandsSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 3 — WORK: Show what we deliver                             */}
+      {/* ACT 3 — SERVICES: What we make                                 */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="02 — WORK"
+        label="02 — SERVICES"
+        title="What We Create"
+        subtitle="8 production formats engineered for tech brands"
+      />
+      <ServicesGrid />
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 4 — WORK: Featured productions                             */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="03 — WORK"
         title="Featured Productions"
         subtitle="From idea to viral — explore our latest"
       />
@@ -56,10 +69,10 @@ export default function Home() {
       <LatestFeed />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 4 — STORY: Why we win                                      */}
+      {/* ACT 5 — STORY: Why we win                                      */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="03 — STORY"
+        label="04 — STORY"
         title="The TechVyro Edge"
         subtitle="Built different. Engineered for ROI."
       />
@@ -67,10 +80,10 @@ export default function Home() {
       <JourneyTimeline />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 5 — VALIDATION: Voices that matter                         */}
+      {/* ACT 6 — VALIDATION: Voices that matter                         */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="04 — VALIDATION"
+        label="05 — VALIDATION"
         title="Brands & Press Speak"
         subtitle="What partners and media say about working with us"
       />
@@ -78,10 +91,10 @@ export default function Home() {
       <PressSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 6 — OFFER: Packages + interactive ROI                      */}
+      {/* ACT 7 — OFFER: Packages + ROI                                  */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="05 — OFFER"
+        label="06 — OFFER"
         title="Pick Your Growth Pack"
         subtitle="Transparent pricing. Calculate your ROI live."
       />
@@ -89,10 +102,20 @@ export default function Home() {
       <ROICalculator />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 7 — PROCESS: How we collaborate                            */}
+      {/* ACT 8 — DIFFERENTIATION: Why TechVyro vs others                */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="06 — PROCESS"
+        label="07 — DIFFERENTIATION"
+        title="Why TechVyro Wins"
+        subtitle="Side-by-side: agency vs solo creator vs us"
+      />
+      <ComparisonTable />
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ACT 9 — PROCESS: How we collaborate                            */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <SectionDivider
+        label="08 — PROCESS"
         title="From Brief to Viral"
         subtitle="A frictionless 4-step collaboration flow"
       />
@@ -100,20 +123,20 @@ export default function Home() {
       <MediaKitSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 8 — ANSWERS: Common questions, clear answers               */}
+      {/* ACT 10 — ANSWERS: FAQ                                          */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="07 — ANSWERS"
+        label="09 — ANSWERS"
         title="Frequently Asked"
         subtitle="Everything you wanted to know — answered"
       />
       <FaqSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* ACT 9 — CONNECT: Final conversion stack (right above footer)   */}
+      {/* ACT 11 — CONNECT: Final conversion stack (right above footer)  */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
-        label="08 — CONNECT"
+        label="10 — CONNECT"
         title="Let's Build Something Big"
         subtitle="Newsletter · Book a call · Send a brief"
       />
@@ -122,6 +145,7 @@ export default function Home() {
       <ContactSection />
 
       <Footer />
+      <StickyMobileCta />
     </main>
   )
 }
