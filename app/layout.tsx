@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
+import { I18nProvider } from '@/lib/i18n/i18n-context'
 import { WhatsAppButton } from '@/components/floating/whatsapp-button'
 import { ExitIntentPopup } from '@/components/exit-intent/exit-intent-popup'
 import { VisitorCounter } from '@/components/visitor-counter/visitor-counter'
@@ -109,12 +110,14 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <div id="main-content"><PageTransition>{children}</PageTransition></div>
-          <WhatsAppButton />
-          <ExitIntentPopup />
-          <VisitorCounter />
-          <CookieConsent />
-          <BottomNav />
+          <I18nProvider>
+            <div id="main-content"><PageTransition>{children}</PageTransition></div>
+            <WhatsAppButton />
+            <ExitIntentPopup />
+            <VisitorCounter />
+            <CookieConsent />
+            <BottomNav />
+          </I18nProvider>
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

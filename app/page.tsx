@@ -22,6 +22,12 @@ import { ContactSection } from '@/components/contact/contact-section'
 import { FaqSection } from '@/components/faq/faq-section'
 import { Footer } from '@/components/footer/footer'
 import { ClientEffects } from '@/components/effects/client-effects'
+import { VideoTestimonials } from '@/components/testimonials/video-testimonials'
+import { PricingCalculator } from '@/components/calculators/pricing-calculator'
+import { AchievementsSection } from '@/components/achievements/achievements-section'
+import { ContentCalendar } from '@/components/calendar/content-calendar'
+import { BehindTheScenes } from '@/components/bts/behind-the-scenes'
+import { ReferralSection } from '@/components/referral/referral-section'
 
 export default function Home() {
   return (
@@ -69,7 +75,9 @@ export default function Home() {
         subtitle="Why we win · How we got here"
       />
       <WhyMeSection />
+      <AchievementsSection />
       <JourneyTimeline />
+      <BehindTheScenes />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 5 — TRUST: Voices that matter (clients + media)            */}
@@ -80,6 +88,7 @@ export default function Home() {
         subtitle="What partners and media say about working with us"
       />
       <TestimonialsSection />
+      <VideoTestimonials />
       <PressSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
@@ -91,6 +100,7 @@ export default function Home() {
         subtitle="Transparent pricing · Calculate ROI · See the difference"
       />
       <PackagesSection />
+      <PricingCalculator />
       <ROICalculator />
       <ComparisonTable />
 
@@ -103,6 +113,7 @@ export default function Home() {
         subtitle="A frictionless 4-step flow · Download our deck"
       />
       <CollabProcess />
+      <ContentCalendar />
       <MediaKitSection />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
@@ -117,13 +128,14 @@ export default function Home() {
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 9 — CONNECT: Final conversion stack (right above footer)   */}
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider
         label="08 — CONNECT"
         title="Let's Build Something Big"
         subtitle="Newsletter · Book a call · Send a brief"
       />
       <NewsletterInline />
+      <ReferralSection />
       <AvailabilityCalendar />
       <ContactSection />
 
