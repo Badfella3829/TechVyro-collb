@@ -47,10 +47,29 @@ export async function GET(req: Request) {
   const pageId = process.env.FACEBOOK_PAGE_ID
 
   if (!token || !pageId) {
-    return NextResponse.json(
-      { error: 'Facebook credentials not configured' },
-      { status: 500 }
-    )
+    // Return placeholder data when credentials not configured
+    return NextResponse.json({
+      page: {
+        id: '',
+        name: 'TechVyro',
+        username: 'techvyro',
+        followers_count: 0,
+        profile_picture_url: '/images/techvyro-icon.jpg',
+        about: 'Tech Content Creator',
+        link: 'https://www.facebook.com/techvyro',
+      },
+      posts: [],
+      videos: [],
+      computed: {
+        avgReactions: 0,
+        avgComments: 0,
+        avgEngagement: 0,
+        postCount: 0,
+        totalViews: 0,
+      },
+      fetchedAt: new Date().toISOString(),
+      isPlaceholder: true,
+    })
   }
 
   try {

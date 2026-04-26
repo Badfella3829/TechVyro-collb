@@ -51,10 +51,28 @@ export async function GET(req: Request) {
   const channelId = process.env.YOUTUBE_CHANNEL_ID
 
   if (!apiKey || !channelId) {
-    return NextResponse.json(
-      { error: 'YouTube credentials not configured' },
-      { status: 500 }
-    )
+    // Return placeholder data when credentials not configured
+    return NextResponse.json({
+      channel: {
+        id: '',
+        title: 'TechVyro',
+        description: 'Tech Content Creator',
+        customUrl: '@techvyro',
+        thumbnail: '/images/techvyro-icon.jpg',
+        subscribers: 0,
+        totalViews: 0,
+        videoCount: 0,
+        link: 'https://www.youtube.com/@techvyro',
+      },
+      videos: [],
+      computed: {
+        avgViews: 0,
+        avgLikes: 0,
+        avgEngagement: 0,
+      },
+      fetchedAt: new Date().toISOString(),
+      isPlaceholder: true,
+    })
   }
 
   try {

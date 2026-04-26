@@ -36,10 +36,26 @@ export async function GET(req: Request) {
   const userId = process.env.INSTAGRAM_USER_ID
 
   if (!token || !userId) {
-    return NextResponse.json(
-      { error: 'Instagram credentials not configured' },
-      { status: 500 }
-    )
+    // Return placeholder data when credentials not configured
+    return NextResponse.json({
+      account: {
+        username: 'techvyro',
+        followers_count: 0,
+        media_count: 0,
+        profile_picture_url: '/images/techvyro-icon.jpg',
+        biography: 'Tech Content Creator',
+        name: 'TechVyro',
+      },
+      media: [],
+      computed: {
+        avgLikes: 0,
+        avgComments: 0,
+        avgEngagement: 0,
+        totalViews: 0,
+      },
+      fetchedAt: new Date().toISOString(),
+      isPlaceholder: true,
+    })
   }
 
   try {
