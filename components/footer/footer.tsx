@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { 
   Youtube, 
   Instagram, 
@@ -33,18 +33,17 @@ const socialLinks = [
 
 export function Footer() {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { once: true })
   const [showBackToTop, setShowBackToTop] = useState(false)
   
-  // Scroll-based reveal animation
+  // Scroll-based reveal animation - starts visible then enhances on scroll
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end end"]
   })
   
-  const y = useTransform(scrollYProgress, [0, 1], [80, 0])
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1])
-  const scale = useTransform(scrollYProgress, [0, 1], [0.97, 1])
+  const y = useTransform(scrollYProgress, [0, 1], [30, 0])
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [0.7, 1])
+  const scale = useTransform(scrollYProgress, [0, 1], [0.99, 1])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,15 +101,13 @@ export function Footer() {
       
       <motion.div 
         className="container mx-auto px-4 sm:px-6 lg:px-8 relative"
-        style={{ y, opacity, scale }}
+        initial={{ opacity: 0.7, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        style={{ y, scale }}
       >
         {/* Main footer content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12"
-        >
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
@@ -139,10 +136,10 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className={`p-2.5 rounded-full glass-soft text-muted-foreground ${social.color} transition-all hover:scale-110 hover:shadow-lg`}
                   aria-label={social.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.3 + idx * 0.1 }}
-                  whileHover={{ y: -3 }}
+                  initial={{ opacity: 0.8, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
+                  whileHover={{ y: -3, scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <social.icon className="h-5 w-5" />
@@ -195,18 +192,13 @@ export function Footer() {
               </li>
             </ul>
           </div>
-        </motion.div>
+        </div>
 
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-8" />
 
         {/* Bottom bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground text-center sm:text-left">
             &copy; {currentYear} TechVyro. All rights reserved.
           </p>
@@ -220,13 +212,10 @@ export function Footer() {
             </Link>
           </div>
 
-          <motion.p 
-            className="text-xs text-muted-foreground flex items-center gap-1"
-            whileHover={{ scale: 1.05 }}
-          >
+          <p className="text-xs text-muted-foreground flex items-center gap-1 hover:scale-105 transition-transform cursor-default">
             Made with <Heart className="h-3 w-3 text-secondary fill-secondary animate-pulse" /> in India
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
       </motion.div>
 
         {/* Back to top button */}
