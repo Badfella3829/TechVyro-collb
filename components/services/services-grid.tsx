@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Youtube, Instagram, Film, Megaphone, Star, GraduationCap, Mic, Sparkles } from 'lucide-react'
+import { TiltCard } from '@/components/ui/tilt-card'
 
 const SERVICES = [
   {
@@ -72,7 +73,9 @@ const SERVICES = [
 
 export function ServicesGrid() {
   return (
-    <section id="services" className="py-16 sm:py-24 px-4 relative overflow-hidden">
+    <section id="services" className="py-20 sm:py-28 px-4 relative overflow-hidden section-alt">
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative">
@@ -99,28 +102,38 @@ export function ServicesGrid() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
-                className={`group relative glass border border-border/50 rounded-2xl p-5 hover:border-primary/40 hover:-translate-y-1 transition-all overflow-hidden`}
               >
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none`}
-                />
-                <div className="relative">
-                  <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${service.iconBg} mb-4`}>
-                    <Icon className="h-5 w-5" />
+                <TiltCard 
+                  className="h-full"
+                  tiltAmount={8}
+                  scale={1.02}
+                  glare={true}
+                >
+                  <div
+                    className={`group relative glass-card border border-border/30 rounded-2xl p-5 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 transition-all overflow-hidden cursor-pointer h-full`}
+                  >
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-2xl`}
+                    />
+                    <div className="relative">
+                      <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${service.iconBg} mb-4`}>
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="font-bold text-base mb-1.5">{service.title}</h3>
+                      <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{service.desc}</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {service.tags.map((t) => (
+                          <span
+                            key={t}
+                            className="text-[10px] px-2 py-0.5 rounded-full bg-muted/40 border border-border/40 text-muted-foreground"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="font-bold text-base mb-1.5">{service.title}</h3>
-                  <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{service.desc}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {service.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="text-[10px] px-2 py-0.5 rounded-full bg-muted/40 border border-border/40 text-muted-foreground"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                </TiltCard>
               </motion.div>
             )
           })}

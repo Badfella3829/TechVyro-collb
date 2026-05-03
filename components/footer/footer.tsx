@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { 
   Youtube, 
   Instagram, 
@@ -32,9 +32,18 @@ const socialLinks = [
 ]
 
 export function Footer() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const ref = useRef<HTMLElement>(null)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  
+  // Scroll-based reveal animation - starts visible then enhances on scroll
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end end"]
+  })
+  
+  const y = useTransform(scrollYProgress, [0, 1], [30, 0])
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [0.7, 1])
+  const scale = useTransform(scrollYProgress, [0, 1], [0.99, 1])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,18 +67,47 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50 mb-2 md:mb-0">
+    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50 mb-2 md:mb-0 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 grid-pattern-subtle opacity-20 pointer-events-none" />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+      {/* Animated glow orbs */}
+      <motion.div
+        className="absolute -top-20 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute -top-10 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none"
+        animate={{
+          scale: [1.2, 1, 1.2],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
+      />
+      
+      <motion.div 
+        className="container mx-auto px-4 sm:px-6 lg:px-8 relative"
+        initial={{ opacity: 0.7, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        style={{ y, scale }}
+      >
         {/* Main footer content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12"
-        >
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
@@ -90,17 +128,22 @@ export function Footer() {
             </p>
             {/* Social links */}
             <div className="flex items-center gap-4">
-              {socialLinks.map((social) => (
-                <a
+              {socialLinks.map((social, idx) => (
+                <motion.a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`p-2 rounded-full glass text-muted-foreground ${social.color} transition-colors`}
+                  className={`p-2.5 rounded-full glass-soft text-muted-foreground ${social.color} transition-all hover:scale-110 hover:shadow-lg`}
                   aria-label={social.label}
+                  initial={{ opacity: 0.8, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
+                  whileHover={{ y: -3, scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <social.icon className="h-5 w-5" />
-                </a>
+                </motion.a>
               ))}
             </div>
           </div>
@@ -149,18 +192,13 @@ export function Footer() {
               </li>
             </ul>
           </div>
-        </motion.div>
+        </div>
 
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-8" />
 
         {/* Bottom bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground text-center sm:text-left">
             &copy; {currentYear} TechVyro. All rights reserved.
           </p>
@@ -174,10 +212,11 @@ export function Footer() {
             </Link>
           </div>
 
-          <p className="text-xs text-muted-foreground flex items-center gap-1">
-            Made with <Heart className="h-3 w-3 text-secondary fill-secondary" /> in India
+          <p className="text-xs text-muted-foreground flex items-center gap-1 hover:scale-105 transition-transform cursor-default">
+            Made with <Heart className="h-3 w-3 text-secondary fill-secondary animate-pulse" /> in India
           </p>
-        </motion.div>
+        </div>
+      </motion.div>
 
         {/* Back to top button */}
         <AnimatePresence>
@@ -200,7 +239,6 @@ export function Footer() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
     </footer>
   )
 }

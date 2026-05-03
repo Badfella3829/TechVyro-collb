@@ -42,6 +42,36 @@ const STUDIES: Record<string, CaseStudy> = {
     outcome:
       'Compounding reach across 3 platforms with one consistent narrative — better than spreading the same budget across one-off campaigns.',
   },
+  'viral-unboxing-campaign': {
+    slug: 'viral-unboxing-campaign',
+    title: 'Viral Unboxing Campaign',
+    challenge:
+      'Traditional product photos and spec sheets fail to create emotional connection. Brands need content that makes viewers feel like they already own the product.',
+    approach: [
+      'Pre-launch teaser: mysterious close-up shots hinting at the product design.',
+      'Unboxing day: cinematic unboxing video with ASMR-quality audio and genuine first reactions.',
+      'Deep-dive review: technical breakdown with real-world usage scenarios.',
+      'User showcase: featuring customer unboxings and reactions to build social proof.',
+    ],
+    deliverables: ['1 Teaser Reel (15s)', '1 Full Unboxing (3-5 min)', '1 Review Video (8-12 min)', 'UGC compilation reel'],
+    outcome:
+      'Average of 10x organic shares compared to standard review content. Unboxing videos continue driving search traffic 6+ months after publication.',
+  },
+  'community-driven-launch': {
+    slug: 'community-driven-launch',
+    title: 'Community-Driven Launch',
+    challenge:
+      'Paid advertising costs are rising while effectiveness drops. Brands need organic growth strategies that leverage existing community for amplification.',
+    approach: [
+      'Beta access: exclusive early access to engaged community members for testing and feedback.',
+      'Ambassador program: identifying and nurturing superfans who naturally promote the product.',
+      'User-generated content: incentivizing and showcasing customer content across channels.',
+      'Community events: live sessions, Q&As, and exclusive reveals to build anticipation.',
+    ],
+    deliverables: ['Community strategy document', 'Ambassador outreach templates', 'UGC campaign kit', 'Live event production (2 sessions)'],
+    outcome:
+      '50% lower customer acquisition cost compared to paid-only campaigns. Higher retention rates as customers feel invested in the brand success.',
+  },
 }
 
 export function generateStaticParams() {

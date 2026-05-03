@@ -4,12 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* TechVyro Dark Theme with Neon Accents */
-  --background: oklch(0.12 0.02 260);
+  /* TechVyro Dark Theme - Manoj Hankare inspired darker base with neon accents */
+  --background: oklch(0.08 0.015 260);
   --foreground: oklch(0.98 0 0);
-  --card: oklch(0.15 0.02 260);
+  --card: oklch(0.11 0.018 260);
   --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.15 0.02 260);
+  --popover: oklch(0.11 0.018 260);
   --popover-foreground: oklch(0.98 0 0);
   
   /* Primary: Cyan/Teal */
@@ -30,8 +30,8 @@
   
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.28 0.03 260);
-  --input: oklch(0.22 0.02 260);
+  --border: oklch(0.20 0.025 260);
+  --input: oklch(0.15 0.02 260);
   --ring: oklch(0.85 0.18 195);
   
   /* Chart colors - neon palette */
@@ -53,11 +53,11 @@
 }
 
 .dark {
-  --background: oklch(0.12 0.02 260);
+  --background: oklch(0.08 0.015 260);
   --foreground: oklch(0.98 0 0);
-  --card: oklch(0.15 0.02 260);
+  --card: oklch(0.11 0.018 260);
   --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.15 0.02 260);
+  --popover: oklch(0.11 0.018 260);
   --popover-foreground: oklch(0.98 0 0);
   --primary: oklch(0.85 0.18 195);
   --primary-foreground: oklch(0.12 0.02 260);
@@ -69,8 +69,8 @@
   --accent-foreground: oklch(0.12 0.02 260);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.28 0.03 260);
-  --input: oklch(0.22 0.02 260);
+  --border: oklch(0.20 0.025 260);
+  --input: oklch(0.15 0.02 260);
   --ring: oklch(0.85 0.18 195);
   --chart-1: oklch(0.85 0.18 195);
   --chart-2: oklch(0.65 0.25 310);
@@ -135,9 +135,8 @@
     }
   }
 
-  /* Smooth scrolling */
+  /* Text sizing and base styles - smooth scrolling handled by Lenis */
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
 
@@ -198,11 +197,27 @@
     z-index: -1;
   }
   
-  /* Glass effect */
+  /* Glass effect - refined Manoj style */
   .glass {
-    background: oklch(0.15 0.02 260 / 0.8);
+    background: oklch(0.10 0.015 260 / 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid oklch(0.98 0 0 / 0.08);
+  }
+  
+  .glass-soft {
+    background: oklch(0.10 0.015 260 / 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid oklch(0.98 0 0 / 0.05);
+  }
+  
+  .glass-card {
+    background: linear-gradient(
+      135deg,
+      oklch(0.12 0.018 260 / 0.9) 0%,
+      oklch(0.10 0.015 260 / 0.8) 100%
+    );
     backdrop-filter: blur(12px);
-    border: 1px solid oklch(0.98 0 0 / 0.1);
+    border: 1px solid oklch(0.98 0 0 / 0.08);
   }
 }
 
@@ -213,5 +228,48 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  
+  /* Grid pattern background - Manoj Hankare style */
+  .grid-pattern {
+    background-image: 
+      linear-gradient(to right, oklch(0.20 0.02 260 / 0.3) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0.20 0.02 260 / 0.3) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  
+  .grid-pattern-subtle {
+    background-image: 
+      linear-gradient(to right, oklch(0.15 0.02 260 / 0.2) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0.15 0.02 260 / 0.2) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+  
+  /* Dot pattern background */
+  .dot-pattern {
+    background-image: radial-gradient(oklch(0.25 0.02 260 / 0.4) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  
+  /* Enhanced card hover effect */
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 
+      0 20px 40px -10px oklch(0 0 0 / 0.5),
+      0 0 30px -5px var(--neon-cyan-glow);
+  }
+  
+  /* Section background variants */
+  .section-alt {
+    background: linear-gradient(
+      180deg,
+      oklch(0.08 0.015 260) 0%,
+      oklch(0.10 0.018 260) 50%,
+      oklch(0.08 0.015 260) 100%
+    );
   }
 }

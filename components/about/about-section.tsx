@@ -25,7 +25,10 @@ export function AboutSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section id="about" className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
+    <section id="about" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+      {/* Grid pattern background */}
+      <div className="absolute inset-0 grid-pattern-subtle opacity-30" />
+      
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-primary/5 to-transparent rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-secondary/5 to-transparent rounded-full blur-3xl" />
@@ -115,8 +118,9 @@ export function AboutSection() {
                       key={platform.label}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                      whileHover={{ scale: 1.05, y: -2 }}
                       transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                      className="flex items-center gap-2 glass px-4 py-2 rounded-full"
+                      className="flex items-center gap-2 glass-soft px-4 py-2 rounded-full cursor-pointer hover:border-primary/30 border border-transparent transition-colors"
                     >
                       <platform.icon className={`h-5 w-5 ${platform.color}`} />
                       <span className="text-sm font-medium">{platform.label}</span>
