@@ -22,13 +22,49 @@ const textVariants = {
 }
 
 const glowVariants = {
-  initial: { opacity: 0.5 },
+  initial: { opacity: 0.4, scale: 1 },
   animate: {
-    opacity: [0.5, 1, 0.5],
+    opacity: [0.4, 0.8, 0.4],
+    scale: [1, 1.1, 1],
     transition: {
-      duration: 2,
+      duration: 3,
       repeat: Infinity,
       ease: "easeInOut",
+    },
+  },
+}
+
+const floatingVariants = {
+  initial: { y: 0 },
+  animate: {
+    y: [-8, 8, -8],
+    transition: {
+      duration: 4,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  },
+}
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.3,
+    },
+  },
+}
+
+const fadeUpItem = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
 }
@@ -51,6 +87,12 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Grid pattern background */}
+      <div className="absolute inset-0 grid-pattern-subtle opacity-40" />
+      
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+      
       {/* 3D Particle Background */}
       <ParticleField />
       
@@ -62,14 +104,19 @@ export function HeroSection() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-8"
         >
-          {/* Logo */}
-          <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-6">
+          {/* Logo with floating animation */}
+          <motion.div 
+            variants={floatingVariants}
+            initial="initial"
+            animate="animate"
+            className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-6"
+          >
             <Image
               src="/images/techvyro-icon.jpg"
               alt="TechVyro Logo"
               fill
               sizes="(max-width: 640px) 128px, 160px"
-              className="object-contain rounded-2xl"
+              className="object-contain rounded-2xl ring-2 ring-primary/20"
               priority
             />
             {/* Glow effect behind logo */}
@@ -79,7 +126,21 @@ export function HeroSection() {
               animate="animate"
               className="absolute inset-0 -z-10 bg-primary/30 blur-3xl rounded-full scale-150"
             />
-          </div>
+            {/* Secondary glow */}
+            <motion.div
+              animate={{
+                opacity: [0.2, 0.5, 0.2],
+                scale: [1.2, 1.4, 1.2],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+              className="absolute inset-0 -z-20 bg-secondary/20 blur-[60px] rounded-full scale-150"
+            />
+          </motion.div>
         </motion.div>
 
         {/* Main heading */}
@@ -149,21 +210,26 @@ export function HeroSection() {
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-8 lg:gap-12 w-full max-w-md sm:max-w-none mx-auto px-4 sm:px-0"
+          className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-6 lg:gap-10 w-full max-w-md sm:max-w-none mx-auto px-4 sm:px-0"
         >
           {[
             { value: ready ? formatBig(totals.followers) : '—', label: 'Followers' },
             { value: ready ? formatBig(totals.totalViews) : '—', label: 'Views' },
             { value: ready ? formatBig(totals.content) : '—', label: 'Posts' },
           ].map((stat, index) => (
-            <div key={index} className="text-center">
+            <motion.div 
+              key={index} 
+              className="text-center px-4 py-3 rounded-xl glass-soft"
+              whileHover={{ scale: 1.05, y: -2 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
               <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary">
                 {stat.value}
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground">
                 {stat.label}
               </div>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>

@@ -7,6 +7,7 @@ import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { LangToggle } from '@/components/i18n/lang-toggle'
+import { CursorModeSelector } from '@/components/effects/cursor-mode-selector'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -118,6 +119,7 @@ export function Navbar() {
 
             {/* CTA Button + toggles */}
             <div className="hidden md:flex items-center gap-2">
+              <CursorModeSelector />
               <LangToggle />
               <ThemeToggle />
               <Button

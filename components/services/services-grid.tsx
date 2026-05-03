@@ -72,7 +72,9 @@ const SERVICES = [
 
 export function ServicesGrid() {
   return (
-    <section id="services" className="py-16 sm:py-24 px-4 relative overflow-hidden">
+    <section id="services" className="py-20 sm:py-28 px-4 relative overflow-hidden section-alt">
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative">
@@ -97,9 +99,10 @@ export function ServicesGrid() {
                 key={service.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -6, scale: 1.02 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
-                className={`group relative glass border border-border/50 rounded-2xl p-5 hover:border-primary/40 hover:-translate-y-1 transition-all overflow-hidden`}
+                className={`group relative glass-card border border-border/30 rounded-2xl p-5 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 transition-all overflow-hidden cursor-pointer`}
               >
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none`}
