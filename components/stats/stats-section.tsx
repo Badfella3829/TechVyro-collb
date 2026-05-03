@@ -25,12 +25,44 @@ interface StatItemProps {
   isInView: boolean
 }
 
+// Rolling digit component for slot-machine effect
+function RollingDigit({ digit, delay }: { digit: string; delay: number }) {
+  const isNumber = !isNaN(parseInt(digit))
+  
+  if (!isNumber) {
+    return <span className="inline-block">{digit}</span>
+  }
+  
+  return (
+    <span className="inline-block relative overflow-hidden h-[1.2em] w-[0.65em]">
+      <motion.span
+        className="absolute inset-0 flex flex-col items-center"
+        initial={{ y: '-100%' }}
+        animate={{ y: `${-parseInt(digit) * 10}%` }}
+        transition={{
+          duration: 1.5,
+          delay,
+          ease: [0.25, 0.46, 0.45, 0.94],
+        }}
+      >
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+          <span key={n} className="h-[1.2em] flex items-center justify-center">
+            {n}
+          </span>
+        ))}
+      </motion.span>
+    </span>
+  )
+}
+
 function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean }) {
-  const [count, setCount] = useState(0)
+  const [displayValue, setDisplayValue] = useState(0)
+  const [hasAnimated, setHasAnimated] = useState(false)
   
   useEffect(() => {
-    if (!isInView) return
+    if (!isInView || hasAnimated) return
     
+    setHasAnimated(true)
     let start = 0
     const duration = 2000
     const increment = value / (duration / 16)
@@ -38,17 +70,27 @@ function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean
     const timer = setInterval(() => {
       start += increment
       if (start >= value) {
-        setCount(value)
+        setDisplayValue(value)
         clearInterval(timer)
       } else {
-        setCount(Math.floor(start))
+        setDisplayValue(Math.floor(start))
       }
     }, 16)
     
     return () => clearInterval(timer)
-  }, [value, isInView])
+  }, [value, isInView, hasAnimated])
   
-  return <span>{count.toLocaleString()}</span>
+  // Format number with commas and use rolling digits
+  const formattedValue = displayValue.toLocaleString()
+  const chars = formattedValue.split('')
+  
+  return (
+    <span className="inline-flex tabular-nums">
+      {chars.map((char, i) => (
+        <RollingDigit key={i} digit={char} delay={i * 0.05} />
+      ))}
+    </span>
+  )
 }
 
 function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView, ready }: StatItemProps & { ready: boolean }) {
