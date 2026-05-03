@@ -135,9 +135,8 @@
     }
   }
 
-  /* Smooth scrolling */
+  /* Text sizing and base styles - smooth scrolling handled by Lenis */
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
 

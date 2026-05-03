@@ -147,7 +147,8 @@ export function TestimonialsSection() {
         <div className="relative max-w-4xl mx-auto">
           {/* Main Carousel */}
           <div 
-            className="relative h-[320px] sm:h-[280px] perspective-1000"
+            className="relative h-[320px] sm:h-[280px]"
+            style={{ perspective: '1000px' }}
             onMouseEnter={() => setIsDragging(true)}
             onMouseLeave={() => setIsDragging(false)}
           >

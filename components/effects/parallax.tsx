@@ -37,7 +37,7 @@ export function Parallax({
   return (
     <motion.div
       ref={ref}
-      style={{ x, y }}
+      style={{ x, y, position: 'relative' }}
       className={className}
     >
       {children}
@@ -69,7 +69,7 @@ export function ParallaxLayer({
   return (
     <motion.div
       ref={ref}
-      style={{ y, opacity }}
+      style={{ y, opacity, position: 'relative' }}
       className={className}
     >
       {children}
@@ -96,7 +96,7 @@ export function ParallaxBackground({ className = "" }: ParallaxBackgroundProps) 
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0.5])
 
   return (
-    <div ref={ref} className={`absolute inset-0 overflow-hidden ${className}`}>
+    <div ref={ref} className={`absolute inset-0 overflow-hidden ${className}`} style={{ position: 'absolute' }}>
       {/* Layer 1 - Slowest */}
       <motion.div
         style={{ y: y1, opacity }}
