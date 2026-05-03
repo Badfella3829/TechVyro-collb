@@ -58,8 +58,16 @@ export async function GET(req: Request) {
   }
 
   try {
+    const cacheOptions = forceRefresh ? { cache: "no-store" as const } : { next: { revalidate: 3600 } }
+    
+    // Fetch channel and search in parallel for faster loading
     const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${channelId}&key=${apiKey}`
-    const channelRes = await fetch(channelUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } })
+    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=viewCount&maxResults=20&type=video&key=${apiKey}`
+    
+    const [channelRes, searchRes] = await Promise.all([
+      fetch(channelUrl, cacheOptions),
+      fetch(searchUrl, cacheOptions),
+    ])
 
     if (!channelRes.ok) {
       const text = await channelRes.text()
@@ -75,16 +83,13 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Channel not found' }, { status: 404 })
     }
 
-    // Get most popular videos via search (ordered by viewCount)
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=viewCount&maxResults=20&type=video&key=${apiKey}`
-    const searchRes = await fetch(searchUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } })
     const searchJson = searchRes.ok ? await searchRes.json() : { items: [] }
     const videoIds: string[] = (searchJson.items || []).map((it: { id: { videoId: string } }) => it.id.videoId).filter(Boolean)
 
     let videos: YTVideo[] = []
     if (videoIds.length > 0) {
       const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoIds.join(',')}&key=${apiKey}`
-      const videosRes = await fetch(videosUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } })
+      const videosRes = await fetch(videosUrl, cacheOptions)
       if (videosRes.ok) {
         const videosJson = await videosRes.json()
         videos = videosJson.items || []
@@ -146,6 +151,10 @@ export async function GET(req: Request) {
       },
       fetchedAt: new Date().toISOString(),
     })
+    
+    // Add cache headers for faster subsequent loads
+    response.headers.set('Cache-Control', 's-maxage=3600, stale-while-revalidate=7200')
+    return response
   } catch (err) {
     return NextResponse.json(
       { error: 'YouTube API request failed', details: String(err) },
