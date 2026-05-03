@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { 
   Youtube, 
   Instagram, 
@@ -32,9 +32,19 @@ const socialLinks = [
 ]
 
 export function Footer() {
-  const ref = useRef(null)
+  const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { once: true })
   const [showBackToTop, setShowBackToTop] = useState(false)
+  
+  // Scroll-based reveal animation
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end end"]
+  })
+  
+  const y = useTransform(scrollYProgress, [0, 1], [80, 0])
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1])
+  const scale = useTransform(scrollYProgress, [0, 1], [0.97, 1])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,11 +68,42 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50 mb-2 md:mb-0">
+    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50 mb-2 md:mb-0 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 grid-pattern-subtle opacity-20 pointer-events-none" />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+      {/* Animated glow orbs */}
+      <motion.div
+        className="absolute -top-20 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute -top-10 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none"
+        animate={{
+          scale: [1.2, 1, 1.2],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
+      />
+      
+      <motion.div 
+        className="container mx-auto px-4 sm:px-6 lg:px-8 relative"
+        style={{ y, opacity, scale }}
+      >
         {/* Main footer content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -90,17 +131,22 @@ export function Footer() {
             </p>
             {/* Social links */}
             <div className="flex items-center gap-4">
-              {socialLinks.map((social) => (
-                <a
+              {socialLinks.map((social, idx) => (
+                <motion.a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`p-2 rounded-full glass text-muted-foreground ${social.color} transition-colors`}
+                  className={`p-2.5 rounded-full glass-soft text-muted-foreground ${social.color} transition-all hover:scale-110 hover:shadow-lg`}
                   aria-label={social.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.3 + idx * 0.1 }}
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <social.icon className="h-5 w-5" />
-                </a>
+                </motion.a>
               ))}
             </div>
           </div>
@@ -174,10 +220,14 @@ export function Footer() {
             </Link>
           </div>
 
-          <p className="text-xs text-muted-foreground flex items-center gap-1">
-            Made with <Heart className="h-3 w-3 text-secondary fill-secondary" /> in India
-          </p>
+          <motion.p 
+            className="text-xs text-muted-foreground flex items-center gap-1"
+            whileHover={{ scale: 1.05 }}
+          >
+            Made with <Heart className="h-3 w-3 text-secondary fill-secondary animate-pulse" /> in India
+          </motion.p>
         </motion.div>
+      </motion.div>
 
         {/* Back to top button */}
         <AnimatePresence>
@@ -200,7 +250,6 @@ export function Footer() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
     </footer>
   )
 }
