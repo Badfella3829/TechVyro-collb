@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, FileText } from 'lucide-react'
+import { FileText } from 'lucide-react'
+import { Navbar } from '@/components/navigation/navbar'
+import { Footer } from '@/components/footer/footer'
+import { ClientEffects } from '@/components/effects/client-effects'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — TechVyro',
+  title: 'Terms of Service | TechVyro',
   description: 'The terms governing the use of TechVyro services.',
 }
 
@@ -12,24 +15,29 @@ const CONTACT_EMAIL = 'techvyro@gmail.com'
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <div className="max-w-3xl mx-auto px-6 py-16 sm:py-24">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to home
-        </Link>
-
-        <div className="flex items-center gap-3 mb-3">
-          <FileText className="h-8 w-8 text-primary" />
-          <h1 className="text-4xl sm:text-5xl font-bold">Terms of Service</h1>
+    <main className="relative min-h-screen">
+      <ClientEffects />
+      <Navbar />
+      
+      {/* Hero Header */}
+      <section className="relative pt-32 pb-8 sm:pt-40 sm:pb-12 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
+            <FileText className="h-3.5 w-3.5 text-primary" />
+            <span className="text-xs font-semibold text-primary tracking-wide uppercase">Legal</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold mb-3">Terms of Service</h1>
+          <p className="text-sm text-muted-foreground">Last updated: {LAST_UPDATED}</p>
         </div>
-        <p className="text-sm text-muted-foreground mb-12">Last updated: {LAST_UPDATED}</p>
+      </section>
+      
+      <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
 
-        <div className="prose prose-invert max-w-none space-y-8 text-muted-foreground leading-relaxed">
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">1. Agreement</h2>
+        <div className="space-y-4 text-muted-foreground leading-relaxed">
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">1. Agreement</h2>
             <p>
               These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of the TechVyro
               website, services, and any content or features offered. By using our services, you agree to be
@@ -37,8 +45,8 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">2. Services Offered</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">2. Services Offered</h2>
             <p>
               TechVyro provides tech-focused content creation and brand collaboration services, including:
             </p>
@@ -51,8 +59,8 @@ export default function TermsPage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">3. Inquiries &amp; Bookings</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">3. Inquiries &amp; Bookings</h2>
             <p>
               Submitting an inquiry through our website does not constitute a binding contract. A booking is
               confirmed only after explicit confirmation from TechVyro via email or WhatsApp. All deliverables,
@@ -60,8 +68,8 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">4. Pricing &amp; Payment</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">4. Pricing &amp; Payment</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Quoted prices are valid for 14 days unless otherwise specified.</li>
               <li>50% advance is required to lock the schedule; balance is due before publishing.</li>
@@ -71,8 +79,8 @@ export default function TermsPage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">5. Content &amp; Creative Control</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">5. Content &amp; Creative Control</h2>
             <p>
               TechVyro retains creative control over content style, format, and presentation to maintain
               authenticity and audience engagement. Brands may provide briefs, key messages, and reasonable
@@ -84,8 +92,8 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">6. Intellectual Property</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">6. Intellectual Property</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>
                 Original content created by TechVyro (videos, images, scripts) remains the property of
@@ -101,8 +109,8 @@ export default function TermsPage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">7. Cancellation Policy</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">7. Cancellation Policy</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Cancellations 7+ days before scheduled delivery: full refund of advance.</li>
               <li>Cancellations 3-6 days before: 50% refund of advance.</li>
@@ -111,8 +119,8 @@ export default function TermsPage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">8. Acceptable Use</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">8. Acceptable Use</h2>
             <p>You agree NOT to use our services for:</p>
             <ul className="list-disc pl-6 space-y-1">
               <li>Promoting illegal products or services</li>
@@ -124,8 +132,8 @@ export default function TermsPage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">9. Disclaimer of Warranties</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">9. Disclaimer of Warranties</h2>
             <p>
               While we strive to deliver high-quality content and reasonable engagement, we do not guarantee
               specific views, sales, conversions, or other performance metrics. Audience response depends on
@@ -134,8 +142,8 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">10. Limitation of Liability</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">10. Limitation of Liability</h2>
             <p>
               To the maximum extent permitted by law, TechVyro&apos;s total liability for any claim arising
               from a single engagement is limited to the fees paid by the brand for that engagement. We are
@@ -143,8 +151,8 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">11. Indemnification</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">11. Indemnification</h2>
             <p>
               You agree to indemnify and hold TechVyro harmless from any claims, damages, or expenses
               (including reasonable legal fees) arising from your use of our services, your content, or your
@@ -152,16 +160,16 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">12. Confidentiality</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">12. Confidentiality</h2>
             <p>
               Both parties agree to keep confidential any non-public business information shared during the
               engagement. This obligation survives termination of the engagement.
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">13. Termination</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">13. Termination</h2>
             <p>
               Either party may terminate an engagement for material breach with 7 days&apos; written notice
               and opportunity to cure. TechVyro may terminate immediately for serious violations including
@@ -169,16 +177,16 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">14. Governing Law &amp; Jurisdiction</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">14. Governing Law &amp; Jurisdiction</h2>
             <p>
               These Terms are governed by the laws of India. Any disputes will be subject to the exclusive
               jurisdiction of the courts of Uttarakhand, India.
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">15. Changes to Terms</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">15. Changes to Terms</h2>
             <p>
               We may update these Terms from time to time. Material changes will be notified via email or
               prominent website notice. Continued use of our services after changes indicates acceptance of
@@ -186,8 +194,8 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">16. Contact</h2>
+          <section className="glass border border-border/50 rounded-xl p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3">16. Contact</h2>
             <p>
               For questions about these Terms, please reach out at:
             </p>
@@ -201,7 +209,10 @@ export default function TermsPage() {
             </p>
           </section>
         </div>
-      </div>
+        </div>
+      </section>
+      
+      <Footer />
     </main>
   )
 }

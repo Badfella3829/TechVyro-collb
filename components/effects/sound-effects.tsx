@@ -204,6 +204,9 @@ export function SoundEffects() {
       if (now - lastHoverTime.current < 100) return // Throttle to 100ms
       
       const target = e.target as HTMLElement
+      // Check if target is an element with matches method
+      if (!target || typeof target.matches !== 'function') return
+      
       const isInteractive = target.matches('button, a, [role="button"], .hoverable')
       if (isInteractive) {
         lastHoverTime.current = now
