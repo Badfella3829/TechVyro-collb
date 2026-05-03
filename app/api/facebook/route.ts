@@ -54,21 +54,41 @@ export async function GET(req: Request) {
   }
 
   try {
+    const cacheOptions = forceRefresh ? { cache: "no-store" as const } : { next: { revalidate: 3600 } }
+    
     const pageFields = 'id,name,username,fan_count,followers_count,picture.width(300),about,link'
     const pageUrl = `https://graph.facebook.com/v23.0/${pageId}?fields=${pageFields}&access_token=${token}`
 
     const postFields = 'id,message,story,created_time,permalink_url,full_picture,attachments{type,media,url,title,subattachments},reactions.summary(true),comments.summary(true),shares'
     const postsUrl = `https://graph.facebook.com/v23.0/${pageId}/posts?fields=${postFields}&limit=50&access_token=${token}`
+    
+    const videosUrl = `https://graph.facebook.com/v23.0/${pageId}/videos?fields=id,views,length,description,title,picture,permalink_url,created_time&limit=100&access_token=${token}`
 
-    const [pageRes, postsRes] = await Promise.all([
-      fetch(pageUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } }),
-      fetch(postsUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } }),
+    // Fetch all 3 in parallel for faster loading
+    const [pageRes, postsRes, videosRes] = await Promise.all([
+      fetch(pageUrl, cacheOptions),
+      fetch(postsUrl, cacheOptions),
+      fetch(videosUrl, cacheOptions),
     ])
 
+    // Check all responses for errors
     if (!pageRes.ok) {
-      const text = await pageRes.text()
+      let errorDetails = ''
+      try {
+        const errorJson = await pageRes.json()
+        errorDetails = JSON.stringify(errorJson)
+        // Check for token expiration
+        if (errorJson?.error?.code === 190 || errorJson?.error?.message?.includes('expired')) {
+          return NextResponse.json(
+            { error: 'Facebook token expired. Please refresh it in Admin panel.', details: errorDetails },
+            { status: 401 }
+          )
+        }
+      } catch {
+        errorDetails = await pageRes.text()
+      }
       return NextResponse.json(
-        { error: 'Facebook page fetch failed', details: text },
+        { error: 'Facebook page fetch failed', details: errorDetails },
         { status: pageRes.status }
       )
     }
@@ -93,7 +113,7 @@ export async function GET(req: Request) {
       }
     }
 
-    // Fetch video list with view counts (works without read_insights)
+    // Parse video data from parallel fetch
     let videos: Array<{
       id: string
       views?: number
@@ -104,17 +124,13 @@ export async function GET(req: Request) {
       permalink_url?: string
       created_time?: string
     }> = []
-    try {
-      const videosUrl = `https://graph.facebook.com/v23.0/${pageId}/videos?fields=id,views,length,description,title,picture,permalink_url,created_time&limit=100&access_token=${token}`
-      const vRes = await fetch(videosUrl, forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } })
-      if (vRes.ok) {
-        const vJson = await vRes.json()
-        videos = vJson.data || []
-        totalViews = videos.reduce((s, v) => s + (v.views || 0), 0)
-      }
-    } catch {}
+    if (videosRes.ok) {
+      const vJson = await videosRes.json()
+      videos = vJson.data || []
+      totalViews = videos.reduce((s, v) => s + (v.views || 0), 0)
+    }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       page: {
         id: page.id,
         name: page.name,
@@ -135,6 +151,10 @@ export async function GET(req: Request) {
       },
       fetchedAt: new Date().toISOString(),
     })
+    
+    // Add cache headers for faster subsequent loads
+    response.headers.set('Cache-Control', 's-maxage=3600, stale-while-revalidate=7200')
+    return response
   } catch (err) {
     return NextResponse.json(
       { error: 'Facebook API request failed', details: String(err) },
