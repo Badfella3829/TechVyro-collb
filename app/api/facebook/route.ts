@@ -71,10 +71,24 @@ export async function GET(req: Request) {
       fetch(videosUrl, cacheOptions),
     ])
 
+    // Check all responses for errors
     if (!pageRes.ok) {
-      const text = await pageRes.text()
+      let errorDetails = ''
+      try {
+        const errorJson = await pageRes.json()
+        errorDetails = JSON.stringify(errorJson)
+        // Check for token expiration
+        if (errorJson?.error?.code === 190 || errorJson?.error?.message?.includes('expired')) {
+          return NextResponse.json(
+            { error: 'Facebook token expired. Please refresh it in Admin panel.', details: errorDetails },
+            { status: 401 }
+          )
+        }
+      } catch {
+        errorDetails = await pageRes.text()
+      }
       return NextResponse.json(
-        { error: 'Facebook page fetch failed', details: text },
+        { error: 'Facebook page fetch failed', details: errorDetails },
         { status: pageRes.status }
       )
     }

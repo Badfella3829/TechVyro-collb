@@ -114,7 +114,7 @@ export async function GET(req: Request) {
       }
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       channel: {
         id: channel.id,
         title: channel.snippet.title,
@@ -156,6 +156,7 @@ export async function GET(req: Request) {
     response.headers.set('Cache-Control', 's-maxage=3600, stale-while-revalidate=7200')
     return response
   } catch (err) {
+    console.error('[v0] YouTube API error:', err)
     return NextResponse.json(
       { error: 'YouTube API request failed', details: String(err) },
       { status: 500 }
