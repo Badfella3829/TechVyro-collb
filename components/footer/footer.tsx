@@ -67,7 +67,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50 mb-2 md:mb-0 overflow-hidden">
+    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50 mb-2 md:mb-0 overflow-hidden" style={{ position: 'relative' }}>
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
       <div className="absolute inset-0 grid-pattern-subtle opacity-20 pointer-events-none" />

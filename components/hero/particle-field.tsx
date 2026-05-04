@@ -5,6 +5,15 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
+// Suppress THREE.Clock deprecation warning (library internal, not our code)
+if (typeof window !== 'undefined') {
+  const originalWarn = console.warn
+  console.warn = (...args) => {
+    if (args[0]?.includes?.('THREE.Clock')) return
+    originalWarn.apply(console, args)
+  }
+}
+
 function hasWebGL(): boolean {
   if (typeof window === 'undefined') return false
   try {

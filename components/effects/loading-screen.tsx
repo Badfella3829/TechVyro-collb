@@ -4,15 +4,21 @@ import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 
-// Particle component for loading screen
+// Seeded random for consistent values
+function seededRandom(seed: number) {
+  const x = Math.sin(seed * 9999) * 10000
+  return x - Math.floor(x)
+}
+
+// Particle component for loading screen - uses seeded random for hydration consistency
 function LoadingParticle({ index }: { index: number }) {
   const randomValues = useMemo(() => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    duration: Math.random() * 3 + 2,
-    delay: Math.random() * 2,
-  }), [])
+    x: seededRandom(index * 1) * 100,
+    y: seededRandom(index * 2) * 100,
+    size: seededRandom(index * 3) * 4 + 2,
+    duration: seededRandom(index * 4) * 3 + 2,
+    delay: seededRandom(index * 5) * 2,
+  }), [index])
 
   return (
     <motion.div
