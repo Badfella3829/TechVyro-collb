@@ -1,7 +1,19 @@
 "use client"
 
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
+
+// Check for reduced motion preference
+function prefersReducedMotion(): boolean {
+  if (typeof window === 'undefined') return true
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+// Check if device is low-powered
+function isLowPowerDevice(): boolean {
+  if (typeof window === 'undefined') return true
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+}
 
 interface Shape {
   id: number
@@ -38,7 +50,7 @@ const colorMap = {
   accent: 'oklch(0.85 0.22 130)',
 }
 
-function ShapeComponent({ shape }: { shape: Shape }) {
+const ShapeComponent = memo(function ShapeComponent({ shape }: { shape: Shape }) {
   const color = colorMap[shape.color]
   
   const getPath = () => {
@@ -147,18 +159,27 @@ function ShapeComponent({ shape }: { shape: Shape }) {
       </svg>
     </motion.div>
   )
-}
+})
 
 export function FloatingShapes({ count = 12 }: { count?: number }) {
   const [shapes, setShapes] = useState<Shape[]>([])
   const [mounted, setMounted] = useState(false)
+  const [shouldRender, setShouldRender] = useState(false)
   
   useEffect(() => {
     setMounted(true)
-    setShapes(generateShapes(count))
+    // Skip on low-power devices or reduced motion preference
+    if (isLowPowerDevice() || prefersReducedMotion()) {
+      setShouldRender(false)
+      return
+    }
+    setShouldRender(true)
+    // Reduce shape count on mobile
+    const actualCount = window.innerWidth < 768 ? Math.floor(count / 2) : count
+    setShapes(generateShapes(actualCount))
   }, [count])
   
-  if (!mounted) return null
+  if (!mounted || !shouldRender) return null
   
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
@@ -169,15 +190,22 @@ export function FloatingShapes({ count = 12 }: { count?: number }) {
   )
 }
 
-// Gradient blob variant
+// Gradient blob variant - optimized for performance
 export function FloatingBlobs() {
   const [mounted, setMounted] = useState(false)
+  const [shouldRender, setShouldRender] = useState(false)
   
   useEffect(() => {
     setMounted(true)
+    // Skip on low-power devices - blurs are expensive
+    if (isLowPowerDevice() || prefersReducedMotion()) {
+      setShouldRender(false)
+      return
+    }
+    setShouldRender(true)
   }, [])
   
-  if (!mounted) return null
+  if (!mounted || !shouldRender) return null
   
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">

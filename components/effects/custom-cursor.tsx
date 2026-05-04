@@ -250,6 +250,11 @@ export function CustomCursor() {
 
   useEffect(() => {
     if (isMobile) return
+    
+    // Check for reduced motion preference
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY }
@@ -259,12 +264,23 @@ export function CustomCursor() {
         pointsRef.current.push({ x: e.clientX, y: e.clientY, age: 0 })
       }
     }
+    
+    // Pause when tab is not visible
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafRef.current)
+      } else {
+        rafRef.current = requestAnimationFrame(animate)
+      }
+    }
 
     window.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
     rafRef.current = requestAnimationFrame(animate)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       cancelAnimationFrame(rafRef.current)
     }
   }, [isMobile, mode, animate])

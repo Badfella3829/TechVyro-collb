@@ -18,7 +18,16 @@ function hasWebGL(): boolean {
   }
 }
 
-function Particles({ count = 3000 }) {
+// Check if device is low-powered (mobile/tablet)
+function isLowPowerDevice(): boolean {
+  if (typeof window === 'undefined') return true
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  const isLowMemory = 'deviceMemory' in navigator && (navigator as { deviceMemory?: number }).deviceMemory !== undefined && (navigator as { deviceMemory?: number }).deviceMemory! < 4
+  const hasReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return isMobile || isLowMemory || hasReducedMotion
+}
+
+function Particles({ count = 1500 }) {
   const ref = useRef<THREE.Points>(null)
   const ref2 = useRef<THREE.Points>(null)
   const ref3 = useRef<THREE.Points>(null)
@@ -115,23 +124,35 @@ function Particles({ count = 3000 }) {
 
 export function ParticleField() {
   const [webglOk, setWebglOk] = useState(false)
+  const [isLowPower, setIsLowPower] = useState(true)
 
   useEffect(() => {
     setWebglOk(hasWebGL())
+    setIsLowPower(isLowPowerDevice())
   }, [])
+
+  // Skip particles entirely on low-power devices
+  if (isLowPower) {
+    return (
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background pointer-events-none" />
+      </div>
+    )
+  }
 
   return (
     <div className="absolute inset-0 -z-10">
       {webglOk && (
         <Canvas
           camera={{ position: [0, 0, 6], fov: 75 }}
-          dpr={[1, 2]}
+          dpr={[1, 1.5]} // Reduced DPR for better performance
           style={{ background: 'transparent' }}
+          frameloop="always"
           onCreated={({ gl }) => {
             gl.domElement.addEventListener('webglcontextlost', (e) => e.preventDefault())
           }}
         >
-          <Particles />
+          <Particles count={800} />
         </Canvas>
       )}
       

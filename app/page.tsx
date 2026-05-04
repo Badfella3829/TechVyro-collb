@@ -28,6 +28,8 @@ export default function Home() {
     <main className="relative min-h-screen">
       <ClientEffects />
       <Navbar />
+      
+      {/* Critical above-the-fold content - no lazy loading */}
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 1 — WELCOME: First impression                              */}
@@ -51,14 +53,16 @@ export default function Home() {
       {/* ACT 3 — WORK: Show the work, then explain the formats          */}
       {/* Portfolio (show) → Latest Feed (live) → Services (formats)     */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <SectionDivider
-        label="02 — WORK"
-        title="Featured Productions"
-        subtitle="See what we've built · Live feed · Content formats we create"
-      />
-      <PortfolioSection />
-      <LatestFeed />
-      <ServicesGrid />
+      <div className="content-auto">
+        <SectionDivider
+          label="02 — WORK"
+          title="Featured Productions"
+          subtitle="See what we've built · Live feed · Content formats we create"
+        />
+        <PortfolioSection />
+        <LatestFeed />
+        <ServicesGrid />
+      </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 4 — STORY: Why TechVyro + journey timeline                 */}
@@ -74,25 +78,29 @@ export default function Home() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 5 — TRUST: Voices that matter (clients + media)            */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <SectionDivider
-        label="04 — TRUST"
-        title="Brands & Press Speak"
-        subtitle="What partners and media say about working with us"
-      />
-      <TestimonialsSection />
-      <PressSection />
+      <div className="content-auto">
+        <SectionDivider
+          label="04 — TRUST"
+          title="Brands & Press Speak"
+          subtitle="What partners and media say about working with us"
+        />
+        <TestimonialsSection />
+        <PressSection />
+      </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 6 — OFFER: Packages → ROI → Why us vs others               */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <SectionDivider
-        label="05 — OFFER"
-        title="Pick Your Growth Pack"
-        subtitle="Transparent pricing · Calculate ROI · See the difference"
-      />
-      <PackagesSection />
-      <ROICalculator />
-      <ComparisonTable />
+      <div className="content-auto">
+        <SectionDivider
+          label="05 — OFFER"
+          title="Pick Your Growth Pack"
+          subtitle="Transparent pricing · Calculate ROI · See the difference"
+        />
+        <PackagesSection />
+        <ROICalculator />
+        <ComparisonTable />
+      </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 7 — PROCESS: How we collaborate + media kit download       */}
