@@ -120,13 +120,26 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* Prevent tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
   }
+  
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Prevent iOS Safari bounce effect */
+    overscroll-behavior: none;
+  }
+  
   body {
     @apply bg-background text-foreground;
-    /* Prevent horizontal overflow on mobile (long marquees, wide tables, etc.) */
+    /* Prevent horizontal overflow on mobile */
     overflow-x: hidden;
-    /* Reserve space for the mobile bottom nav so footer/last section is never hidden */
+    /* Reserve space for mobile bottom nav */
     padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    /* Ensure text is readable on all devices */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   @media (min-width: 768px) {
@@ -135,15 +148,26 @@
     }
   }
 
-  /* Text sizing and base styles - smooth scrolling handled by Lenis */
-  html {
-    -webkit-text-size-adjust: 100%;
-  }
-
   /* Prevent images from forcing horizontal overflow */
   img, video, iframe {
     max-width: 100%;
     height: auto;
+  }
+  
+  /* Ensure minimum touch target size (44px) */
+  button, a, [role="button"], input, select, textarea {
+    min-height: 44px;
+  }
+  
+  /* Exception for inline links in paragraphs */
+  p a, li a, span a {
+    min-height: auto;
+  }
+  
+  /* Focus visible for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 }
 
@@ -251,16 +275,79 @@
     background-size: 30px 30px;
   }
   
-  /* Enhanced card hover effect */
+  /* Enhanced card hover effect - disabled on touch devices for better UX */
   .card-hover {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  .card-hover:hover {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: 
-      0 20px 40px -10px oklch(0 0 0 / 0.5),
-      0 0 30px -5px var(--neon-cyan-glow);
+  @media (hover: hover) and (pointer: fine) {
+    .card-hover:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 
+        0 20px 40px -10px oklch(0 0 0 / 0.5),
+        0 0 30px -5px var(--neon-cyan-glow);
+    }
+  }
+  
+  /* Mobile-specific card active state */
+  @media (hover: none) {
+    .card-hover:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+  }
+  
+  /* Safe area padding for notched devices */
+  .safe-area-inset {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  /* Container query support for responsive components */
+  .container-responsive {
+    container-type: inline-size;
+  }
+  
+  /* Prevent text selection on interactive elements */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hardware-accelerated animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  
+  /* Reduce animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  
+  /* Content visibility for off-screen sections - improves initial render */
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+  
+  /* Responsive text that scales with viewport */
+  .text-responsive {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+  }
+  
+  .text-responsive-lg {
+    font-size: clamp(1.25rem, 4vw, 2rem);
+  }
+  
+  .text-responsive-xl {
+    font-size: clamp(1.75rem, 5vw, 3rem);
   }
   
   /* Section background variants */
