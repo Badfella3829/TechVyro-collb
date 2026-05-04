@@ -22,7 +22,7 @@ export function FooterReveal({ children, className = "" }: FooterRevealProps) {
   const blur = useTransform(scrollYProgress, [0, 0.8, 1], [10, 2, 0])
 
   return (
-    <div ref={containerRef} className={`relative ${className}`}>
+    <div ref={containerRef} className={`relative ${className}`} style={{ position: 'relative' }}>
       {/* Sticky content wrapper that reveals footer */}
       <div className="sticky bottom-0">
         <motion.div
@@ -58,7 +58,7 @@ export function FooterRevealFull({ children, className = "" }: FooterRevealProps
   const y = useTransform(scrollYProgress, [0, 1], [50, 0])
 
   return (
-    <div ref={containerRef} className={`relative min-h-[50vh] ${className}`}>
+    <div ref={containerRef} className={`relative min-h-[50vh] ${className}`} style={{ position: 'relative' }}>
       <motion.div
         className="sticky bottom-0"
         style={{ 
