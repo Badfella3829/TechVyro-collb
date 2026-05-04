@@ -204,15 +204,16 @@ export function PortfolioSection() {
               variant={platformFilter === f.id ? 'default' : 'outline'}
               onClick={() => setPlatformFilter(f.id)}
               className={cn(
-                "rounded-full gap-2",
+                "rounded-full gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[44px]",
                 platformFilter === f.id && "bg-primary text-primary-foreground",
                 f.id === 'instagram' && platformFilter === 'instagram' && "bg-pink-500 hover:bg-pink-600",
                 f.id === 'facebook' && platformFilter === 'facebook' && "bg-blue-500 hover:bg-blue-600",
                 f.id === 'youtube' && platformFilter === 'youtube' && "bg-red-500 hover:bg-red-600",
               )}
             >
-              <f.icon className="h-4 w-4" />
-              {f.label}
+              <f.icon className="h-4 w-4 shrink-0" />
+              <span className="hidden xs:inline">{f.label}</span>
+              <span className="xs:hidden">{f.id === 'all' ? 'All' : f.id.charAt(0).toUpperCase() + f.id.slice(1, 3)}</span>
             </Button>
           ))}
         </motion.div>
@@ -230,10 +231,11 @@ export function PortfolioSection() {
               variant={typeFilter === filter.id ? 'default' : 'outline'}
               size="sm"
               onClick={() => setTypeFilter(filter.id)}
-              className="rounded-full gap-2"
+              className="rounded-full gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[40px]"
             >
-              <filter.icon className="h-4 w-4" />
-              {filter.label}
+              <filter.icon className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">{filter.label}</span>
+              <span className="sm:hidden">{filter.id === 'all' ? 'Top' : filter.id === 'reel' ? 'Reels' : 'Posts'}</span>
             </Button>
           ))}
         </motion.div>
