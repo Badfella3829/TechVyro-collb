@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://techvyro.com'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://techvyro.in'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
