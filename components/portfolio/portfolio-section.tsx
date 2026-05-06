@@ -242,13 +242,35 @@ export function PortfolioSection() {
 
         {/* Loading / Error */}
         {loading && allItems.length === 0 && (
-          <div className="text-center text-muted-foreground py-12">
-            Loading top content…
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Card key={i} className="overflow-hidden glass border-border/50 animate-pulse">
+                <div className="aspect-[4/5] sm:aspect-[9/12] bg-muted" />
+                <CardContent className="p-4">
+                  <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                  <div className="h-3 bg-muted rounded w-1/2" />
+                </CardContent>
+              </Card>
+            ))}
           </div>
         )}
         {hasError && (
-          <div className="text-center text-destructive py-12">
-            Couldn&apos;t load content right now.
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">Couldn&apos;t load live content right now.</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button asChild variant="outline" size="lg" className="rounded-full">
+                <a href="https://instagram.com/techvyro" target="_blank" rel="noopener noreferrer">
+                  <Instagram className="h-4 w-4 mr-2 text-pink-500" />
+                  Visit Instagram
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="rounded-full">
+                <a href="https://youtube.com/@techvyro" target="_blank" rel="noopener noreferrer">
+                  <Youtube className="h-4 w-4 mr-2 text-red-500" />
+                  Visit YouTube
+                </a>
+              </Button>
+            </div>
           </div>
         )}
 
