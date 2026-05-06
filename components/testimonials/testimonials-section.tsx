@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { Star, Quote, ChevronLeft, ChevronRight, Pause, Play, Building2, TrendingUp, Users, Award } from 'lucide-react'
+import { Star, Quote, ChevronLeft, ChevronRight, Pause, Play, Building2, TrendingUp, Users, Award, BadgeCheck } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
@@ -16,6 +16,8 @@ const TESTIMONIALS = [
     initial: 'RK',
     color: 'from-orange-500 to-amber-500',
     stats: { views: '2.4M', conversion: '+18%' },
+    verified: true,
+    campaignType: 'Product Launch Campaign',
   },
   {
     name: 'Priya Sharma',
@@ -26,6 +28,8 @@ const TESTIMONIALS = [
     initial: 'PS',
     color: 'from-pink-500 to-rose-500',
     stats: { views: '1.8M', conversion: '+22%' },
+    verified: true,
+    campaignType: 'Brand Awareness',
   },
   {
     name: 'Vikram Mehta',
@@ -36,6 +40,8 @@ const TESTIMONIALS = [
     initial: 'VM',
     color: 'from-blue-500 to-cyan-500',
     stats: { views: '3.1M', conversion: '+15%' },
+    verified: true,
+    campaignType: 'Flagship Launch',
   },
   {
     name: 'Anjali Desai',
@@ -46,6 +52,8 @@ const TESTIMONIALS = [
     initial: 'AD',
     color: 'from-violet-500 to-purple-500',
     stats: { views: '1.5M', conversion: '+25%' },
+    verified: true,
+    campaignType: 'Smartwatch Review',
   },
   {
     name: 'Amit Patel',
@@ -56,6 +64,8 @@ const TESTIMONIALS = [
     initial: 'AP',
     color: 'from-green-500 to-emerald-500',
     stats: { views: '980K', conversion: '+32%' },
+    verified: true,
+    campaignType: 'Product Review',
   },
   {
     name: 'Neha Gupta',
@@ -66,6 +76,8 @@ const TESTIMONIALS = [
     initial: 'NG',
     color: 'from-red-500 to-orange-500',
     stats: { views: '2.8M', conversion: '+20%' },
+    verified: true,
+    campaignType: 'Comparison Video',
   },
 ]
 
@@ -300,8 +312,14 @@ export function TestimonialsSection() {
                         {currentTestimonial.initial}
                       </div>
                       <div className="flex-1">
-                        <p className="text-base font-semibold">{currentTestimonial.name}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-base font-semibold">{currentTestimonial.name}</p>
+                          {currentTestimonial.verified && (
+                            <BadgeCheck className="h-4 w-4 text-blue-500" />
+                          )}
+                        </div>
                         <p className="text-sm text-muted-foreground">{currentTestimonial.role}</p>
+                        <p className="text-xs text-primary/70 mt-0.5">{currentTestimonial.campaignType}</p>
                       </div>
                       <div className="hidden sm:block text-right">
                         <p className="text-xs text-muted-foreground">Company</p>

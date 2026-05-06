@@ -25,6 +25,7 @@ interface PackageItem {
   description: string
   features: string[]
   popular?: boolean
+  startingPrice?: string
 }
 
 interface PackageCategory {
@@ -46,17 +47,20 @@ const categories: PackageCategory[] = [
         name: 'Dedicated Sponsored Video',
         description: 'Full video on brand only - review, unboxing, or story',
         features: ['Full creative control', '5-15 min video', 'Custom thumbnail', 'Multi-platform upload'],
-        popular: true
+        popular: true,
+        startingPrice: '₹25,000'
       },
       {
         name: 'Integrated Sponsorship',
         description: '30-60 sec mention inside existing video',
-        features: ['Mid-roll or end-roll', 'Natural integration', 'Existing audience reach']
+        features: ['Mid-roll or end-roll', 'Natural integration', 'Existing audience reach'],
+        startingPrice: '₹10,000'
       },
       {
         name: 'Product Review Video',
         description: 'Honest detailed review with affiliate link',
-        features: ['In-depth analysis', 'Pros & cons', 'Comparison with competitors', 'Affiliate tracking']
+        features: ['In-depth analysis', 'Pros & cons', 'Comparison with competitors', 'Affiliate tracking'],
+        startingPrice: '₹15,000'
       }
     ]
   },
@@ -70,17 +74,20 @@ const categories: PackageCategory[] = [
         name: 'Instagram Reel',
         description: '15-60 sec high-reach reel content',
         features: ['Trending format', 'Music integration', 'Hashtag strategy', 'Explore page potential'],
-        popular: true
+        popular: true,
+        startingPrice: '₹8,000'
       },
       {
         name: 'YouTube Short',
         description: 'Under 60 sec algorithm-boosted content',
-        features: ['Shorts shelf placement', 'Vertical format', 'Quick engagement']
+        features: ['Shorts shelf placement', 'Vertical format', 'Quick engagement'],
+        startingPrice: '₹8,000'
       },
       {
         name: 'TikTok Style Content',
         description: 'Trending format with viral potential',
-        features: ['Trend participation', 'Sound trends', 'Duet/stitch friendly']
+        features: ['Trend participation', 'Sound trends', 'Duet/stitch friendly'],
+        startingPrice: '₹6,000'
       }
     ]
   },
@@ -93,18 +100,21 @@ const categories: PackageCategory[] = [
       {
         name: 'Instagram Feed Post',
         description: 'Photo/carousel with caption + hashtags',
-        features: ['High-quality imagery', 'Engaging caption', 'Strategic hashtags', 'Grid aesthetic']
+        features: ['High-quality imagery', 'Engaging caption', 'Strategic hashtags', 'Grid aesthetic'],
+        startingPrice: '₹5,000'
       },
       {
         name: 'Instagram Story',
         description: 'Swipe-up / link with poll/quiz/CTA',
         features: ['Interactive elements', 'Link stickers', '24hr visibility', 'Highlight option'],
-        popular: true
+        popular: true,
+        startingPrice: '₹3,000'
       },
       {
         name: 'Twitter/X Thread',
         description: 'Thread or single post with brand mention',
-        features: ['Thread format', 'Engagement hooks', 'Retweet potential']
+        features: ['Thread format', 'Engagement hooks', 'Retweet potential'],
+        startingPrice: '₹2,500'
       }
     ]
   },
@@ -118,17 +128,20 @@ const categories: PackageCategory[] = [
         name: 'Live Stream Sponsorship',
         description: 'Brand mention during live - real-time audience',
         features: ['Real-time engagement', 'Q&A opportunity', 'Chat interaction', 'Recording available'],
-        popular: true
+        popular: true,
+        startingPrice: '₹15,000'
       },
       {
         name: 'Event/Meetup Presence',
         description: 'Brand presence at fan meetup or physical event',
-        features: ['On-ground activation', 'Fan engagement', 'Photo ops', 'Social coverage']
+        features: ['On-ground activation', 'Fan engagement', 'Photo ops', 'Social coverage'],
+        startingPrice: '₹50,000'
       },
       {
         name: 'Webinar/Workshop',
         description: 'Brand co-hosts online session',
-        features: ['Educational content', 'Lead generation', 'Extended engagement']
+        features: ['Educational content', 'Lead generation', 'Extended engagement'],
+        startingPrice: '₹20,000'
       }
     ]
   },
@@ -142,17 +155,20 @@ const categories: PackageCategory[] = [
         name: 'Brand Ambassador',
         description: 'Long-term deal 3-12 months exclusive',
         features: ['Exclusive partnership', 'Multiple content pieces', 'Event appearances', 'Social takeovers'],
-        popular: true
+        popular: true,
+        startingPrice: '₹1,00,000+'
       },
       {
         name: 'Custom UGC Content',
         description: 'Content created for brand\'s own page - white-label',
-        features: ['Full usage rights', 'Brand voice match', 'No creator branding']
+        features: ['Full usage rights', 'Brand voice match', 'No creator branding'],
+        startingPrice: '₹12,000'
       },
       {
         name: 'Affiliate Partnership',
         description: 'Commission per sale/click with promo code + link',
-        features: ['Performance-based', 'Tracked conversions', 'Custom promo codes']
+        features: ['Performance-based', 'Tracked conversions', 'Custom promo codes'],
+        startingPrice: 'Revenue Share'
       }
     ]
   },
@@ -165,18 +181,21 @@ const categories: PackageCategory[] = [
       {
         name: 'Starter Bundle',
         description: '1 Reel + 2 Stories + 1 Post - Perfect for startups',
-        features: ['Multi-format coverage', 'Cost effective', 'Quick turnaround', 'Best for awareness']
+        features: ['Multi-format coverage', 'Cost effective', 'Quick turnaround', 'Best for awareness'],
+        startingPrice: '₹15,000'
       },
       {
         name: 'Growth Bundle',
         description: '1 Video + 1 Reel + 3 Stories + 1 Post',
         features: ['Comprehensive coverage', 'Multi-platform', 'Campaign cohesion', 'Mid-size brands'],
-        popular: true
+        popular: true,
+        startingPrice: '₹40,000'
       },
       {
         name: 'Mega Campaign',
         description: 'Video + Reel + Live + Stories + Post - Full package',
-        features: ['Maximum exposure', 'All platforms', 'Premium support', 'Best ROI']
+        features: ['Maximum exposure', 'All platforms', 'Premium support', 'Best ROI'],
+        startingPrice: '₹75,000'
       }
     ]
   }
@@ -299,6 +318,11 @@ export function PackagesSection() {
                         <CardHeader>
                           <CardTitle className="text-lg pr-16">{pkg.name}</CardTitle>
                           <p className="text-sm text-muted-foreground">{pkg.description}</p>
+                          {pkg.startingPrice && (
+                            <p className="text-lg font-bold text-primary mt-2">
+                              Starting from {pkg.startingPrice}
+                            </p>
+                          )}
                         </CardHeader>
                         
                         <CardContent>

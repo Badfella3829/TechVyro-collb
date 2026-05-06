@@ -213,9 +213,9 @@ export function HeroSection() {
           className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-6 lg:gap-10 w-full max-w-md sm:max-w-none mx-auto px-4 sm:px-0"
         >
           {[
-            { value: ready ? formatBig(totals.followers) : '—', label: 'Followers' },
-            { value: ready ? formatBig(totals.totalViews) : '—', label: 'Views' },
-            { value: ready ? formatBig(totals.content) : '—', label: 'Posts' },
+            { value: ready ? formatBig(totals.followers) : '27K+', label: 'Followers' },
+            { value: ready ? formatBig(totals.totalViews) : '2M+', label: 'Views' },
+            { value: ready ? formatBig(totals.content) : '200+', label: 'Posts' },
           ].map((stat, index) => (
             <motion.div 
               key={index} 
