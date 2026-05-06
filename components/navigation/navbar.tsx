@@ -15,7 +15,7 @@ const navLinks = [
   { href: '/about', label: 'About', external: true },
   { href: '#stats', label: 'Stats' },
   { href: '#packages', label: 'Packages' },
-  { href: '/recommender', label: 'Match', external: true },
+  { href: '/match', label: 'Match', external: true },
   { href: '/case-studies', label: 'Case Studies', external: true },
   { href: '/blog', label: 'Blog', external: true },
   { href: '#contact', label: 'Contact' },
