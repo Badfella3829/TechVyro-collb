@@ -39,12 +39,15 @@ export default function FacebookAnalyticsPage() {
           <CardContent className="p-8 text-center">
             <p className="text-destructive font-semibold mb-2">Could not load Facebook data</p>
             <p className="text-sm text-muted-foreground mb-6">{error || 'Unknown error'}</p>
+            <p className="text-xs text-muted-foreground mb-6 p-3 bg-muted rounded">To connect real Facebook data, configure FACEBOOK_PAGE_ID and set up your token in the Admin panel.</p>
             <Link href="/"><Button variant="outline"><ArrowLeft className="h-4 w-4 mr-2" />Back to home</Button></Link>
           </CardContent>
         </Card>
       </div>
     )
   }
+
+  const isDemoData = (data as any).isDemoData
 
   const { page, posts, videos = [], computed } = data
   const totalReactions = posts.reduce((s, p) => s + (p.reactions?.summary?.total_count ?? 0), 0)
@@ -56,6 +59,13 @@ export default function FacebookAnalyticsPage() {
 
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
+      {isDemoData && (
+        <div className="bg-blue-500/10 border-t border-b border-blue-500/30 py-3 px-4 mb-6">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-sm text-blue-700 dark:text-blue-400"><strong>Demo Mode:</strong> Showing sample Facebook data. Connect real credentials in Admin panel for live analytics.</p>
+          </div>
+        </div>
+      )}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6">
           <Link href="/#stats" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
