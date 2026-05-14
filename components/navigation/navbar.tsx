@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import { Menu, X, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -157,10 +158,22 @@ function AnimatedLogo({ onClick }: { onClick: () => void }) {
 }
 
 export function Navbar() {
+  const router = useRouter()
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isHidden, setIsHidden] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeLink, setActiveLink] = useState('')
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    if (isMobileMenuOpen) {
+      const original = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = original }
+    }
+  }, [isMobileMenuOpen])
 
   useEffect(() => {
     let lastY = typeof window !== 'undefined' ? window.scrollY : 0
@@ -192,18 +205,22 @@ export function Navbar() {
   }, [isMobileMenuOpen])
 
   const scrollToSection = (href: string) => {
-    if (href.startsWith('/')) {
-      window.location.href = href
-      setIsMobileMenuOpen(false)
+    setIsMobileMenuOpen(false)
+    // Route links (e.g. /about, /match) - use SPA navigation
+    if (href.startsWith('/') && !href.startsWith('/#')) {
+      router.push(href)
       return
     }
-    const element = document.querySelector(href)
+    // Normalize hash links (handles both "#contact" and "/#contact")
+    const hash = href.includes('#') ? `#${href.split('#')[1]}` : href
+    if (pathname !== '/') {
+      router.push(`/${hash}`)
+      return
+    }
+    const element = document.querySelector(hash)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
-    } else if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-      window.location.href = `/${href}`
     }
-    setIsMobileMenuOpen(false)
   }
 
   return (
