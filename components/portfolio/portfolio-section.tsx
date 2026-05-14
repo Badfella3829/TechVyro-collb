@@ -241,8 +241,8 @@ export function PortfolioSection() {
         </motion.div>
 
         {/* Loading / Error */}
-        {loading && allItems.length === 0 && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  {loading && allItems.length === 0 && (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <Card key={i} className="overflow-hidden glass border-border/50 animate-pulse">
                 <div className="aspect-[4/5] sm:aspect-[9/12] bg-muted" />
@@ -283,7 +283,7 @@ export function PortfolioSection() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
             >
               {filteredItems.map((item, index) => (
                 <motion.div

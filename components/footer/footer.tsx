@@ -67,14 +67,14 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer ref={ref} className="relative pt-10 sm:pt-16 pb-6 sm:pb-8 border-t border-border/50 mb-2 md:mb-0 overflow-hidden" style={{ position: 'relative' }}>
+    <footer ref={ref} className="relative pt-8 sm:pt-16 pb-20 sm:pb-8 border-t border-border/50 mb-2 md:mb-0 overflow-hidden" style={{ position: 'relative' }}>
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
       <div className="absolute inset-0 grid-pattern-subtle opacity-20 pointer-events-none" />
       
-      {/* Animated glow orbs */}
+      {/* Animated glow orbs - hidden on mobile to save bandwidth */}
       <motion.div
-        className="absolute -top-20 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"
+        className="absolute -top-20 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none hidden sm:block"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.3, 0.5, 0.3],
@@ -86,7 +86,7 @@ export function Footer() {
         }}
       />
       <motion.div
-        className="absolute -top-10 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none"
+        className="absolute -top-10 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none hidden sm:block"
         animate={{
           scale: [1.2, 1, 1.2],
           opacity: [0.2, 0.4, 0.2],
@@ -100,14 +100,14 @@ export function Footer() {
       />
       
       <motion.div 
-        className="container mx-auto px-4 sm:px-6 lg:px-8 relative"
+        className="container mx-auto px-3 sm:px-6 lg:px-8 relative"
         initial={{ opacity: 0.7, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         style={{ y, scale }}
       >
         {/* Main footer content */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">

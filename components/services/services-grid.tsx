@@ -73,26 +73,26 @@ const SERVICES = [
 
 export function ServicesGrid() {
   return (
-    <section id="services" className="py-20 sm:py-28 px-4 relative overflow-hidden section-alt">
+    <section id="services" className="py-16 sm:py-24 lg:py-28 px-3 sm:px-4 relative overflow-hidden section-alt">
       {/* Subtle grid pattern */}
       <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-3 sm:mb-4">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-semibold text-primary tracking-wide">WHAT WE CREATE</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
+          <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-2 sm:mb-3">
             Content Formats That <span className="gradient-text">Convert</span>
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto">
             8 production formats. One creative team. Built around your brand goal.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {SERVICES.map((service, idx) => {
             const Icon = service.icon
             return (
