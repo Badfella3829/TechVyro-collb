@@ -134,18 +134,10 @@
     @apply bg-background text-foreground;
     /* Prevent horizontal overflow on mobile */
     overflow-x: hidden;
-    /* Reserve space for mobile bottom nav */
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
     /* Ensure text is readable on all devices */
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  @media (min-width: 768px) {
-    body {
-      padding-bottom: 0;
-    }
   }
 
   /* Prevent images from forcing horizontal overflow */
