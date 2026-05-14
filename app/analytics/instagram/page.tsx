@@ -39,12 +39,15 @@ export default function InstagramAnalyticsPage() {
           <CardContent className="p-8 text-center">
             <p className="text-destructive font-semibold mb-2">Could not load Instagram data</p>
             <p className="text-sm text-muted-foreground mb-6">{error || 'Unknown error'}</p>
+            <p className="text-xs text-muted-foreground mb-6 p-3 bg-muted rounded">To connect real Instagram data, configure INSTAGRAM_USER_ID and INSTAGRAM_ACCESS_TOKEN environment variables.</p>
             <Link href="/"><Button variant="outline"><ArrowLeft className="h-4 w-4 mr-2" />Back to home</Button></Link>
           </CardContent>
         </Card>
       </div>
     )
   }
+
+  const isDemoData = (data as any).isDemoData
 
   const { account, media, computed } = data
   const totalLikes = media.reduce((s, m) => s + (m.like_count ?? 0), 0)
@@ -55,6 +58,13 @@ export default function InstagramAnalyticsPage() {
 
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
+      {isDemoData && (
+        <div className="bg-amber-500/10 border-t border-b border-amber-500/30 py-3 px-4 mb-6">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-sm text-amber-700 dark:text-amber-400"><strong>Demo Mode:</strong> Showing sample Instagram data. Connect real credentials for live analytics.</p>
+          </div>
+        </div>
+      )}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back nav */}
         <div className="flex items-center justify-between mb-6">
