@@ -126,16 +126,14 @@
   
   html {
     -webkit-text-size-adjust: 100%;
-    /* Prevent iOS Safari bounce effect */
-    overscroll-behavior: none;
   }
   
   body {
     @apply bg-background text-foreground;
     /* Prevent horizontal overflow on mobile */
     overflow-x: hidden;
-    /* Reserve space for mobile bottom nav */
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    /* Reserve space for mobile bottom nav (only on mobile) */
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
     /* Ensure text is readable on all devices */
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -153,15 +151,16 @@
     max-width: 100%;
     height: auto;
   }
-  
-  /* Ensure minimum touch target size (44px) */
-  button, a, [role="button"], input, select, textarea {
-    min-height: 44px;
-  }
-  
-  /* Exception for inline links in paragraphs */
-  p a, li a, span a {
-    min-height: auto;
+
+  /* Mobile-only touch target sizing for primary form controls.
+     Scoped to non-icon contexts so icon buttons, toggles, table actions
+     and inline UI controls keep their intended compact size. */
+  @media (max-width: 767px) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+      min-height: 44px;
+    }
   }
   
   /* Focus visible for accessibility */

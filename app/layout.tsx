@@ -151,7 +151,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className="font-sans antialiased min-h-screen pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
+      <body className="font-sans antialiased min-h-screen">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-primary-foreground focus:px-3 focus:py-1.5 focus:rounded">
           Skip to content
         </a>

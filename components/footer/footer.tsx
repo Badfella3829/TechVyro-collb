@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { 
   Youtube, 
@@ -33,6 +34,8 @@ const socialLinks = [
 
 export function Footer() {
   const ref = useRef<HTMLElement>(null)
+  const router = useRouter()
+  const pathname = usePathname()
   const [showBackToTop, setShowBackToTop] = useState(false)
   
   // Scroll-based reveal animation - starts visible then enhances on scroll
@@ -58,6 +61,11 @@ export function Footer() {
   }
 
   const scrollToSection = (href: string) => {
+    // If on a non-home page, navigate to home with the hash so it scrolls after load
+    if (pathname !== '/') {
+      router.push(`/${href}`)
+      return
+    }
     const element = document.querySelector(href)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
