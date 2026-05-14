@@ -97,7 +97,7 @@ export function HeroSection() {
       <ParticleField />
       
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-3 sm:px-6 lg:px-8 text-center py-8 sm:py-12">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -109,7 +109,7 @@ export function HeroSection() {
             variants={floatingVariants}
             initial="initial"
             animate="animate"
-            className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 mx-auto mb-4 sm:mb-6"
+            className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-6"
           >
             <Image
               src="/images/techvyro-icon.jpg"

@@ -135,7 +135,7 @@
     /* Prevent horizontal overflow on mobile */
     overflow-x: hidden;
     /* Reserve space for mobile bottom nav */
-    padding-bottom: calc(72px + max(12px, env(safe-area-inset-bottom)));
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
     /* Ensure text is readable on all devices */
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -162,27 +162,6 @@
   /* Exception for inline links in paragraphs */
   p a, li a, span a {
     min-height: auto;
-  }
-  
-  /* Mobile-first input styling */
-  input, select, textarea {
-    /* Prevent iOS zoom on input focus */
-    font-size: 16px;
-    /* Prevent auto-zoom on iOS */
-    min-height: 44px;
-    padding: 12px;
-    /* Better mobile keyboard experience */
-    appearance: none;
-    border-radius: 8px;
-  }
-  
-  /* Remove default iOS styling on select */
-  select {
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 20px;
-    padding-right: 32px;
   }
   
   /* Focus visible for accessibility */

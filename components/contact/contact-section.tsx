@@ -484,7 +484,7 @@ export function ContactSection() {
     <section id="contact" className="py-16 sm:py-24 lg:py-32 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-background" />
 
-      <div className="container mx-auto px-3 sm:px-6 lg:px-8 relative" ref={ref}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative" ref={ref}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -505,13 +505,13 @@ export function ContactSection() {
           </p>
         </motion.div>
 
-        <div className="flex flex-col gap-4 sm:gap-6 lg:grid lg:grid-cols-3 lg:gap-10 max-w-6xl mx-auto">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 max-w-6xl mx-auto">
           {/* Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-1 space-y-4 lg:sticky lg:top-24 self-start order-first lg:order-last"
+            className="lg:col-span-1 space-y-4 lg:sticky lg:top-24 self-start"
           >
             <CalendlyEmbed />
             {/* Live reach card */}
