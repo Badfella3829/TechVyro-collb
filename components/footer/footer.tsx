@@ -174,23 +174,19 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact Info */}
-          <div>
-            <h3 className="font-semibold mb-4">Get In Touch</h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li>
-                <span className="block text-foreground font-medium">Email</span>
-                techvyro@gmail.com
-              </li>
-              <li>
-                <span className="block text-foreground font-medium">Response Time</span>
-                Within 24 hours
-              </li>
-              <li>
-                <span className="block text-foreground font-medium">Location</span>
-                India
-              </li>
-            </ul>
+          {/* Ready to Grow? - Sponz.in style CTA */}
+          <div className="bg-card/50 rounded-2xl p-6 border border-border/50">
+            <h3 className="font-bold text-lg mb-3">Ready to Grow?</h3>
+            <p className="text-sm text-muted-foreground mb-5">
+              Book a free strategy call with our team. No commitment, no cost.
+            </p>
+            <button
+              onClick={() => scrollToSection('#contact')}
+              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-3 px-5 rounded-full shadow-lg shadow-accent/30 hover:shadow-accent/50 transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              Book a Call
+              <span>&rarr;</span>
+            </button>
           </div>
         </div>
 

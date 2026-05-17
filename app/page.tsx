@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/navigation/navbar'
 import { HeroSection } from '@/components/hero/hero-section'
+import { SocialProofBar } from '@/components/stats/social-proof-bar'
 import { TrustBar } from '@/components/trust-bar/trust-bar'
 import { SectionDivider } from '@/components/section-divider/section-divider'
 import { StatsSection } from '@/components/stats/stats-section'
@@ -12,6 +13,7 @@ import { ComparisonTable } from '@/components/comparison/comparison-table'
 import { PortfolioSection } from '@/components/portfolio/portfolio-section'
 import { LatestFeed } from '@/components/feed/latest-feed'
 import { WhyMeSection } from '@/components/why-me/why-me-section'
+import { WhyTrustSection } from '@/components/trust/why-trust-section'
 import { TestimonialsSection } from '@/components/testimonials/testimonials-section'
 import { NewsletterInline } from '@/components/newsletter/newsletter-inline'
 import { PressSection } from '@/components/press/press-section'
@@ -33,9 +35,10 @@ export default function Home() {
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 1 — WELCOME: First impression                              */}
-      {/* Hero hook → TrustBar marquee                                   */}
+      {/* Hero hook → Social Proof Stats → TrustBar marquee              */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <HeroSection />
+      <SocialProofBar />
       <TrustBar />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
@@ -73,6 +76,7 @@ export default function Home() {
         subtitle="Why we win · How we got here"
       />
       <WhyMeSection />
+      <WhyTrustSection />
       <JourneyTimeline />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
@@ -123,7 +127,7 @@ export default function Home() {
       />
       <FaqSection />
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* ━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 9 — CONNECT: Final conversion stack (right above footer)   */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <SectionDivider

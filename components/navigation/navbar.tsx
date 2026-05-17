@@ -259,7 +259,7 @@ export function Navbar() {
               ))}
             </div>
 
-            {/* CTA Button + toggles */}
+            {/* CTA Button + toggles - Sponz.in style prominent green button */}
             <div className="hidden md:flex items-center gap-2">
               <SoundToggle />
               <CursorModeSelector />
@@ -271,9 +271,9 @@ export function Navbar() {
               >
                 <Button
                   onClick={() => scrollToSection('#contact')}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground relative overflow-hidden group"
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-accent/30 hover:shadow-accent/50 relative overflow-hidden group transition-all duration-300"
                 >
-                  <span className="relative z-10">Get in Touch</span>
+                  <span className="relative z-10">Book a Free Strategy Call</span>
                   {/* Button shine effect */}
                   <motion.span
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"

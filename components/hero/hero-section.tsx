@@ -143,39 +143,32 @@ export function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* Main heading */}
+        {/* Main heading - Sponz.in inspired bold statement */}
         <motion.h1
           custom={1}
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-4"
+          className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight mb-6 leading-tight"
         >
-          <span className="gradient-text">TechVyro</span>
+          <span className="text-foreground">We Get Brands More</span>
+          <br />
+          <span className="text-foreground">Sales Through </span>
+          <span className="gradient-text">Content & Creators</span>
         </motion.h1>
 
-        {/* Tagline */}
+        {/* Tagline - cleaner subtitle */}
         <motion.p
           custom={2}
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="text-lg sm:text-xl lg:text-2xl text-muted-foreground mb-2 max-w-2xl mx-auto"
+          className="text-lg sm:text-xl lg:text-2xl text-primary mb-8 max-w-3xl mx-auto leading-relaxed"
         >
-          India&apos;s Premier Tech Content Creator
-        </motion.p>
-        
-        <motion.p
-          custom={3}
-          variants={textVariants}
-          initial="hidden"
-          animate={isLoaded ? "visible" : "hidden"}
-          className="text-base sm:text-lg text-primary font-medium mb-8"
-        >
-          Creating Content That Converts
+          End-to-end content creation + influencer marketing — we handle everything so you can focus on running your business.
         </motion.p>
 
-        {/* CTA Buttons */}
+        {/* CTA Buttons - Sponz.in inspired prominent green style */}
         <motion.div
           custom={4}
           variants={textVariants}
@@ -186,10 +179,16 @@ export function HeroSection() {
           <Button
             size="lg"
             onClick={() => scrollToSection('contact')}
-            className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold neon-glow-cyan w-full sm:w-auto"
+            className="group relative overflow-hidden bg-accent hover:bg-accent/90 text-accent-foreground px-8 sm:px-10 py-6 sm:py-7 text-base sm:text-lg font-bold rounded-full shadow-lg shadow-accent/30 hover:shadow-accent/50 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
           >
-            <Zap className="mr-2 h-5 w-5" />
-            Let&apos;s Collab
+            Book a Free Strategy Call
+            <motion.span
+              className="ml-2 inline-block"
+              animate={{ x: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              &rarr;
+            </motion.span>
             <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           </Button>
           
@@ -197,7 +196,7 @@ export function HeroSection() {
             size="lg"
             variant="outline"
             onClick={() => scrollToSection('portfolio')}
-            className="group border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold w-full sm:w-auto"
+            className="group border-2 border-muted-foreground/30 text-foreground hover:border-primary hover:bg-primary/10 px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full w-full sm:w-auto transition-all duration-300"
           >
             <Play className="mr-2 h-5 w-5" />
             View My Work
