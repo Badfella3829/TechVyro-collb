@@ -11,7 +11,6 @@ import { PackagesSection } from '@/components/packages/packages-section'
 import { ROICalculator } from '@/components/calculators/roi-calculator'
 import { ComparisonTable } from '@/components/comparison/comparison-table'
 import { PortfolioSection } from '@/components/portfolio/portfolio-section'
-import { LatestFeed } from '@/components/feed/latest-feed'
 import { WhyMeSection } from '@/components/why-me/why-me-section'
 import { WhyTrustSection } from '@/components/trust/why-trust-section'
 import { TestimonialsSection } from '@/components/testimonials/testimonials-section'
@@ -54,16 +53,15 @@ export default function Home() {
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       {/* ACT 3 — WORK: Show the work, then explain the formats          */}
-      {/* Portfolio (show) → Latest Feed (live) → Services (formats)     */}
+      {/* Portfolio (show) → Services (formats)                          */}
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div className="content-auto">
         <SectionDivider
           label="02 — WORK"
           title="Featured Productions"
-          subtitle="See what we've built · Live feed · Content formats we create"
+          subtitle="See what we've built · Content formats we create"
         />
         <PortfolioSection />
-        <LatestFeed />
         <ServicesGrid />
       </div>
 

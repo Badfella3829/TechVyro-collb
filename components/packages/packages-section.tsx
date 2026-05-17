@@ -337,7 +337,7 @@ export function PackagesSection() {
                           
                           <Button 
                             variant="outline" 
-                            className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                            className="w-full group-hover:bg-accent group-hover:text-accent-foreground group-hover:border-accent transition-colors font-semibold"
                             onClick={() => selectPackage({
                               name: pkg.name,
                               description: pkg.description,
