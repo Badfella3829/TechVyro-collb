@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { ChevronDown, Play, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ParticleField } from './particle-field'
+import { AnimatedBrandText } from './animated-brand-text'
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
 
 const textVariants = {
@@ -92,6 +93,9 @@ export function HeroSection() {
       
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+      
+      {/* Animated TECHVYRO background text - Sponz.in style */}
+      <AnimatedBrandText />
       
       {/* 3D Particle Background */}
       <ParticleField />
