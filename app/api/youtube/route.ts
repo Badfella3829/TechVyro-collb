@@ -45,16 +45,74 @@ function parseDuration(iso?: string): number | null {
   return h * 3600 + m * 60 + s
 }
 
+// Realistic demo data when credentials aren't configured
+function getYouTubeDemoData() {
+  const videoTitles = [
+    'iPhone 16 Pro Max Complete Review - Is It Worth It?',
+    'MacBook Pro M4 vs M3 - Real World Performance Test',
+    'Best Budget Smartphones Under 15000 in 2024',
+    'Galaxy S24 Ultra Camera Deep Dive',
+    'iPad Pro M4 - The Ultimate Tablet?',
+    'AirPods Pro 3 Leaked Features',
+    'OnePlus 13 First Impressions',
+    'Best Wireless Earbuds 2024',
+    'Pixel 9 Pro vs iPhone 16 Pro Camera Comparison',
+    'Gaming Laptop Buying Guide 2024',
+    'Apple Watch Ultra 3 Everything We Know',
+    'Samsung Galaxy Fold 6 Durability Test',
+    'Best Power Banks for Travel',
+    'Xiaomi 14 Ultra Camera Review',
+    'Tech Gadgets You NEED in 2024',
+    'iPhone 16 Hidden Features',
+    'Best Monitors for Productivity',
+    'Realme GT 6 Gaming Review',
+    'Nothing Phone 3 Leaks',
+    'Smart Home Setup Tour 2024',
+  ]
+  
+  return {
+    channel: {
+      id: 'demo-channel',
+      title: 'TechVyro',
+      description: 'Your go-to source for tech reviews, comparisons, and the latest gadget news. We help you make informed tech decisions.',
+      customUrl: '@TechVyro',
+      thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=200&fit=crop',
+      subscribers: 287000,
+      totalViews: 45200000,
+      videoCount: 342,
+      link: 'https://www.youtube.com/@TechVyro',
+    },
+    videos: videoTitles.map((title, i) => ({
+      id: `demo-video-${i}`,
+      title,
+      description: `In this video we explore ${title.toLowerCase()}. Don't forget to like, subscribe and hit the bell icon!`,
+      publishedAt: new Date(Date.now() - i * 3 * 86400000).toISOString(),
+      thumbnail: `https://images.unsplash.com/photo-${[1611162617474, 1585792180666, 1517336714731, 1563203369, 1592899677].at(i % 5)}-w=640&h=360&fit=crop`,
+      views: Math.floor(Math.random() * 800000) + 50000,
+      likes: Math.floor(Math.random() * 25000) + 2000,
+      comments: Math.floor(Math.random() * 1500) + 100,
+      duration: i % 4 === 0 ? Math.floor(Math.random() * 55) + 15 : Math.floor(Math.random() * 900) + 180,
+      permalink: `https://youtube.com/watch?v=demo-${i}`,
+      isShort: i % 4 === 0,
+    })),
+    computed: {
+      avgViews: 185000,
+      avgLikes: 8500,
+      avgEngagement: 4.82,
+    },
+    fetchedAt: new Date().toISOString(),
+    isDemoData: true,
+  }
+}
+
 export async function GET(req: Request) {
   const _u = new URL(req.url); const forceRefresh = _u.searchParams.has("refresh") || _u.searchParams.has("_t");
   const apiKey = process.env.YOUTUBE_API_KEY
   const channelId = process.env.YOUTUBE_CHANNEL_ID
 
   if (!apiKey || !channelId) {
-    return NextResponse.json(
-      { error: 'YouTube credentials not configured' },
-      { status: 500 }
-    )
+    console.warn('[youtube-api] Credentials not configured, using demo data')
+    return NextResponse.json(getYouTubeDemoData())
   }
 
   try {

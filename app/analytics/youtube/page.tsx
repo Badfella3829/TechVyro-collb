@@ -48,6 +48,7 @@ export default function YouTubeAnalyticsPage() {
           <CardContent className="p-8 text-center">
             <p className="text-destructive font-semibold mb-2">Could not load YouTube data</p>
             <p className="text-sm text-muted-foreground mb-6">{error || 'Unknown error'}</p>
+            <p className="text-xs text-muted-foreground mb-6 p-3 bg-muted rounded">To connect real YouTube data, configure YOUTUBE_API_KEY and YOUTUBE_CHANNEL_ID environment variables.</p>
             <Link href="/"><Button variant="outline"><ArrowLeft className="h-4 w-4 mr-2" />Back to home</Button></Link>
           </CardContent>
         </Card>
@@ -55,6 +56,7 @@ export default function YouTubeAnalyticsPage() {
     )
   }
 
+  const isDemoData = (data as any).isDemoData
   const { channel, videos, computed } = data
   const totalLikes = videos.reduce((s, v) => s + v.likes, 0)
   const totalComments = videos.reduce((s, v) => s + v.comments, 0)
@@ -66,6 +68,13 @@ export default function YouTubeAnalyticsPage() {
 
   return (
     <main className="min-h-screen pt-24 pb-16 sm:pb-24">
+      {isDemoData && (
+        <div className="bg-red-500/10 border-t border-b border-red-500/30 py-3 px-4 mb-6">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-sm text-red-700 dark:text-red-400"><strong>Demo Mode:</strong> Showing sample YouTube data. Connect real credentials for live analytics.</p>
+          </div>
+        </div>
+      )}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6">
           <Link href="/#stats" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
