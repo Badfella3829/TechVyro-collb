@@ -182,7 +182,7 @@ export function TestimonialsSection() {
   const currentTestimonial = TESTIMONIALS[currentIndex]
 
   return (
-    <section id="testimonials" className="py-20 sm:py-28 relative overflow-hidden" ref={sectionRef}>
+    <section id="testimonials" className="py-10 sm:py-14 relative overflow-hidden" ref={sectionRef}>
       {/* Background decoration */}
       <div className="absolute inset-0 grid-pattern-subtle opacity-20" />
       <div className="absolute top-1/4 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />

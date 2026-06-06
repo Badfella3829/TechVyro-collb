@@ -73,7 +73,7 @@ const SERVICES = [
 
 export function ServicesGrid() {
   return (
-    <section id="services" className="py-20 sm:py-28 px-4 relative overflow-hidden section-alt">
+    <section id="services" className="py-10 sm:py-14 px-4 relative overflow-hidden section-alt">
       {/* Subtle grid pattern */}
       <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />

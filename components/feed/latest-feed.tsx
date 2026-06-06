@@ -83,7 +83,7 @@ export function LatestFeed() {
   if (feed.length === 0) return null
 
   return (
-    <section id="latest" className="py-16 sm:py-24 relative">
+    <section id="latest" className="py-10 sm:py-12 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

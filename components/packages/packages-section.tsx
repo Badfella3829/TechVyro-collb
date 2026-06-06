@@ -218,7 +218,7 @@ export function PackagesSection() {
   }
 
   return (
-    <section id="packages" className="py-16 sm:py-24 lg:py-32 relative">
+    <section id="packages" className="py-10 sm:py-12 lg:py-16 relative">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/5 to-transparent" />
       

@@ -34,7 +34,7 @@ function Cell({ value }: { value: boolean }) {
 
 export function ComparisonTable() {
   return (
-    <section id="compare" className="py-16 sm:py-24 px-4 relative overflow-hidden">
+    <section id="compare" className="py-10 sm:py-12 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/5 to-transparent pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative">
