@@ -121,7 +121,7 @@ function AnimatedLogo({ onClick }: { onClick: () => void }) {
       </motion.div>
       
       {/* Brand text with character animation */}
-      <span className="text-lg sm:text-xl font-bold relative overflow-hidden">
+      <span className="text-lg sm:text-xl font-bold relative overflow-hidden whitespace-nowrap">
         {'TechVyro'.split('').map((char, i) => (
           <motion.span
             key={i}
@@ -244,7 +244,7 @@ export function Navbar() {
             />
 
             {/* Desktop Navigation with magnetic links */}
-            <div className="hidden md:flex items-center gap-6 lg:gap-8">
+            <div className="hidden lg:flex items-center gap-6 lg:gap-8">
               {navLinks.map((link) => (
                 <MagneticNavLink
                   key={link.href}
@@ -260,7 +260,7 @@ export function Navbar() {
             </div>
 
             {/* CTA Button + toggles */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2">
               <SoundToggle />
               <CursorModeSelector />
               <LangToggle />
@@ -289,7 +289,7 @@ export function Navbar() {
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-              className="md:hidden p-3 -mr-2 text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center relative"
+              className="lg:hidden p-3 -mr-2 text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center relative"
               whileTap={{ scale: 0.9 }}
             >
               <AnimatePresence mode="wait">
@@ -328,7 +328,7 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 md:hidden overflow-y-auto overscroll-contain"
+            className="fixed inset-0 z-40 lg:hidden overflow-y-auto overscroll-contain"
           >
             {/* Backdrop with blur */}
             <motion.div 
