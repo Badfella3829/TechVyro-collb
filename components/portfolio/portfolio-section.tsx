@@ -19,9 +19,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { useInstagram, type InstagramMedia } from '@/hooks/use-instagram'
-import { useFacebook, type FacebookPost } from '@/hooks/use-facebook'
-import { useYouTube, type YouTubeVideo } from '@/hooks/use-youtube'
 
 type Platform = 'instagram' | 'facebook' | 'youtube'
 type FilterType = 'all' | 'reel' | 'post'
@@ -47,60 +44,73 @@ function formatCount(n: number): string {
   return n.toLocaleString()
 }
 
-function captionTitle(caption: string | undefined, fallback = 'Post'): string {
-  if (!caption) return fallback
-  const firstLine = caption.split('\n')[0].trim()
-  return firstLine.length > 80 ? firstLine.slice(0, 77) + '…' : firstLine
-}
-
-function igToUnified(m: InstagramMedia): UnifiedItem {
-  return {
-    id: `ig-${m.id}`,
-    platform: 'instagram',
-    type: m.media_type === 'VIDEO' ? 'reel' : 'post',
-    thumbnail: m.thumbnail_url || m.media_url,
-    title: captionTitle(m.caption, 'Instagram Post'),
-    permalink: m.permalink,
-    likes: m.like_count || 0,
-    comments: m.comments_count || 0,
-    timestamp: m.timestamp,
-    caption: m.caption,
-  }
-}
-
-function ytToUnified(v: YouTubeVideo): UnifiedItem {
-  return {
-    id: `yt-${v.id}`,
-    platform: 'youtube',
-    type: v.isShort ? 'reel' : 'post',
-    thumbnail: v.thumbnail,
-    title: v.title,
-    permalink: v.permalink,
-    likes: v.likes,
-    comments: v.comments,
-    views: v.views,
-    timestamp: v.publishedAt,
-    caption: v.description,
-  }
-}
-
-function fbToUnified(p: FacebookPost): UnifiedItem {
-  const att = p.attachments?.data?.[0]
-  const isVideo = att?.type?.includes('video') || p.permalink_url?.includes('/reel/') || p.permalink_url?.includes('/videos/')
-  return {
-    id: `fb-${p.id}`,
-    platform: 'facebook',
-    type: isVideo ? 'reel' : 'post',
-    thumbnail: p.full_picture || att?.media?.image?.src,
-    title: captionTitle(p.message || p.story, 'Facebook Post'),
-    permalink: p.permalink_url || `https://facebook.com/${p.id}`,
-    likes: p.reactions?.summary?.total_count || 0,
-    comments: p.comments?.summary?.total_count || 0,
-    shares: p.shares?.count,
-    timestamp: p.created_time,
-    caption: p.message || p.story,
-  }
-}
+// Static featured content. Swap thumbnails, links and metrics anytime.
+const PORTFOLIO_ITEMS: UnifiedItem[] = [
+  {
+    id: 'ig-1', platform: 'instagram', type: 'reel',
+    thumbnail: '/images/portfolio/iphone-16.jpg',
+    title: 'iPhone 16 Pro — cinematic launch reel',
+    permalink: 'https://instagram.com/techvyro',
+    likes: 58000, comments: 1200, timestamp: '2025-03-12',
+    caption: 'A cinematic launch reel for the iPhone 16 Pro — shot, edited and delivered in 48 hours.',
+  },
+  {
+    id: 'yt-1', platform: 'youtube', type: 'post',
+    thumbnail: '/images/portfolio/samsung-s24.jpg',
+    title: 'Samsung S24 Ultra full review',
+    permalink: 'https://youtube.com/@techvyro',
+    likes: 41000, comments: 2100, views: 1250000, timestamp: '2025-02-20',
+    caption: 'A deep-dive long-form review of the Samsung S24 Ultra with custom motion graphics.',
+  },
+  {
+    id: 'ig-2', platform: 'instagram', type: 'post',
+    thumbnail: '/images/portfolio/pixel-9.jpg',
+    title: 'Pixel 9 camera showcase',
+    permalink: 'https://instagram.com/techvyro',
+    likes: 33000, comments: 890, timestamp: '2025-02-10',
+    caption: 'Carousel showcasing the Pixel 9 computational photography pipeline.',
+  },
+  {
+    id: 'fb-1', platform: 'facebook', type: 'reel',
+    thumbnail: '/images/portfolio/oneplus-12.jpg',
+    title: 'OnePlus 12 speed test',
+    permalink: 'https://facebook.com/techvyroclips',
+    likes: 21000, comments: 540, shares: 1300, timestamp: '2025-01-28',
+    caption: 'A fast-cut speed test reel for the OnePlus 12.',
+  },
+  {
+    id: 'yt-2', platform: 'youtube', type: 'reel',
+    thumbnail: '/images/portfolio/nothing-phone.jpg',
+    title: 'Nothing Phone 2a — Short',
+    permalink: 'https://youtube.com/@techvyro',
+    likes: 28000, comments: 760, views: 880000, timestamp: '2025-01-15',
+    caption: 'A punchy YouTube Short on the Nothing Phone 2a design language.',
+  },
+  {
+    id: 'ig-3', platform: 'instagram', type: 'reel',
+    thumbnail: '/images/portfolio/rog-phone.jpg',
+    title: 'ROG Phone 8 gaming reel',
+    permalink: 'https://instagram.com/techvyro',
+    likes: 47000, comments: 1500, timestamp: '2024-12-22',
+    caption: 'High-energy gaming reel for the ROG Phone 8.',
+  },
+  {
+    id: 'fb-2', platform: 'facebook', type: 'post',
+    thumbnail: '/images/portfolio/xiaomi-14.jpg',
+    title: 'Xiaomi 14 Ultra photo walk',
+    permalink: 'https://facebook.com/techvyroclips',
+    likes: 16000, comments: 410, shares: 720, timestamp: '2024-12-05',
+    caption: 'A photo-walk feature highlighting the Xiaomi 14 Ultra Leica lenses.',
+  },
+  {
+    id: 'yt-3', platform: 'youtube', type: 'post',
+    thumbnail: '/images/portfolio/sony-xperia.jpg',
+    title: 'Sony Xperia 1 VI for creators',
+    permalink: 'https://youtube.com/@techvyro',
+    likes: 19000, comments: 980, views: 540000, timestamp: '2024-11-18',
+    caption: 'Long-form creator-focused review of the Sony Xperia 1 VI.',
+  },
+]
 
 const platformFilters: { id: Platform | 'all'; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'all', label: 'All Platforms', icon: Play },
@@ -139,19 +149,12 @@ export function PortfolioSection() {
   const [platformFilter, setPlatformFilter] = useState<Platform | 'all'>('all')
   const [typeFilter, setTypeFilter] = useState<FilterType>('all')
   const [selectedItem, setSelectedItem] = useState<UnifiedItem | null>(null)
-  const { data: ig, loading: igLoading, error: igError } = useInstagram()
-  const { data: fb, loading: fbLoading, error: fbError } = useFacebook()
-  const { data: yt, loading: ytLoading, error: ytError } = useYouTube()
 
   const allItems = useMemo<UnifiedItem[]>(() => {
-    const items: UnifiedItem[] = []
-    if (ig) items.push(...ig.media.map(igToUnified))
-    if (fb) items.push(...fb.posts.map(fbToUnified))
-    if (yt) items.push(...yt.videos.map(ytToUnified))
     const score = (i: UnifiedItem) =>
       i.platform === 'youtube' ? (i.views ?? 0) : (i.likes + i.comments) * 10
-    return items.sort((a, b) => score(b) - score(a))
-  }, [ig, fb, yt])
+    return [...PORTFOLIO_ITEMS].sort((a, b) => score(b) - score(a))
+  }, [])
 
   const filteredItems = useMemo(() => {
     let items = allItems
@@ -159,9 +162,6 @@ export function PortfolioSection() {
     if (typeFilter !== 'all') items = items.filter((i) => i.type === typeFilter)
     return items.slice(0, 12)
   }, [allItems, platformFilter, typeFilter])
-
-  const loading = igLoading || fbLoading || ytLoading
-  const hasError = !ig && !fb && !yt && (igError || fbError || ytError)
 
   return (
     <section id="portfolio" className="py-10 sm:py-12 lg:py-16 relative">
@@ -183,11 +183,10 @@ export function PortfolioSection() {
             <span className="gradient-text"> Content</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Live top content from{' '}
+            A selection of top content created for{' '}
             <span className="text-pink-500 font-semibold">Instagram</span>,{' '}
             <span className="text-blue-500 font-semibold">Facebook</span> &{' '}
-            <span className="text-red-500 font-semibold">YouTube</span>
-            {' '}— ranked by real performance.
+            <span className="text-red-500 font-semibold">YouTube</span>.
           </p>
         </motion.div>
 
@@ -240,42 +239,8 @@ export function PortfolioSection() {
           ))}
         </motion.div>
 
-        {/* Loading / Error */}
-        {loading && allItems.length === 0 && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Card key={i} className="overflow-hidden glass border-border/50 animate-pulse">
-                <div className="aspect-[4/5] sm:aspect-[9/12] bg-muted" />
-                <CardContent className="p-4">
-                  <div className="h-4 bg-muted rounded w-3/4 mb-2" />
-                  <div className="h-3 bg-muted rounded w-1/2" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-        {hasError && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">Couldn&apos;t load live content right now.</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Button asChild variant="outline" size="lg" className="rounded-full">
-                <a href="https://instagram.com/techvyro" target="_blank" rel="noopener noreferrer">
-                  <Instagram className="h-4 w-4 mr-2 text-pink-500" />
-                  Visit Instagram
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full">
-                <a href="https://youtube.com/@techvyro" target="_blank" rel="noopener noreferrer">
-                  <Youtube className="h-4 w-4 mr-2 text-red-500" />
-                  Visit YouTube
-                </a>
-              </Button>
-            </div>
-          </div>
-        )}
-
         {/* Grid */}
-        {allItems.length > 0 && (
+        {filteredItems.length > 0 && (
           <AnimatePresence mode="wait">
             <motion.div
               key={`${platformFilter}-${typeFilter}`}
@@ -299,7 +264,7 @@ export function PortfolioSection() {
                       {item.thumbnail ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={item.thumbnail}
+                          src={item.thumbnail || "/placeholder.svg"}
                           alt={item.title}
                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                           loading="lazy"
@@ -388,21 +353,21 @@ export function PortfolioSection() {
           className="text-center mt-12 flex flex-wrap justify-center gap-3"
         >
           <Button asChild variant="outline" size="lg" className="rounded-full">
-            <a href={`https://instagram.com/${ig?.account.username || 'techvyro'}`} target="_blank" rel="noopener noreferrer">
+            <a href="https://instagram.com/techvyro" target="_blank" rel="noopener noreferrer">
               <Instagram className="h-4 w-4 mr-2 text-pink-500" />
               Visit Instagram
               <ExternalLink className="h-4 w-4 ml-2" />
             </a>
           </Button>
           <Button asChild variant="outline" size="lg" className="rounded-full">
-            <a href={fb?.page.link || 'https://facebook.com/techvyroclips'} target="_blank" rel="noopener noreferrer">
+            <a href="https://facebook.com/techvyroclips" target="_blank" rel="noopener noreferrer">
               <Facebook className="h-4 w-4 mr-2 text-blue-500" />
               Visit Facebook
               <ExternalLink className="h-4 w-4 ml-2" />
             </a>
           </Button>
           <Button asChild variant="outline" size="lg" className="rounded-full">
-            <a href={yt?.channel.link || 'https://youtube.com/@techvyro'} target="_blank" rel="noopener noreferrer">
+            <a href="https://youtube.com/@techvyro" target="_blank" rel="noopener noreferrer">
               <Youtube className="h-4 w-4 mr-2 text-red-500" />
               Visit YouTube
               <ExternalLink className="h-4 w-4 ml-2" />
@@ -442,7 +407,7 @@ export function PortfolioSection() {
                 {selectedItem.thumbnail && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={selectedItem.thumbnail}
+                    src={selectedItem.thumbnail || "/placeholder.svg"}
                     alt=""
                     className="absolute inset-0 w-full h-full object-cover"
                   />

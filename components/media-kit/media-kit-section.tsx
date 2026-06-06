@@ -224,8 +224,8 @@ export function MediaKitSection() {
               {/* Bottom Actions */}
               <div className="p-6 sm:p-8 border-t border-border/30 bg-muted/10 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                  Live data • {ready ? new Date(ig?.fetchedAt || Date.now()).toLocaleString() : 'Loading…'}
+                  <span className="w-2 h-2 bg-accent rounded-full" />
+                  Verified stats • Updated regularly
                 </div>
                 <div className="flex items-center gap-3">
                   <Button

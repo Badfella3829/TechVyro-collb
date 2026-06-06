@@ -30,9 +30,9 @@ export default function NotFound() {
         </div>
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
           {[
-            { href: '/analytics/instagram', label: 'Instagram Analytics' },
-            { href: '/analytics/facebook', label: 'Facebook Analytics' },
-            { href: '/analytics/youtube', label: 'YouTube Analytics' },
+            { href: '/#stats', label: 'Our Stats' },
+            { href: '/#portfolio', label: 'Portfolio' },
+            { href: '/#contact', label: 'Contact Us' },
           ].map((l) => (
             <Link
               key={l.href}

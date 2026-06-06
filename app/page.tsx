@@ -10,7 +10,6 @@ import { PackagesSection } from '@/components/packages/packages-section'
 import { ROICalculator } from '@/components/calculators/roi-calculator'
 import { ComparisonTable } from '@/components/comparison/comparison-table'
 import { PortfolioSection } from '@/components/portfolio/portfolio-section'
-import { LatestFeed } from '@/components/feed/latest-feed'
 import { WhyMeSection } from '@/components/why-me/why-me-section'
 import { TestimonialsSection } from '@/components/testimonials/testimonials-section'
 import { NewsletterInline } from '@/components/newsletter/newsletter-inline'
@@ -44,7 +43,7 @@ export default function Home() {
       <SectionDivider
         label="01 — PROOF"
         title="Numbers Don't Lie"
-        subtitle="Real-time stats from live platforms · Brands we've served"
+        subtitle="Our reach by the numbers · Brands we've served"
       />
       <StatsSection />
       <BrandsSection />
@@ -57,10 +56,9 @@ export default function Home() {
         <SectionDivider
           label="02 — WORK"
           title="Featured Productions"
-          subtitle="See what we've built · Live feed · Content formats we create"
+          subtitle="See what we've built · Content formats we create"
         />
         <PortfolioSection />
-        <LatestFeed />
         <ServicesGrid />
       </div>
 

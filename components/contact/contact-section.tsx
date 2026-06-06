@@ -514,13 +514,13 @@ export function ContactSection() {
             className="lg:col-span-1 space-y-4 lg:sticky lg:top-24 self-start"
           >
             <CalendlyEmbed />
-            {/* Live reach card */}
+            {/* Reach card */}
             <Card className="glass border-primary/30 bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent">
               <CardContent className="p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <span className="text-xs uppercase tracking-wider text-muted-foreground">
-                    Live Audience
+                    Total Audience
                   </span>
                 </div>
                 <p className="text-2xl font-bold gradient-text">
