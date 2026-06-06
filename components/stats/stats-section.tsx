@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useEffect, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Users, Play, Eye, TrendingUp, Heart, MessageCircle, ArrowRight, Instagram, Facebook, Youtube } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 
@@ -21,44 +21,14 @@ interface StatItemProps {
   isInView: boolean
 }
 
-// Rolling digit component for slot-machine effect
-function RollingDigit({ digit, delay }: { digit: string; delay: number }) {
-  const isNumber = !isNaN(parseInt(digit))
-
-  if (!isNumber) {
-    return <span className="inline-block">{digit}</span>
-  }
-
-  return (
-    <span className="inline-block relative overflow-hidden h-[1.2em] w-[0.65em]">
-      <motion.span
-        className="absolute inset-0 flex flex-col items-center"
-        initial={{ y: '-100%' }}
-        animate={{ y: `${-parseInt(digit) * 10}%` }}
-        transition={{
-          duration: 1.5,
-          delay,
-          ease: [0.25, 0.46, 0.45, 0.94],
-        }}
-      >
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-          <span key={n} className="h-[1.2em] flex items-center justify-center">
-            {n}
-          </span>
-        ))}
-      </motion.span>
-    </span>
-  )
-}
-
 function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean }) {
   const [displayValue, setDisplayValue] = useState(0)
-  const [hasAnimated, setHasAnimated] = useState(false)
+  const hasAnimated = useRef(false)
 
   useEffect(() => {
-    if (!isInView || hasAnimated) return
+    if (!isInView || hasAnimated.current) return
 
-    setHasAnimated(true)
+    hasAnimated.current = true
     let start = 0
     const duration = 2000
     const increment = value / (duration / 16)
@@ -74,19 +44,9 @@ function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean
     }, 16)
 
     return () => clearInterval(timer)
-  }, [value, isInView, hasAnimated])
+  }, [value, isInView])
 
-  // Format number with commas and use rolling digits
-  const formattedValue = displayValue.toLocaleString()
-  const chars = formattedValue.split('')
-
-  return (
-    <span className="inline-flex tabular-nums">
-      {chars.map((char, i) => (
-        <RollingDigit key={i} digit={char} delay={i * 0.05} />
-      ))}
-    </span>
-  )
+  return <span className="tabular-nums">{formatNumber(displayValue)}</span>
 }
 
 function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView }: StatItemProps) {
@@ -104,7 +64,7 @@ function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView }: 
             </div>
             <TrendingUp className="h-4 w-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 break-all">
+          <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 whitespace-nowrap">
             <AnimatedCounter value={value} isInView={isInView} />
             <span className="text-primary">{suffix}</span>
           </div>
@@ -172,8 +132,40 @@ const platformStats = [
 ]
 
 export function StatsSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef<HTMLDivElement>(null)
+  const [isInView, setIsInView] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) {
+      // No ref yet — still trigger so counters never get stuck on 0.
+      const t = setTimeout(() => setIsInView(true), 200)
+      return () => clearTimeout(t)
+    }
+
+    // Reveal as soon as the section enters the viewport...
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setIsInView(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 },
+    )
+    observer.observe(el)
+
+    // ...with a guaranteed fallback so the numbers always animate in.
+    const fallback = setTimeout(() => {
+      setIsInView(true)
+      observer.disconnect()
+    }, 1200)
+
+    return () => {
+      observer.disconnect()
+      clearTimeout(fallback)
+    }
+  }, [])
 
   return (
     <section id="stats" className="py-10 sm:py-12 lg:py-16 relative">
