@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import { Space_Grotesk, JetBrains_Mono, Cormorant_Garamond } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { SmoothScroll } from '@/components/effects/smooth-scroll'
@@ -21,6 +21,14 @@ const spaceGrotesk = Space_Grotesk({
 const jetbrainsMono = JetBrains_Mono({ 
   subsets: ["latin"],
   variable: '--font-mono',
+  display: 'swap',
+})
+
+const cormorant = Cormorant_Garamond({ 
+  subsets: ["latin"],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
   display: 'swap',
 })
 
@@ -89,7 +97,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} bg-background`}>
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${cormorant.variable} bg-background`}>
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
         <script
