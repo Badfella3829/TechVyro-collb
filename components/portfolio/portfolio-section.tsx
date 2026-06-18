@@ -169,27 +169,18 @@ export function PortfolioSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative" ref={ref}>
-        {/* Header */}
-        <motion.div
+        {/* Short context line — full section title comes from the divider above */}
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center text-muted-foreground max-w-2xl mx-auto mb-8"
         >
-          <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-            Portfolio
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-2 mb-4">
-            Best Performing
-            <span className="gradient-text"> Content</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            A selection of top content created for{' '}
-            <span className="text-pink-500 font-semibold">Instagram</span>,{' '}
-            <span className="text-blue-500 font-semibold">Facebook</span> &{' '}
-            <span className="text-red-500 font-semibold">YouTube</span>.
-          </p>
-        </motion.div>
+          A selection of top content created for{' '}
+          <span className="text-pink-500 font-semibold">Instagram</span>,{' '}
+          <span className="text-blue-500 font-semibold">Facebook</span> &{' '}
+          <span className="text-red-500 font-semibold">YouTube</span>.
+        </motion.p>
 
         {/* Platform tabs */}
         <motion.div
@@ -212,8 +203,7 @@ export function PortfolioSection() {
               )}
             >
               <f.icon className="h-4 w-4 shrink-0" />
-              <span className="hidden xs:inline">{f.label}</span>
-              <span className="xs:hidden">{f.id === 'all' ? 'All' : f.id.charAt(0).toUpperCase() + f.id.slice(1, 3)}</span>
+              <span>{f.label}</span>
             </Button>
           ))}
         </motion.div>
@@ -234,8 +224,7 @@ export function PortfolioSection() {
               className="rounded-full gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[40px]"
             >
               <filter.icon className="h-4 w-4 shrink-0" />
-              <span className="hidden sm:inline">{filter.label}</span>
-              <span className="sm:hidden">{filter.id === 'all' ? 'Top' : filter.id === 'reel' ? 'Reels' : 'Posts'}</span>
+              <span>{filter.label}</span>
             </Button>
           ))}
         </motion.div>
@@ -490,7 +479,7 @@ export function PortfolioSection() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
         viewport={{ once: true, margin: '-100px' }}
-        className="mt-24"
+        className="mt-12"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
