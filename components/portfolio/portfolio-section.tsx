@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { InteractiveGlobe } from '@/components/3d/interactive-globe'
 
 type Platform = 'instagram' | 'facebook' | 'youtube'
 type FilterType = 'all' | 'reel' | 'post'
@@ -482,6 +483,44 @@ export function PortfolioSection() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* 3D Interactive Globe Showcase */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        viewport={{ once: true, margin: '-100px' }}
+        className="mt-24"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-3 bg-gradient-to-r from-gold via-accent to-gold bg-clip-text text-transparent">
+              Our Global Reach
+            </h3>
+            <p className="text-foreground/60 max-w-2xl mx-auto">
+              Explore our interactive 3D globe showcasing our audience reach across continents. Drag, rotate, and zoom to discover where our content resonates most.
+            </p>
+          </div>
+          <div className="rounded-xl overflow-hidden shadow-2xl border border-gold/10">
+            <InteractiveGlobe />
+          </div>
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { label: 'Asia Pacific', value: '35%' },
+              { label: 'Europe', value: '28%' },
+              { label: 'Americas', value: '22%' },
+              { label: 'Africa & ME', value: '15%' },
+            ].map((stat) => (
+              <Card key={stat.label} className="bg-gold/5 border-gold/20">
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-gold mb-1">{stat.value}</div>
+                  <p className="text-xs text-foreground/60 uppercase tracking-wide">{stat.label}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </section>
   )
 }
