@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { ChevronDown, Play, Zap, TrendingUp, Award } from 'lucide-react'
+import { ChevronDown, Play, Zap, TrendingUp, Award, Instagram, Youtube, Facebook, Linkedin, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ParticleField } from './particle-field'
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
@@ -206,10 +206,28 @@ export function HeroSection() {
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="text-base sm:text-lg text-gold font-medium tracking-wide mb-8"
+          className="text-base sm:text-lg text-gold font-medium tracking-wide mb-6"
         >
           Creating Content That Converts
         </motion.p>
+
+        {/* Skill / content pills — reference inspired */}
+        <motion.div
+          custom={3.5}
+          variants={textVariants}
+          initial="hidden"
+          animate={isLoaded ? "visible" : "hidden"}
+          className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8 px-4 sm:px-0"
+        >
+          {['Tech Reviews', 'Unboxings', 'Brand Collabs', 'Tutorials', 'Shorts & Reels'].map((skill) => (
+            <span
+              key={skill}
+              className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium border border-gold/30 bg-gold/5 text-foreground/80 hover:border-gold/60 hover:text-gold transition-colors"
+            >
+              {skill}
+            </span>
+          ))}
+        </motion.div>
 
         {/* CTA Buttons */}
         <motion.div
@@ -238,6 +256,35 @@ export function HeroSection() {
             <Play className="mr-2 h-5 w-5" />
             View My Work
           </Button>
+        </motion.div>
+
+        {/* Social icons row — reference inspired */}
+        <motion.div
+          custom={4.5}
+          variants={textVariants}
+          initial="hidden"
+          animate={isLoaded ? "visible" : "hidden"}
+          className="flex items-center justify-center gap-3 mb-10 sm:mb-12"
+        >
+          <span className="text-xs uppercase tracking-widest text-muted-foreground mr-1">Follow</span>
+          {[
+            { Icon: Instagram, href: 'https://instagram.com/techvyro', label: 'Instagram' },
+            { Icon: Youtube, href: 'https://youtube.com/@techvyro', label: 'YouTube' },
+            { Icon: Facebook, href: 'https://facebook.com/techvyro', label: 'Facebook' },
+            { Icon: Linkedin, href: 'https://linkedin.com/in/techvyro', label: 'LinkedIn' },
+            { Icon: MessageCircle, href: 'https://wa.me/916396094707', label: 'WhatsApp' },
+          ].map(({ Icon, href, label }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="flex items-center justify-center w-10 h-10 rounded-full border border-gold/30 bg-gold/5 text-foreground/70 hover:text-gold hover:border-gold/60 hover:bg-gold/10 transition-colors"
+            >
+              <Icon className="h-4 w-4" />
+            </a>
+          ))}
         </motion.div>
 
         {/* Stats preview */}
