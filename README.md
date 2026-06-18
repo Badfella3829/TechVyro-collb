@@ -201,7 +201,7 @@ This project is private and proprietary. All rights reserved.
 
 **TechVyro** - [@techvyro](https://instagram.com/techvyro)
 
-Website: [https://techvyro.com](https://techvyro.com)
+Website: [https://techvyro.com](https://techvyro.in)
 
 Email: techvyro@gmail.com
 
