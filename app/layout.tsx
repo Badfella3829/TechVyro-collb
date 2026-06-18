@@ -9,6 +9,7 @@ import { VisitorCounter } from '@/components/visitor-counter/visitor-counter'
 import { PageTransition } from '@/components/page-transition/page-transition'
 import { CookieConsent } from '@/components/cookie-consent/cookie-consent'
 import { BottomNav } from '@/components/mobile-nav/bottom-nav'
+import { BrandScene } from '@/components/3d/brand-scene'
 import { personJsonLd, organizationJsonLd, websiteJsonLd } from '@/lib/json-ld'
 import './globals.css'
 
@@ -164,6 +165,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <BrandScene />
           <SmoothScroll>
             <div id="main-content"><PageTransition>{children}</PageTransition></div>
             <WhatsAppButton />
