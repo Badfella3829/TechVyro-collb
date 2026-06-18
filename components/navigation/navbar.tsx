@@ -8,8 +8,6 @@ import { Menu, X, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { LangToggle } from '@/components/i18n/lang-toggle'
-import { CursorModeSelector } from '@/components/effects/cursor-mode-selector'
-import { SoundToggle } from '@/components/effects/sound-effects'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -244,7 +242,7 @@ export function Navbar() {
             />
 
             {/* Desktop Navigation with magnetic links */}
-            <div className="hidden md:flex items-center gap-6 lg:gap-8">
+            <div className="hidden md:flex items-center gap-1 lg:gap-2">
               {navLinks.map((link) => (
                 <MagneticNavLink
                   key={link.href}
@@ -260,9 +258,7 @@ export function Navbar() {
             </div>
 
             {/* CTA Button + toggles */}
-            <div className="hidden md:flex items-center gap-2">
-              <SoundToggle />
-              <CursorModeSelector />
+            <div className="hidden md:flex items-center gap-3 lg:gap-4 ml-auto">
               <LangToggle />
               <ThemeToggle />
               <motion.div
@@ -394,7 +390,6 @@ export function Navbar() {
                 >
                   <ThemeToggle />
                   <LangToggle />
-                  <CursorModeSelector />
                 </motion.div>
                 
                 {/* CTA Button */}
