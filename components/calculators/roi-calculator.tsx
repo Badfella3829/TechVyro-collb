@@ -112,7 +112,7 @@ export function ROICalculator() {
   }
 
   return (
-    <section id="roi-calculator" className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
+    <section id="roi-calculator" className="py-10 sm:py-12 lg:py-16 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative" ref={ref}>
@@ -132,13 +132,13 @@ export function ROICalculator() {
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             See what your investment can achieve. Calculations powered by
-            <span className="text-primary font-medium"> live data </span>
+            <span className="text-primary font-medium"> real data </span>
             from TechVyro&apos;s actual Instagram, Facebook & YouTube performance.
           </p>
           {ready && realMetrics.avgViewsPerPiece > 0 && (
             <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-xs">
               <Zap className="h-3 w-3 text-primary" />
-              <span className="text-muted-foreground">Live avg:</span>
+              <span className="text-muted-foreground">Avg:</span>
               <span className="text-foreground font-semibold">
                 {Math.round(realMetrics.avgViewsPerPiece).toLocaleString('en-IN')} views/post
               </span>

@@ -50,6 +50,12 @@
   --neon-cyan-glow: oklch(0.85 0.18 195 / 0.5);
   --neon-magenta-glow: oklch(0.65 0.25 310 / 0.5);
   --neon-lime-glow: oklch(0.85 0.22 130 / 0.5);
+
+  /* Gold accent (inspired by reference site) */
+  --gold: oklch(0.82 0.14 85);
+  --gold-bright: oklch(0.88 0.15 90);
+  --gold-deep: oklch(0.72 0.13 75);
+  --gold-glow: oklch(0.82 0.14 85 / 0.5);
 }
 
 .dark {
@@ -82,6 +88,7 @@
 @theme inline {
   --font-sans: 'Space Grotesk', 'Geist', 'Geist Fallback', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -115,6 +122,11 @@
   --color-neon-cyan: var(--neon-cyan);
   --color-neon-magenta: var(--neon-magenta);
   --color-neon-lime: var(--neon-lime);
+
+  /* Gold accent for direct use */
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-deep: var(--gold-deep);
 }
 
 @layer base {
@@ -187,6 +199,65 @@
   
   .text-glow-lime {
     text-shadow: 0 0 10px var(--neon-lime-glow), 0 0 20px var(--neon-lime-glow);
+  }
+
+  /* Gold accent helpers (reference-site inspired) */
+  .text-gold {
+    color: var(--gold);
+  }
+
+  .neon-glow-gold {
+    box-shadow: 0 0 20px var(--gold-glow), 0 0 40px var(--gold-glow);
+  }
+
+  .text-glow-gold {
+    text-shadow: 0 0 10px var(--gold-glow), 0 0 22px var(--gold-glow);
+  }
+
+  .gold-gradient-text {
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold), var(--gold-deep));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gold-gradient-bg {
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
+  }
+
+  .font-serif-italic {
+    font-family: var(--font-serif);
+    font-style: italic;
+  }
+
+  /* Corner-bracket frame for portraits / media */
+  .corner-frame {
+    position: relative;
+  }
+  .corner-frame::before,
+  .corner-frame::after {
+    content: '';
+    position: absolute;
+    width: 28%;
+    height: 28%;
+    border-color: var(--gold);
+    border-style: solid;
+    border-width: 0;
+    pointer-events: none;
+  }
+  .corner-frame::before {
+    top: -6px;
+    left: -6px;
+    border-top-width: 3px;
+    border-left-width: 3px;
+    border-top-left-radius: 8px;
+  }
+  .corner-frame::after {
+    bottom: -6px;
+    right: -6px;
+    border-bottom-width: 3px;
+    border-right-width: 3px;
+    border-bottom-right-radius: 8px;
   }
   
   /* Gradient text */

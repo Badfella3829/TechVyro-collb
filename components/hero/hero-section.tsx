@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { ChevronDown, Play, Zap } from 'lucide-react'
+import { ChevronDown, Play, Zap, TrendingUp, Award, Instagram, Youtube, Facebook, Linkedin, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ParticleField } from './particle-field'
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
@@ -104,19 +104,33 @@ export function HeroSection() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-8"
         >
-          {/* Logo with floating animation */}
+          {/* Availability pill — reference inspired */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-gold/40 bg-gold/10 text-gold text-xs sm:text-sm font-medium tracking-wide uppercase"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-gold opacity-75 animate-ping" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
+            </span>
+            Available for Collaborations
+          </motion.div>
+
+          {/* Logo with gold corner-bracket frame + floating badges */}
           <motion.div 
             variants={floatingVariants}
             initial="initial"
             animate="animate"
-            className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-6"
+            className="corner-frame relative w-36 h-36 sm:w-44 sm:h-44 mx-auto mb-6"
           >
             <Image
               src="/images/techvyro-icon.jpg"
               alt="TechVyro Logo"
               fill
-              sizes="(max-width: 640px) 128px, 160px"
-              className="object-contain rounded-2xl ring-2 ring-primary/20"
+              sizes="(max-width: 640px) 144px, 176px"
+              className="object-contain rounded-2xl ring-2 ring-gold/30"
               priority
             />
             {/* Glow effect behind logo */}
@@ -138,8 +152,30 @@ export function HeroSection() {
                 ease: "easeInOut",
                 delay: 1,
               }}
-              className="absolute inset-0 -z-20 bg-secondary/20 blur-[60px] rounded-full scale-150"
+              className="absolute inset-0 -z-20 bg-gold/20 blur-[60px] rounded-full scale-150"
             />
+
+            {/* Floating badge — top right */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9, type: 'spring', stiffness: 200 }}
+              className="absolute -top-3 -right-10 sm:-right-16 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg glass border-gold/30 text-gold text-[11px] sm:text-xs font-semibold shadow-lg"
+            >
+              <TrendingUp className="h-3.5 w-3.5" />
+              850K+ Reach
+            </motion.div>
+
+            {/* Floating badge — bottom left */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.1, type: 'spring', stiffness: 200 }}
+              className="absolute -bottom-3 -left-10 sm:-left-16 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg glass border-primary/30 text-primary text-[11px] sm:text-xs font-semibold shadow-lg"
+            >
+              <Award className="h-3.5 w-3.5" />
+              200+ Projects
+            </motion.div>
           </motion.div>
         </motion.div>
 
@@ -160,7 +196,7 @@ export function HeroSection() {
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="text-lg sm:text-xl lg:text-2xl text-muted-foreground mb-2 max-w-2xl mx-auto"
+          className="font-serif italic text-2xl sm:text-3xl lg:text-4xl text-foreground/90 mb-2 max-w-2xl mx-auto"
         >
           India&apos;s Premier Tech Content Creator
         </motion.p>
@@ -170,10 +206,28 @@ export function HeroSection() {
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="text-base sm:text-lg text-primary font-medium mb-8"
+          className="text-base sm:text-lg text-gold font-medium tracking-wide mb-6"
         >
           Creating Content That Converts
         </motion.p>
+
+        {/* Skill / content pills — reference inspired */}
+        <motion.div
+          custom={3.5}
+          variants={textVariants}
+          initial="hidden"
+          animate={isLoaded ? "visible" : "hidden"}
+          className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8 px-4 sm:px-0"
+        >
+          {['Tech Reviews', 'Unboxings', 'Brand Collabs', 'Tutorials', 'Shorts & Reels'].map((skill) => (
+            <span
+              key={skill}
+              className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium border border-gold/30 bg-gold/5 text-foreground/80 hover:border-gold/60 hover:text-gold transition-colors"
+            >
+              {skill}
+            </span>
+          ))}
+        </motion.div>
 
         {/* CTA Buttons */}
         <motion.div
@@ -186,7 +240,7 @@ export function HeroSection() {
           <Button
             size="lg"
             onClick={() => scrollToSection('contact')}
-            className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold neon-glow-cyan w-full sm:w-auto"
+            className="group relative overflow-hidden gold-gradient-bg hover:opacity-90 text-background px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold neon-glow-gold w-full sm:w-auto"
           >
             <Zap className="mr-2 h-5 w-5" />
             Let&apos;s Collab
@@ -197,11 +251,40 @@ export function HeroSection() {
             size="lg"
             variant="outline"
             onClick={() => scrollToSection('portfolio')}
-            className="group border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold w-full sm:w-auto"
+            className="group border-gold/60 text-gold hover:bg-gold hover:text-background px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold w-full sm:w-auto"
           >
             <Play className="mr-2 h-5 w-5" />
             View My Work
           </Button>
+        </motion.div>
+
+        {/* Social icons row — reference inspired */}
+        <motion.div
+          custom={4.5}
+          variants={textVariants}
+          initial="hidden"
+          animate={isLoaded ? "visible" : "hidden"}
+          className="flex items-center justify-center gap-3 mb-10 sm:mb-12"
+        >
+          <span className="text-xs uppercase tracking-widest text-muted-foreground mr-1">Follow</span>
+          {[
+            { Icon: Instagram, href: 'https://instagram.com/techvyro', label: 'Instagram' },
+            { Icon: Youtube, href: 'https://youtube.com/@techvyro', label: 'YouTube' },
+            { Icon: Facebook, href: 'https://facebook.com/techvyro', label: 'Facebook' },
+            { Icon: Linkedin, href: 'https://linkedin.com/in/techvyro', label: 'LinkedIn' },
+            { Icon: MessageCircle, href: 'https://wa.me/916396094707', label: 'WhatsApp' },
+          ].map(({ Icon, href, label }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="flex items-center justify-center w-10 h-10 rounded-full border border-gold/30 bg-gold/5 text-foreground/70 hover:text-gold hover:border-gold/60 hover:bg-gold/10 transition-colors"
+            >
+              <Icon className="h-4 w-4" />
+            </a>
+          ))}
         </motion.div>
 
         {/* Stats preview */}
@@ -223,7 +306,7 @@ export function HeroSection() {
               whileHover={{ scale: 1.05, y: -2 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gold">
                 {stat.value}
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground">
@@ -254,8 +337,8 @@ export function HeroSection() {
       </motion.div>
 
       {/* Side decorations — desktop only */}
-      <div className="hidden sm:block absolute top-1/4 left-8 w-px h-32 bg-gradient-to-b from-transparent via-primary to-transparent opacity-50" />
-      <div className="hidden sm:block absolute top-1/4 right-8 w-px h-32 bg-gradient-to-b from-transparent via-secondary to-transparent opacity-50" />
+      <div className="hidden sm:block absolute top-1/4 left-8 w-px h-32 bg-gradient-to-b from-transparent via-gold to-transparent opacity-50" />
+      <div className="hidden sm:block absolute top-1/4 right-8 w-px h-32 bg-gradient-to-b from-transparent via-gold to-transparent opacity-50" />
     </section>
   )
 }

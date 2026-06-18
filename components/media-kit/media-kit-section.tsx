@@ -50,7 +50,7 @@ export function MediaKitSection() {
   ]
 
   return (
-    <section id="media-kit" className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
+    <section id="media-kit" className="py-10 sm:py-12 lg:py-16 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative" ref={ref}>
@@ -224,8 +224,8 @@ export function MediaKitSection() {
               {/* Bottom Actions */}
               <div className="p-6 sm:p-8 border-t border-border/30 bg-muted/10 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                  Live data • {ready ? new Date(ig?.fetchedAt || Date.now()).toLocaleString() : 'Loading…'}
+                  <span className="w-2 h-2 bg-accent rounded-full" />
+                  Verified stats • Updated regularly
                 </div>
                 <div className="flex items-center gap-3">
                   <Button

@@ -53,9 +53,12 @@ export async function POST(req: Request) {
     }).catch(() => {})
 
     await sendInquiryWhatsapp({
-      brand: name || 'Newsletter',
-      contact: name || '-',
+      reference: lead.id,
+      brandName: name || 'Newsletter',
+      contactName: name || '-',
       email,
+      campaignGoal: `New ${source} signup`,
+      collabType: source,
       message: `New ${source} signup`,
     }).catch(() => {})
 

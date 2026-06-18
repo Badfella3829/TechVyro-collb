@@ -38,7 +38,7 @@ function buildHtmlMediaKit() {
     <div class="stat"><b>18–34 yrs</b><span>Core demographic</span></div>
     <div class="stat"><b>Hindi · English</b><span>Content languages</span></div>
   </div>
-  <p style="font-size:13px;color:#888">↳ Live, real-time stats: visit <b>techvyro.com/analytics</b> for current follower count, engagement rates, and top-performing posts pulled directly from Meta & YouTube APIs.</p>
+  <p style="font-size:13px;color:#888">↳ For current follower counts, engagement rates and top-performing content, visit <b>techvyro.com</b> or reach out on WhatsApp.</p>
 
   <h2>Collaboration Packages</h2>
   <div class="pkg"><b>Starter — ₹16,500</b><br>1 piece of content (Reel OR Static post). Perfect for product launches & quick brand pushes.</div>

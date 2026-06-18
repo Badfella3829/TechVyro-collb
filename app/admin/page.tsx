@@ -3,16 +3,9 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, LayoutDashboard, Calendar, Lock } from 'lucide-react'
-import { BestTimeInsights } from '@/components/admin/best-time-insights'
-import { GrowthCharts } from '@/components/charts/growth-charts'
 import { LeadsTable } from '@/components/admin/leads-table'
-import { AudienceInsights } from '@/components/admin/audience-insights'
-import { TokenManager } from '@/components/admin/token-manager'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useInstagram } from '@/hooks/use-instagram'
-import { useFacebook } from '@/hooks/use-facebook'
-import { useYouTube } from '@/hooks/use-youtube'
 
 const PASSWORD_KEY = 'techvyro:admin-key'
 
@@ -50,10 +43,6 @@ export default function AdminPage() {
     }
   }
 
-  const { data: ig } = useInstagram()
-  const { data: fb } = useFacebook()
-  const { data: yt } = useYouTube()
-
   if (!authed) {
     return (
       <main className="min-h-screen flex items-center justify-center px-4">
@@ -74,21 +63,6 @@ export default function AdminPage() {
     )
   }
 
-  const postsByPlatform = {
-    instagram: (ig?.media || []).map((m: any) => ({
-      ts: new Date(m.timestamp).getTime(),
-      engagement: (m.like_count ?? 0) + (m.comments_count ?? 0) * 3,
-    })),
-    facebook: (fb?.posts || []).map((p: any) => ({
-      ts: new Date(p.created_time).getTime(),
-      engagement: (p.reactions?.summary?.total_count ?? 0) + (p.comments?.summary?.total_count ?? 0) * 3,
-    })),
-    youtube: (yt?.videos || []).map((v: any) => ({
-      ts: new Date(v.publishedAt).getTime(),
-      engagement: v.views ?? 0,
-    })),
-  }
-
   return (
     <main className="min-h-screen pt-24 pb-24 md:pb-16 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-5xl">
@@ -100,7 +74,7 @@ export default function AdminPage() {
             <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
               <LayoutDashboard className="h-6 w-6 text-primary" /> Owner Dashboard
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">Internal insights powered by real Graph API data</p>
+            <p className="text-sm text-muted-foreground mt-1">Manage your leads and availability</p>
           </div>
           <Link
             href="/admin/availability"
@@ -111,11 +85,7 @@ export default function AdminPage() {
         </div>
 
         <div className="space-y-6">
-          <TokenManager token={token} />
           <LeadsTable token={token} />
-          <AudienceInsights />
-          <GrowthCharts postsByPlatform={postsByPlatform} />
-          <BestTimeInsights />
         </div>
       </div>
     </main>

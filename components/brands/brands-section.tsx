@@ -11,7 +11,7 @@ const BRANDS = [
 
 export function BrandsSection() {
   return (
-    <section id="brands" className="py-12 sm:py-16 relative">
+    <section id="brands" className="py-8 sm:py-10 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

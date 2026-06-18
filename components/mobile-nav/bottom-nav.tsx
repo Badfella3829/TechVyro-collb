@@ -8,7 +8,7 @@ import type { MouseEvent } from 'react'
 
 const items = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/analytics', label: 'Stats', icon: BarChart3 },
+  { href: '/#stats', label: 'Stats', icon: BarChart3 },
   { href: '/recommender', label: 'Match', icon: Sparkles, accent: true },
   { href: '/#portfolio', label: 'Work', icon: Briefcase },
   { href: '/#contact', label: 'Contact', icon: MessageCircle },

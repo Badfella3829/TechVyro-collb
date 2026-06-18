@@ -35,7 +35,7 @@ export function NewsletterInline() {
   }
 
   return (
-    <section className="py-12 sm:py-16 px-4 border-t border-border/40">
+    <section className="py-8 sm:py-10 px-4 border-t border-border/40">
       <div className="container mx-auto max-w-3xl">
         <div className="glass border border-primary/20 rounded-2xl p-6 sm:p-8 text-center bg-gradient-to-br from-primary/5 to-purple-500/5">
           <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-primary/15 text-primary mb-3">

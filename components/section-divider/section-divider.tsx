@@ -25,7 +25,7 @@ export function SectionDivider({ label, title, subtitle, variant = 'animated', n
 
   if (variant === 'counter') {
     return (
-      <div ref={ref} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-4" style={{ position: 'relative' }}>
+      <div ref={ref} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-2" style={{ position: 'relative' }}>
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -74,7 +74,7 @@ export function SectionDivider({ label, title, subtitle, variant = 'animated', n
   }
 
   return (
-    <div ref={ref} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-4" style={{ position: 'relative' }}>
+    <div ref={ref} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-2" style={{ position: 'relative' }}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}

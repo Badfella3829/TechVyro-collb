@@ -22,11 +22,11 @@ async function handle(req: Request) {
 
   const revalidated: string[] = []
   if (path) { revalidatePath(path); revalidated.push(`path:${path}`) }
-  if (tag) { revalidateTag(tag); revalidated.push(`tag:${tag}`) }
+  if (tag) { revalidateTag(tag, 'max'); revalidated.push(`tag:${tag}`) }
 
   if (!path && !tag) {
     // Default: refresh primary pages
-    const paths = ['/', '/analytics', '/portfolio']
+    const paths = ['/', '/portfolio']
     for (const p of paths) { revalidatePath(p); revalidated.push(`path:${p}`) }
   }
 

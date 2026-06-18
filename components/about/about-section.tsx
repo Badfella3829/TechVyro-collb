@@ -25,7 +25,7 @@ export function AboutSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section id="about" className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+    <section id="about" className="py-10 sm:py-14 lg:py-16 relative overflow-hidden">
       {/* Grid pattern background */}
       <div className="absolute inset-0 grid-pattern-subtle opacity-30" />
       

@@ -14,7 +14,7 @@ const PUBLICATIONS = [
 
 export function PressSection() {
   return (
-    <section id="press" className="py-12 sm:py-16 px-4 border-t border-border/40">
+    <section id="press" className="py-8 sm:py-10 px-4 border-t border-border/40">
       <div className="container mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 12 }}

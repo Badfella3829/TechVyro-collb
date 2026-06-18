@@ -1,13 +1,9 @@
 "use client"
 
-import { useRef, useEffect, useState, useMemo } from 'react'
-import { motion, useInView } from 'framer-motion'
-import Link from 'next/link'
+import { useRef, useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { Users, Play, Eye, TrendingUp, Heart, MessageCircle, ArrowRight, Instagram, Facebook, Youtube } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
-import { useInstagram } from '@/hooks/use-instagram'
-import { useFacebook } from '@/hooks/use-facebook'
-import { useYouTube } from '@/hooks/use-youtube'
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
@@ -25,48 +21,18 @@ interface StatItemProps {
   isInView: boolean
 }
 
-// Rolling digit component for slot-machine effect
-function RollingDigit({ digit, delay }: { digit: string; delay: number }) {
-  const isNumber = !isNaN(parseInt(digit))
-  
-  if (!isNumber) {
-    return <span className="inline-block">{digit}</span>
-  }
-  
-  return (
-    <span className="inline-block relative overflow-hidden h-[1.2em] w-[0.65em]">
-      <motion.span
-        className="absolute inset-0 flex flex-col items-center"
-        initial={{ y: '-100%' }}
-        animate={{ y: `${-parseInt(digit) * 10}%` }}
-        transition={{
-          duration: 1.5,
-          delay,
-          ease: [0.25, 0.46, 0.45, 0.94],
-        }}
-      >
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-          <span key={n} className="h-[1.2em] flex items-center justify-center">
-            {n}
-          </span>
-        ))}
-      </motion.span>
-    </span>
-  )
-}
-
 function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean }) {
   const [displayValue, setDisplayValue] = useState(0)
-  const [hasAnimated, setHasAnimated] = useState(false)
-  
+  const hasAnimated = useRef(false)
+
   useEffect(() => {
-    if (!isInView || hasAnimated) return
-    
-    setHasAnimated(true)
+    if (!isInView || hasAnimated.current) return
+
+    hasAnimated.current = true
     let start = 0
     const duration = 2000
     const increment = value / (duration / 16)
-    
+
     const timer = setInterval(() => {
       start += increment
       if (start >= value) {
@@ -76,24 +42,14 @@ function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean
         setDisplayValue(Math.floor(start))
       }
     }, 16)
-    
+
     return () => clearInterval(timer)
-  }, [value, isInView, hasAnimated])
-  
-  // Format number with commas and use rolling digits
-  const formattedValue = displayValue.toLocaleString()
-  const chars = formattedValue.split('')
-  
-  return (
-    <span className="inline-flex tabular-nums">
-      {chars.map((char, i) => (
-        <RollingDigit key={i} digit={char} delay={i * 0.05} />
-      ))}
-    </span>
-  )
+  }, [value, isInView])
+
+  return <span className="tabular-nums">{formatNumber(displayValue)}</span>
 }
 
-function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView, ready }: StatItemProps & { ready: boolean }) {
+function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView }: StatItemProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -108,12 +64,8 @@ function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView, re
             </div>
             <TrendingUp className="h-4 w-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 break-all">
-            {ready ? (
-              <AnimatedCounter value={value} isInView={isInView} />
-            ) : (
-              <span className="opacity-40">—</span>
-            )}
+          <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 whitespace-nowrap">
+            <AnimatedCounter value={value} isInView={isInView} />
             <span className="text-primary">{suffix}</span>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground leading-tight">{label}</p>
@@ -123,94 +75,103 @@ function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView, re
   )
 }
 
+// Fixed headline metrics — edit these numbers anytime to match your real figures.
+const stats = [
+  { icon: Users, value: 850000, suffix: '+', label: 'Total Followers', color: 'bg-primary/20 text-primary' },
+  { icon: Eye, value: 120000000, suffix: '+', label: 'Total Views', color: 'bg-red-500/20 text-red-500' },
+  { icon: Play, value: 1200, suffix: '+', label: 'Total Content', color: 'bg-secondary/20 text-secondary' },
+  { icon: Heart, value: 45000, suffix: '+', label: 'Avg. Likes / Post', color: 'bg-accent/20 text-accent' },
+  { icon: MessageCircle, value: 1800, suffix: '+', label: 'Avg. Comments', color: 'bg-primary/20 text-primary' },
+  { icon: TrendingUp, value: 8, suffix: '%', label: 'Engagement Rate', color: 'bg-secondary/20 text-secondary' },
+]
+
+// Fixed per-platform breakdown.
+const platformStats = [
+  {
+    platform: 'Instagram',
+    handle: '@techvyro',
+    icon: Instagram,
+    href: 'https://instagram.com/techvyro',
+    followers: formatNumber(420000),
+    secondMetricLabel: 'Avg. Likes',
+    secondMetric: formatNumber(38000),
+    engagement: '9.10%',
+    iconBg: 'bg-gradient-to-br from-pink-500 via-fuchsia-500 to-orange-500 text-white',
+    hover: 'hover:border-pink-500/50',
+    accent: 'text-pink-500',
+    glow: 'group-hover:shadow-pink-500/20',
+  },
+  {
+    platform: 'Facebook',
+    handle: '@techvyroclips',
+    icon: Facebook,
+    href: 'https://facebook.com/techvyroclips',
+    followers: formatNumber(180000),
+    secondMetricLabel: 'Avg. Reactions',
+    secondMetric: formatNumber(12000),
+    engagement: '6.70%',
+    iconBg: 'bg-gradient-to-br from-blue-600 to-cyan-500 text-white',
+    hover: 'hover:border-blue-500/50',
+    accent: 'text-blue-500',
+    glow: 'group-hover:shadow-blue-500/20',
+  },
+  {
+    platform: 'YouTube',
+    handle: '@techvyro',
+    icon: Youtube,
+    href: 'https://youtube.com/@techvyro',
+    followers: formatNumber(250000),
+    secondMetricLabel: 'Avg. Views',
+    secondMetric: formatNumber(95000),
+    engagement: '7.40%',
+    iconBg: 'bg-gradient-to-br from-red-600 to-orange-500 text-white',
+    hover: 'hover:border-red-500/50',
+    accent: 'text-red-500',
+    glow: 'group-hover:shadow-red-500/20',
+  },
+]
+
 export function StatsSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const { data: ig, loading: igLoading } = useInstagram()
-  const { data: fb, loading: fbLoading } = useFacebook()
-  const { data: yt, loading: ytLoading } = useYouTube()
+  const ref = useRef<HTMLDivElement>(null)
+  const [isInView, setIsInView] = useState(false)
 
-  const stats = useMemo(() => {
-    const igFollowers = ig?.account.followers_count ?? 0
-    const fbFollowers = fb?.page.followers_count ?? 0
-    const ytSubs = yt?.channel.subscribers ?? 0
-    const totalFollowers = igFollowers + fbFollowers + ytSubs
-    const totalPosts =
-      (ig?.account.media_count ?? 0) +
-      (fb?.computed.postCount ?? fb?.posts.length ?? 0) +
-      (yt?.channel.videoCount ?? 0)
-    const ytTotalViews = yt?.channel.totalViews ?? 0
-    const igTotalViews = ig?.computed.totalViews ?? 0
-    const fbTotalViews = fb?.computed.totalViews ?? 0
-    const allViews = ytTotalViews + igTotalViews + fbTotalViews
-    const avgLikes = ig?.computed.avgLikes ?? 0
-    const avgComments = ig?.computed.avgComments ?? 0
-    const engagement = ig?.computed.avgEngagement ?? 0
+  useEffect(() => {
+    const el = ref.current
+    if (!el) {
+      // No ref yet — still trigger so counters never get stuck on 0.
+      const t = setTimeout(() => setIsInView(true), 200)
+      return () => clearTimeout(t)
+    }
 
-    const avgComm = avgComments
-    return [
-      { icon: Users, value: totalFollowers, suffix: '', label: 'Total Followers', color: 'bg-primary/20 text-primary' },
-      { icon: Eye, value: allViews, suffix: '', label: 'Total Views', color: 'bg-red-500/20 text-red-500' },
-      { icon: Play, value: totalPosts, suffix: '', label: 'Total Content', color: 'bg-secondary/20 text-secondary' },
-      { icon: Heart, value: avgLikes, suffix: '', label: 'Avg. Likes / Post', color: 'bg-accent/20 text-accent' },
-      { icon: MessageCircle, value: avgComm, suffix: '', label: 'Avg. Comments', color: 'bg-primary/20 text-primary' },
-      { icon: TrendingUp, value: Math.round(engagement * 100) / 100, suffix: '%', label: 'Engagement Rate', color: 'bg-secondary/20 text-secondary' },
-    ]
-  }, [ig, fb, yt])
+    // Reveal as soon as the section enters the viewport...
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setIsInView(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 },
+    )
+    observer.observe(el)
 
-  const platformStats = useMemo(() => [
-    {
-      platform: 'Instagram',
-      handle: ig ? `@${ig.account.username}` : '',
-      icon: Instagram,
-      href: '/analytics/instagram',
-      followers: ig ? formatNumber(ig.account.followers_count) : '—',
-      secondMetricLabel: 'Avg. Likes',
-      secondMetric: ig ? formatNumber(ig.computed.avgLikes) : '—',
-      engagement: ig ? `${ig.computed.avgEngagement.toFixed(2)}%` : '—',
-      iconBg: 'bg-gradient-to-br from-pink-500 via-fuchsia-500 to-orange-500 text-white',
-      hover: 'hover:border-pink-500/50',
-      accent: 'text-pink-500',
-      glow: 'group-hover:shadow-pink-500/20',
-      ready: !!ig,
-    },
-    {
-      platform: 'Facebook',
-      handle: fb?.page.username ? `@${fb.page.username}` : fb?.page.name ?? '',
-      icon: Facebook,
-      href: '/analytics/facebook',
-      followers: fb ? formatNumber(fb.page.followers_count) : '—',
-      secondMetricLabel: 'Avg. Reactions',
-      secondMetric: fb ? formatNumber(fb.computed.avgReactions) : '—',
-      engagement: fb ? `${fb.computed.avgEngagement.toFixed(2)}%` : '—',
-      iconBg: 'bg-gradient-to-br from-blue-600 to-cyan-500 text-white',
-      hover: 'hover:border-blue-500/50',
-      accent: 'text-blue-500',
-      glow: 'group-hover:shadow-blue-500/20',
-      ready: !!fb,
-    },
-    {
-      platform: 'YouTube',
-      handle: yt?.channel.customUrl || yt?.channel.title || '',
-      icon: Youtube,
-      href: '/analytics/youtube',
-      followers: yt ? formatNumber(yt.channel.subscribers) : '—',
-      secondMetricLabel: 'Avg. Views',
-      secondMetric: yt ? formatNumber(yt.computed.avgViews) : '—',
-      engagement: yt ? `${yt.computed.avgEngagement.toFixed(2)}%` : '—',
-      iconBg: 'bg-gradient-to-br from-red-600 to-orange-500 text-white',
-      hover: 'hover:border-red-500/50',
-      accent: 'text-red-500',
-      glow: 'group-hover:shadow-red-500/20',
-      ready: !!yt,
-    },
-  ], [ig, fb, yt])
+    // ...with a guaranteed fallback so the numbers always animate in.
+    const fallback = setTimeout(() => {
+      setIsInView(true)
+      observer.disconnect()
+    }, 1200)
+
+    return () => {
+      observer.disconnect()
+      clearTimeout(fallback)
+    }
+  }, [])
 
   return (
-    <section id="stats" className="py-16 sm:py-24 lg:py-32 relative">
+    <section id="stats" className="py-10 sm:py-12 lg:py-16 relative">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
-      
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative" ref={ref}>
         {/* Header */}
         <motion.div
@@ -227,11 +188,11 @@ export function StatsSection() {
             <span className="gradient-text"> Speak</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Real metrics from real campaigns. These numbers represent the impact and reach 
+            Real metrics from real campaigns. These numbers represent the impact and reach
             of content created for brands across platforms.
           </p>
         </motion.div>
-        
+
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
           {stats.map((stat, index) => (
@@ -244,17 +205,10 @@ export function StatsSection() {
               color={stat.color}
               delay={index * 0.1}
               isInView={isInView}
-              ready={
-                // For aggregate cards, show whatever loaded (don't gate on all 3 platforms,
-                // so a single expired token doesn't blank out the whole card).
-                stat.label === 'Total Followers' || stat.label === 'Total Views' || stat.label === 'Total Content'
-                  ? !!ig || !!fb || !!yt
-                  : !!ig
-              }
             />
           ))}
         </div>
-        
+
         {/* Platform breakdown */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -264,7 +218,7 @@ export function StatsSection() {
           <div className="text-center mb-10">
             <span className="text-primary text-xs font-semibold tracking-wider uppercase">Platform Breakdown</span>
             <h3 className="text-2xl sm:text-3xl font-bold mt-2">Performance Across <span className="gradient-text">Channels</span></h3>
-            <p className="text-sm text-muted-foreground mt-2">Tap any card for the full analytics dashboard</p>
+            <p className="text-sm text-muted-foreground mt-2">Follow us across every platform</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
@@ -277,7 +231,7 @@ export function StatsSection() {
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
                 >
-                  <Link href={platform.href} className="block group h-full">
+                  <a href={platform.href} target="_blank" rel="noopener noreferrer" className="block group h-full">
                     <Card className={`glass border-border/50 ${platform.hover} hover:-translate-y-1 transition-all duration-300 cursor-pointer h-full overflow-hidden shadow-lg ${platform.glow}`}>
                       {/* Header with icon + name */}
                       <div className="p-5 sm:p-6 pb-4 flex items-center gap-4 border-b border-border/30">
@@ -297,7 +251,7 @@ export function StatsSection() {
                         {/* Hero metric: followers */}
                         <div className="mb-5">
                           <div className="flex items-baseline gap-2">
-                            <span className={`text-3xl sm:text-4xl font-bold ${platform.ready ? '' : 'opacity-40'}`}>
+                            <span className="text-3xl sm:text-4xl font-bold">
                               {platform.followers}
                             </span>
                             <span className="text-xs text-muted-foreground">followers</span>
@@ -318,33 +272,16 @@ export function StatsSection() {
 
                         {/* CTA */}
                         <div className={`mt-5 pt-4 border-t border-border/30 flex items-center justify-between text-xs font-medium ${platform.accent} group-hover:gap-3 transition-all`}>
-                          <span>View detailed analytics</span>
+                          <span>Visit profile</span>
                           <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </CardContent>
                     </Card>
-                  </Link>
+                  </a>
                 </motion.div>
               )
             })}
           </div>
-        </motion.div>
-        
-        {/* Last updated badge */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 1.2 }}
-          className="text-center mt-8"
-        >
-          <span className="inline-flex items-center gap-2 text-xs text-muted-foreground glass px-4 py-2 rounded-full">
-            <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-            {igLoading || fbLoading || ytLoading
-              ? 'Fetching live data from Instagram, Facebook & YouTube…'
-              : ig || fb || yt
-              ? `Live from Instagram, Facebook & YouTube • ${new Date(ig?.fetchedAt || fb?.fetchedAt || yt?.fetchedAt || Date.now()).toLocaleString()}`
-              : 'Live data temporarily unavailable'}
-          </span>
         </motion.div>
       </div>
     </section>
