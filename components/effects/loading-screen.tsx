@@ -91,6 +91,10 @@ export function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true)
   const [progress, setProgress] = useState(0)
   const [loadingText, setLoadingText] = useState('Initializing')
+  // Particles use randomized positions; render them only after mount so the
+  // server-rendered HTML and the client never disagree (no hydration mismatch).
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   const loadingSteps = useMemo(() => [
     'Initializing',
@@ -133,9 +137,9 @@ export function LoadingScreen() {
           transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background overflow-hidden"
         >
-          {/* Animated background particles */}
+          {/* Animated background particles (client-only to avoid hydration mismatch) */}
           <div className="absolute inset-0 overflow-hidden">
-            {particles.map((_, i) => (
+            {mounted && particles.map((_, i) => (
               <LoadingParticle key={i} index={i} />
             ))}
           </div>
