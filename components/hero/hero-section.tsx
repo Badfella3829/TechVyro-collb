@@ -126,11 +126,11 @@ export function HeroSection() {
             className="corner-frame relative w-36 h-36 sm:w-44 sm:h-44 mx-auto mb-6"
           >
             <Image
-              src="/images/techvyro-icon.jpg"
-              alt="TechVyro Logo"
+              src="/images/techvyro-logo-new.jpg"
+              alt="TechVyro Brand Logo"
               fill
               sizes="(max-width: 640px) 144px, 176px"
-              className="object-contain rounded-2xl ring-2 ring-gold/30"
+              className="object-contain"
               priority
             />
             {/* Glow effect behind logo */}

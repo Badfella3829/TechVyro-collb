@@ -140,6 +140,10 @@
     -webkit-text-size-adjust: 100%;
     /* Prevent iOS Safari bounce effect */
     overscroll-behavior: none;
+    /* Prevent horizontal overflow from decorative elements */
+    overflow-x: clip;
+    width: 100vw;
+    max-width: 100%;
   }
   
   body {

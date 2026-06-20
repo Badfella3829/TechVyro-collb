@@ -103,7 +103,7 @@ function AnimatedLogo({ onClick }: { onClick: () => void }) {
         transition={{ duration: 0.3 }}
       >
         <Image
-          src="/images/techvyro-icon.jpg"
+          src="/images/techvyro-logo-new.jpg"
           alt="TechVyro"
           fill
           sizes="40px"
@@ -334,15 +334,23 @@ export function Navbar() {
               exit={{ opacity: 0 }}
             />
             
-            {/* Decorative elements */}
+            {/* Decorative elements - responsive */}
             <motion.div
-              className="absolute top-1/4 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"
+              className="absolute top-1/4 right-0 rounded-full blur-3xl bg-primary/5"
+              style={{
+                width: 'min(256px, 80vw)',
+                height: 'min(256px, 80vw)',
+              }}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2 }}
             />
             <motion.div
-              className="absolute bottom-1/4 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-3xl"
+              className="absolute bottom-1/4 left-0 rounded-full blur-3xl bg-secondary/5"
+              style={{
+                width: 'min(256px, 80vw)',
+                height: 'min(256px, 80vw)',
+              }}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.3 }}

@@ -21,10 +21,10 @@ export function TrustBar() {
   return (
     <section
       aria-label="Trust indicators"
-      className="relative border-y border-border/40 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 py-4 overflow-hidden"
+      className="relative border-y border-border/40 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 py-4 overflow-hidden w-full"
     >
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-24 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-l from-background via-background/80 to-transparent z-10" />
 
       <motion.div
         className="flex gap-10 whitespace-nowrap"
