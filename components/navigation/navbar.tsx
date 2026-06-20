@@ -227,8 +227,16 @@ export function Navbar() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: isHidden ? -120 : 0, opacity: 1 }}
         transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          width: '100%',
+        }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-[background,padding,backdrop-filter] duration-300",
+          "transition-[background,padding,backdrop-filter] duration-300",
           isScrolled 
             ? "glass py-2 sm:py-3 border-b border-border/30" 
             : "bg-transparent py-3 sm:py-4"
