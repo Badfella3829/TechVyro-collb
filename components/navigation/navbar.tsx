@@ -103,7 +103,7 @@ function AnimatedLogo({ onClick }: { onClick: () => void }) {
         transition={{ duration: 0.3 }}
       >
         <Image
-          src="/images/techvyro-icon.jpg"
+          src="/images/techvyro-logo-new.jpg"
           alt="TechVyro"
           fill
           sizes="40px"
@@ -227,8 +227,16 @@ export function Navbar() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: isHidden ? -120 : 0, opacity: 1 }}
         transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          width: '100%',
+        }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-[background,padding,backdrop-filter] duration-300",
+          "transition-[background,padding,backdrop-filter] duration-300",
           isScrolled 
             ? "glass py-2 sm:py-3 border-b border-border/30" 
             : "bg-transparent py-3 sm:py-4"
@@ -334,15 +342,23 @@ export function Navbar() {
               exit={{ opacity: 0 }}
             />
             
-            {/* Decorative elements */}
+            {/* Decorative elements - responsive */}
             <motion.div
-              className="absolute top-1/4 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"
+              className="absolute top-1/4 right-0 rounded-full blur-3xl bg-primary/5"
+              style={{
+                width: 'min(256px, 80vw)',
+                height: 'min(256px, 80vw)',
+              }}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2 }}
             />
             <motion.div
-              className="absolute bottom-1/4 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-3xl"
+              className="absolute bottom-1/4 left-0 rounded-full blur-3xl bg-secondary/5"
+              style={{
+                width: 'min(256px, 80vw)',
+                height: 'min(256px, 80vw)',
+              }}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.3 }}

@@ -86,7 +86,7 @@ export function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 sm:pt-24 pb-12">
       {/* Grid pattern background */}
       <div className="absolute inset-0 grid-pattern-subtle opacity-40" />
       
@@ -97,7 +97,7 @@ export function HeroSection() {
       <ParticleField />
       
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center py-8 sm:py-12">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -106,14 +106,14 @@ export function HeroSection() {
         >
           {/* Availability pill — reference inspired */}
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-gold/40 bg-gold/10 text-gold text-xs sm:text-sm font-medium tracking-wide uppercase"
+            className="inline-flex items-center gap-2.5 mb-8 px-4 py-2 rounded-full border border-gold/50 bg-gradient-to-r from-gold/15 to-gold/5 text-gold text-xs sm:text-sm font-semibold tracking-wide uppercase shadow-md shadow-gold/20 hover:shadow-lg hover:shadow-gold/30 transition-shadow duration-300"
           >
-            <span className="relative flex h-2 w-2">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="absolute inline-flex h-full w-full rounded-full bg-gold opacity-75 animate-ping" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold" />
             </span>
             Available for Collaborations
           </motion.div>
@@ -126,11 +126,11 @@ export function HeroSection() {
             className="corner-frame relative w-36 h-36 sm:w-44 sm:h-44 mx-auto mb-6"
           >
             <Image
-              src="/images/techvyro-icon.jpg"
-              alt="TechVyro Logo"
+              src="/images/techvyro-logo-new.jpg"
+              alt="TechVyro Brand Logo"
               fill
               sizes="(max-width: 640px) 144px, 176px"
-              className="object-contain rounded-2xl ring-2 ring-gold/30"
+              className="object-contain"
               priority
             />
             {/* Glow effect behind logo */}
@@ -217,15 +217,16 @@ export function HeroSection() {
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8 px-4 sm:px-0"
+          className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-10 px-4 sm:px-0"
         >
           {['Tech Reviews', 'Unboxings', 'Brand Collabs', 'Tutorials', 'Shorts & Reels'].map((skill) => (
-            <span
+            <motion.span
               key={skill}
-              className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium border border-gold/30 bg-gold/5 text-foreground/80 hover:border-gold/60 hover:text-gold transition-colors"
+              whileHover={{ scale: 1.05, borderColor: 'rgba(217, 119, 6, 0.8)' }}
+              className="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border border-gold/40 bg-gradient-to-r from-gold/10 to-gold/5 text-foreground/90 hover:text-gold transition-all duration-300 cursor-default shadow-sm hover:shadow-md hover:shadow-gold/20"
             >
               {skill}
-            </span>
+            </motion.span>
           ))}
         </motion.div>
 
@@ -235,14 +236,14 @@ export function HeroSection() {
           variants={textVariants}
           initial="hidden"
           animate={isLoaded ? "visible" : "hidden"}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-12 w-full sm:w-auto px-4 sm:px-0"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-12 sm:mb-16 px-4 sm:px-0"
         >
           <Button
             size="lg"
             onClick={() => scrollToSection('contact')}
-            className="group relative overflow-hidden gold-gradient-bg hover:opacity-90 text-background px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold neon-glow-gold w-full sm:w-auto"
+            className="group relative overflow-hidden gold-gradient-bg hover:opacity-90 text-background px-7 sm:px-10 py-6 sm:py-7 text-base sm:text-lg font-semibold neon-glow-gold w-full sm:w-auto transition-all duration-300"
           >
-            <Zap className="mr-2 h-5 w-5" />
+            <Zap className="mr-2.5 h-5 w-5" />
             Let&apos;s Collab
             <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           </Button>
@@ -251,9 +252,9 @@ export function HeroSection() {
             size="lg"
             variant="outline"
             onClick={() => scrollToSection('portfolio')}
-            className="group border-gold/60 text-gold hover:bg-gold hover:text-background px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold w-full sm:w-auto"
+            className="group border-gold/60 text-gold hover:bg-gold hover:text-background px-7 sm:px-10 py-6 sm:py-7 text-base sm:text-lg font-semibold w-full sm:w-auto transition-all duration-300"
           >
-            <Play className="mr-2 h-5 w-5" />
+            <Play className="mr-2.5 h-5 w-5" />
             View My Work
           </Button>
         </motion.div>

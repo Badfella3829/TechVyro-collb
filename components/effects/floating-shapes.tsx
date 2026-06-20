@@ -208,14 +208,16 @@ export function FloatingBlobs() {
   if (!mounted || !shouldRender) return null
   
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      {/* Large cyan blob */}
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 w-screen h-screen">
+      {/* Large cyan blob - responsive size */}
       <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full blur-[120px] opacity-[0.04]"
+        className="absolute rounded-full blur-[120px] opacity-[0.04]"
         style={{
           background: 'radial-gradient(circle, oklch(0.85 0.18 195) 0%, transparent 70%)',
           left: '10%',
           top: '20%',
+          width: 'clamp(250px, 60vw, 500px)',
+          height: 'clamp(250px, 60vw, 500px)',
         }}
         animate={{
           x: [0, 100, 0, -50, 0],
@@ -229,13 +231,15 @@ export function FloatingBlobs() {
         }}
       />
       
-      {/* Medium magenta blob */}
+      {/* Medium magenta blob - responsive size */}
       <motion.div
-        className="absolute w-[400px] h-[400px] rounded-full blur-[100px] opacity-[0.05]"
+        className="absolute rounded-full blur-[100px] opacity-[0.05]"
         style={{
           background: 'radial-gradient(circle, oklch(0.65 0.25 310) 0%, transparent 70%)',
           right: '15%',
           top: '40%',
+          width: 'clamp(200px, 50vw, 400px)',
+          height: 'clamp(200px, 50vw, 400px)',
         }}
         animate={{
           x: [0, -80, 0, 60, 0],
@@ -250,13 +254,15 @@ export function FloatingBlobs() {
         }}
       />
       
-      {/* Small lime blob */}
+      {/* Small lime blob - responsive size */}
       <motion.div
-        className="absolute w-[300px] h-[300px] rounded-full blur-[80px] opacity-[0.04]"
+        className="absolute rounded-full blur-[80px] opacity-[0.04]"
         style={{
           background: 'radial-gradient(circle, oklch(0.85 0.22 130) 0%, transparent 70%)',
           left: '50%',
           bottom: '20%',
+          width: 'clamp(150px, 40vw, 300px)',
+          height: 'clamp(150px, 40vw, 300px)',
         }}
         animate={{
           x: [0, 60, -40, 0],
@@ -271,13 +277,15 @@ export function FloatingBlobs() {
         }}
       />
       
-      {/* Extra subtle blob for depth */}
+      {/* Extra subtle blob for depth - responsive */}
       <motion.div
-        className="absolute w-[600px] h-[600px] rounded-full blur-[150px] opacity-[0.02]"
+        className="absolute rounded-full blur-[150px] opacity-[0.02]"
         style={{
           background: 'radial-gradient(circle, oklch(0.85 0.18 195) 0%, oklch(0.65 0.25 310) 50%, transparent 70%)',
           right: '5%',
           bottom: '10%',
+          width: 'clamp(300px, 70vw, 600px)',
+          height: 'clamp(300px, 70vw, 600px)',
         }}
         animate={{
           rotate: [0, 360],
