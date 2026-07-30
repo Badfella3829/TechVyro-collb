@@ -30,20 +30,24 @@ function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean
 
     hasAnimated.current = true
     let start = 0
+    const startTime = Date.now()
     const duration = 2000
-    const increment = value / (duration / 16)
 
-    const timer = setInterval(() => {
-      start += increment
-      if (start >= value) {
-        setDisplayValue(value)
-        clearInterval(timer)
+    const animate = () => {
+      const now = Date.now()
+      const progress = Math.min((now - startTime) / duration, 1)
+      const current = Math.floor(value * progress)
+      
+      setDisplayValue(current)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
       } else {
-        setDisplayValue(Math.floor(start))
+        setDisplayValue(value)
       }
-    }, 16)
+    }
 
-    return () => clearInterval(timer)
+    requestAnimationFrame(animate)
   }, [value, isInView])
 
   return <span className="tabular-nums">{formatNumber(displayValue)}</span>

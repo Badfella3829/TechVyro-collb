@@ -7,8 +7,9 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { 
   Youtube, 
   Instagram, 
-  Twitter, 
+  Facebook,
   Linkedin,
+  MessageCircle,
   ArrowUp,
   Heart
 } from 'lucide-react'
@@ -25,10 +26,11 @@ const navLinks = [
 ] as { href: string; label: string; external?: boolean }[]
 
 const socialLinks = [
-  { icon: Youtube, href: 'https://youtube.com/@techvyro', label: 'YouTube', color: 'hover:text-red-500' },
   { icon: Instagram, href: 'https://instagram.com/techvyro', label: 'Instagram', color: 'hover:text-pink-500' },
-  { icon: Twitter, href: 'https://twitter.com/techvyro', label: 'Twitter/X', color: 'hover:text-foreground' },
-  { icon: Linkedin, href: 'https://linkedin.com/in/techvyro', label: 'LinkedIn', color: 'hover:text-blue-500' },
+  { icon: Youtube, href: 'https://youtube.com/@techvyro', label: 'YouTube', color: 'hover:text-red-500' },
+  { icon: Facebook, href: 'https://facebook.com/techvyro', label: 'Facebook', color: 'hover:text-blue-500' },
+  { icon: Linkedin, href: 'https://linkedin.com/in/techvyro', label: 'LinkedIn', color: 'hover:text-blue-600' },
+  { icon: MessageCircle, href: 'https://wa.me/916396094707', label: 'WhatsApp', color: 'hover:text-green-500' },
 ]
 
 export function Footer() {
