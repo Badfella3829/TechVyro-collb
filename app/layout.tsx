@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     description: "India's Premier Tech Content Creator. Let's create content that converts.",
     images: [
       {
-        url: '/images/techvyro-icon.jpg',
+        url: '/images/techvyro-logo-new.jpg',
         width: 1200,
         height: 630,
         alt: 'TechVyro Logo',
@@ -68,12 +68,12 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'TechVyro | Tech Content Creator',
     description: "India's Premier Tech Content Creator. Let's create content that converts.",
-    images: ['/images/techvyro-icon.jpg'],
+    images: ['/images/techvyro-logo-new.jpg'],
     creator: '@techvyro',
   },
   icons: {
-    icon: '/images/techvyro-icon.jpg',
-    apple: '/images/techvyro-icon.jpg',
+    icon: '/images/techvyro-logo-new.jpg',
+    apple: '/images/techvyro-logo-new.jpg',
   },
   robots: {
     index: true,

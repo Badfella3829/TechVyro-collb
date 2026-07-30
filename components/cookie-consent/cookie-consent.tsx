@@ -38,7 +38,7 @@ export function CookieConsent() {
     <div
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed inset-x-3 bottom-[calc(76px+env(safe-area-inset-bottom))] md:left-auto md:right-4 md:bottom-4 md:max-w-md z-[60] glass border border-border/60 rounded-2xl shadow-2xl p-4 sm:p-5 animate-in slide-in-from-bottom-5"
+      className="fixed inset-x-3 bottom-[calc(4rem+env(safe-area-inset-bottom))] sm:bottom-[calc(76px+env(safe-area-inset-bottom))] md:left-auto md:right-4 md:bottom-4 md:max-w-md z-[60] glass border border-border/60 rounded-xl sm:rounded-2xl shadow-2xl p-3 sm:p-5 animate-in slide-in-from-bottom-5"
     >
       <div className="flex items-start gap-3">
         <div className="h-9 w-9 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
@@ -46,21 +46,21 @@ export function CookieConsent() {
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-semibold mb-1">We use cookies 🍪</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 sm:line-clamp-none">
             We use essential cookies to run the site and optional analytics cookies to improve our content. You can choose your preference. Read our{' '}
-            <Link href="/privacy" className="underline text-foreground">privacy policy</Link>.
+            <Link href="/privacy" className="underline text-foreground hover:text-primary transition-colors">privacy policy</Link>.
           </p>
           <div className="flex flex-wrap gap-2 mt-3">
-            <Button size="sm" onClick={() => decide('all')} className="h-8 text-xs">Accept all</Button>
-            <Button size="sm" variant="outline" onClick={() => decide('essential')} className="h-8 text-xs">Essential only</Button>
+            <Button size="sm" onClick={() => decide('all')} className="h-8 text-xs bg-primary hover:bg-primary/90">Accept all</Button>
+            <Button size="sm" variant="outline" onClick={() => decide('essential')} className="h-8 text-xs">Essential</Button>
           </div>
         </div>
         <button
           aria-label="Dismiss"
           onClick={() => decide('essential')}
-          className="text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground ml-2 shrink-0"
         >
-          <X className="h-4 w-4" />
+          <X className="h-5 w-5" />
         </button>
       </div>
     </div>
