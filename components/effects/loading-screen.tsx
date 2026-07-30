@@ -22,18 +22,21 @@ function LoadingParticle({ index }: { index: number }) {
 
   return (
     <motion.div
-      className="absolute rounded-full bg-primary/30"
+      className="absolute rounded-full"
       style={{
         left: `${randomValues.x}%`,
         top: `${randomValues.y}%`,
         width: randomValues.size,
         height: randomValues.size,
+        background: index % 2 === 0 
+          ? 'radial-gradient(circle, rgba(6,182,212,0.4) 0%, transparent 70%)'
+          : 'radial-gradient(circle, rgba(157,78,221,0.4) 0%, transparent 70%)',
       }}
       animate={{
-        y: [-20, 20, -20],
-        x: [-10, 10, -10],
-        opacity: [0.2, 0.6, 0.2],
-        scale: [1, 1.5, 1],
+        y: [-30, 30, -30],
+        x: [-15, 15, -15],
+        opacity: [0.1, 0.8, 0.1],
+        scale: [0.8, 1.5, 0.8],
       }}
       transition={{
         duration: randomValues.duration,
@@ -215,33 +218,50 @@ export function LoadingScreen() {
               transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="relative mb-8 z-10"
             >
-              <motion.div
-                animate={{
-                  boxShadow: [
-                    '0 0 30px oklch(0.85 0.18 195 / 0.3), 0 0 60px oklch(0.85 0.18 195 / 0.1)',
-                    '0 0 50px oklch(0.85 0.18 195 / 0.5), 0 0 100px oklch(0.85 0.18 195 / 0.2)',
-                    '0 0 30px oklch(0.85 0.18 195 / 0.3), 0 0 60px oklch(0.85 0.18 195 / 0.1)',
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="relative w-28 h-28 rounded-2xl overflow-hidden bg-background border border-primary/20"
-              >
-                <Image
-                  src="/images/techvyro-logo-new.jpg"
-                  alt="TechVyro"
-                  fill
-                  sizes="112px"
-                  className="object-contain"
-                  priority
-                />
-                {/* Shine effect */}
+              <div className="relative">
+                {/* Outer glow rings */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  initial={{ x: '-100%' }}
-                  animate={{ x: '200%' }}
-                  transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+                  className="absolute inset-0 rounded-2xl border-2 border-cyan-500/30"
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.1, 0.3] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  style={{ width: 112 + 16, height: 112 + 16, top: -8, left: -8 }}
                 />
-              </motion.div>
+                <motion.div
+                  className="absolute inset-0 rounded-2xl border border-purple-500/20"
+                  animate={{ scale: [1.2, 1.35, 1.2], opacity: [0.1, 0.2, 0.1] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 0.3 }}
+                  style={{ width: 112 + 32, height: 112 + 32, top: -16, left: -16 }}
+                />
+
+                {/* Logo container */}
+                <motion.div
+                  animate={{
+                    boxShadow: [
+                      '0 0 30px oklch(0.85 0.18 195 / 0.4), 0 0 60px oklch(0.65 0.25 310 / 0.2)',
+                      '0 0 60px oklch(0.85 0.18 195 / 0.6), 0 0 100px oklch(0.65 0.25 310 / 0.3)',
+                      '0 0 30px oklch(0.85 0.18 195 / 0.4), 0 0 60px oklch(0.65 0.25 310 / 0.2)',
+                    ],
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative w-28 h-28 rounded-2xl overflow-hidden bg-background border-2 border-gradient-to-r from-cyan-500/40 to-purple-500/40"
+                >
+                  <Image
+                    src="/images/techvyro-logo-new.jpg"
+                    alt="TechVyro"
+                    fill
+                    sizes="112px"
+                    className="object-contain"
+                    priority
+                  />
+                  {/* Shine effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '200%' }}
+                    transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1.5 }}
+                  />
+                </motion.div>
+              </div>
             </motion.div>
 
             {/* Brand name reveal with character animation */}
