@@ -55,7 +55,7 @@ export function AboutSection() {
               {/* Main image container */}
               <div className="relative w-full h-full rounded-2xl overflow-hidden border border-border glass bg-background">
                 <Image
-                  src="/images/techvyro-icon.jpg"
+                  src="/images/techvyro-logo-new.jpg"
                   alt="TechVyro"
                   fill
                   sizes="(max-width: 768px) 100vw, 400px"

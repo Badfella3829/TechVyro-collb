@@ -227,7 +227,7 @@ export function LoadingScreen() {
                 className="relative w-28 h-28 rounded-2xl overflow-hidden bg-background border border-primary/20"
               >
                 <Image
-                  src="/images/techvyro-icon.jpg"
+                  src="/images/techvyro-logo-new.jpg"
                   alt="TechVyro"
                   fill
                   sizes="112px"
