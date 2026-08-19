@@ -2,13 +2,14 @@
 
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import * as THREE from 'three'
 
 function GlobeMesh() {
   const meshRef = useRef<THREE.Mesh>(null)
   const groupRef = useRef<THREE.Group>(null)
-
+  const [globeTexture, setGlobeTexture] = useState<THREE.Texture | null>(null)
+  
   useEffect(() => {
     if (!meshRef.current || !groupRef.current) return
 
@@ -20,6 +21,13 @@ function GlobeMesh() {
     }, 16)
 
     return () => clearInterval(interval)
+  }, [])
+
+  // Create the canvas texture only in the browser; this component is also SSR-rendered.
+  useEffect(() => {
+    const texture = createGlobeTexture()
+    setGlobeTexture(texture)
+    return () => texture.dispose()
   }, [])
 
   // Create canvas texture for globe
@@ -83,12 +91,14 @@ function GlobeMesh() {
     return texture
   }
 
+  if (!globeTexture) return null
+
   return (
     <group ref={groupRef}>
       <mesh ref={meshRef} castShadow receiveShadow>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
-          map={createGlobeTexture()}
+          map={globeTexture}
           shininess={5}
           emissive={0x1a1a2e}
           emissiveIntensity={0.3}

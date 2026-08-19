@@ -82,7 +82,7 @@ const TESTIMONIALS = [
 ]
 
 // Stats counter component
-function AnimatedStat({ value, label, icon: Icon, delay }: { value: string; label: string; icon: React.ComponentType<{ className?: string }>; delay: number }) {
+  function AnimatedStat({ value, label, icon: Icon, delay }: { value: string; label: string; icon: React.ComponentType<{ className?: string }>; delay: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true })
   
@@ -118,7 +118,7 @@ export function TestimonialsSection() {
   const [direction, setDirection] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
 
-  const slideVariants = {
+  const slideVariants: any = {
     enter: (direction: number) => ({
       x: direction > 0 ? 300 : -300,
       opacity: 0,

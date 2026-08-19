@@ -29,7 +29,6 @@ function AnimatedCounter({ value, isInView }: { value: number; isInView: boolean
     if (!isInView || hasAnimated.current) return
 
     hasAnimated.current = true
-    let start = 0
     const startTime = Date.now()
     const duration = 2000
 
