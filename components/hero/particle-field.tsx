@@ -16,12 +16,22 @@ if (typeof window !== 'undefined') {
 
 function hasWebGL(): boolean {
   if (typeof window === 'undefined') return false
+  // Replit's preview and other automated browsers can expose WebGL APIs
+  // without providing a context that Three.js can actually use.
+  if (navigator.webdriver) return false
   try {
     const canvas = document.createElement('canvas')
-    return !!(
+    const context = (
       window.WebGLRenderingContext &&
-      (canvas.getContext('webgl2') || canvas.getContext('webgl'))
+      (canvas.getContext('webgl2', { failIfMajorPerformanceCaveat: true }) ||
+        canvas.getContext('webgl', { failIfMajorPerformanceCaveat: true }))
     )
+    if (!context) return false
+
+    // Release the probe context so it cannot prevent the real renderer from
+    // acquiring a context on browsers with a small context limit.
+    context.getExtension('WEBGL_lose_context')?.loseContext()
+    return true
   } catch {
     return false
   }
@@ -136,8 +146,9 @@ export function ParticleField() {
   const [isLowPower, setIsLowPower] = useState(true)
 
   useEffect(() => {
-    setWebglOk(hasWebGL())
-    setIsLowPower(isLowPowerDevice())
+    const lowPower = isLowPowerDevice()
+    setIsLowPower(lowPower)
+    setWebglOk(!lowPower && hasWebGL())
   }, [])
 
   // Skip particles entirely on low-power devices
