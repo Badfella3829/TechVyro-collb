@@ -1,0 +1,1 @@
+- [WebGL preview fallback](webgl-preview-fallback.md) — browser previews may expose WebGL APIs without a usable renderer; decorative 3D effects must fail closed to a CSS fallback.
