@@ -35,7 +35,9 @@ export function ScrollBackground() {
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
-          className={particle.id % 2 === 0 ? 'absolute rounded-full blur-xl bg-cyan-500/20' : 'absolute rounded-full blur-xl bg-purple-500/20'}
+          className={`absolute rounded-full blur-xl ${
+            particle.id % 2 === 0 ? 'bg-cyan-500/20' : 'bg-purple-500/20'
+          }`}
           style={{
             left: `${particle.x}%`,
             top: `${particle.y}%`,

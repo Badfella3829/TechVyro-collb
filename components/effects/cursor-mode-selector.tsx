@@ -6,7 +6,9 @@ import { ChevronDown, Sparkles, PenTool, Atom, Crosshair, Orbit } from 'lucide-r
 import { useCursorMode, cursorModeLabels, type CursorMode } from '@/hooks/use-cursor-mode'
 import { cn } from '@/lib/utils'
 
-const modeIcons: Record<string, React.ElementType> = {
+type IconComponent = React.ComponentType<{ className?: string }>
+
+const modeIcons: Record<CursorMode, IconComponent> = {
   constellation: Sparkles,
   'fountain-pen': PenTool,
   particles: Atom,

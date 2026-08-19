@@ -82,7 +82,7 @@ const TESTIMONIALS = [
 ]
 
 // Stats counter component
-function AnimatedStat({ value, label, icon: Icon, delay }: { value: string; label: string; icon: any; delay: number }) {
+  function AnimatedStat({ value, label, icon: Icon, delay }: { value: string; label: string; icon: React.ComponentType<{ className?: string }>; delay: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true })
   
@@ -132,7 +132,7 @@ export function TestimonialsSection() {
       rotateY: 0,
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
       },
     },
     exit: (direction: number) => ({
@@ -142,7 +142,7 @@ export function TestimonialsSection() {
       rotateY: direction < 0 ? 15 : -15,
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
       },
     }),
   }
