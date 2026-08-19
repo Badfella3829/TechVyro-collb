@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { ParticleField } from './particle-field'
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
 
-const textVariants = {
+const textVariants: any = {
   hidden: { opacity: 0, y: 20 },
   visible: (i: number) => ({
     opacity: 1,
@@ -21,7 +21,7 @@ const textVariants = {
   }),
 }
 
-const glowVariants = {
+const glowVariants: any = {
   initial: { opacity: 0.4, scale: 1 },
   animate: {
     opacity: [0.4, 0.8, 0.4],
@@ -34,7 +34,7 @@ const glowVariants = {
   },
 }
 
-const floatingVariants = {
+const floatingVariants: any = {
   initial: { y: 0 },
   animate: {
     y: [-8, 8, -8],
@@ -46,7 +46,7 @@ const floatingVariants = {
   },
 }
 
-const staggerContainer = {
+const staggerContainer: any = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -57,7 +57,7 @@ const staggerContainer = {
   },
 }
 
-const fadeUpItem = {
+const fadeUpItem: any = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
