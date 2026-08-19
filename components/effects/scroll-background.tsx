@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 
 export function ScrollBackground() {
   const [scrollY, setScrollY] = useState(0)
+  const [scrollHeight, setScrollHeight] = useState(1)
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; size: number; duration: number }>>([])
 
   useEffect(() => {
@@ -20,7 +21,11 @@ export function ScrollBackground() {
 
     const handleScroll = () => {
       setScrollY(window.scrollY)
+      setScrollHeight(document.documentElement.scrollHeight - window.innerHeight || 1)
     }
+
+    // Set initial scroll height
+    setScrollHeight(document.documentElement.scrollHeight - window.innerHeight || 1)
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
@@ -32,7 +37,9 @@ export function ScrollBackground() {
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
-          className="absolute rounded-full blur-xl"
+          className={`absolute rounded-full blur-xl ${
+            particle.id % 2 === 0 ? 'bg-cyan-500/20' : 'bg-purple-500/20'
+          }`}
           style={{
             left: `${particle.x}%`,
             top: `${particle.y}%`,
@@ -50,7 +57,6 @@ export function ScrollBackground() {
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          className={particle.id % 2 === 0 ? 'bg-cyan-500/20' : 'bg-purple-500/20'}
         />
       ))}
 
@@ -59,7 +65,7 @@ export function ScrollBackground() {
         className="fixed top-0 left-0 right-0 h-[2px] origin-left"
         style={{
           background: 'linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.6), transparent)',
-          scaleX: Math.min(scrollY / (document.documentElement.scrollHeight - window.innerHeight) || 0, 1),
+          scaleX: Math.min(scrollY / scrollHeight, 1),
         }}
       />
 

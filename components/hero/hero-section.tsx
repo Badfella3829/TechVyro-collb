@@ -16,7 +16,7 @@ const textVariants = {
     transition: {
       delay: i * 0.1,
       duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
     },
   }),
 }
@@ -29,7 +29,7 @@ const glowVariants = {
     transition: {
       duration: 3,
       repeat: Infinity,
-      ease: "easeInOut",
+        ease: "easeInOut" as const,
     },
   },
 }
@@ -41,7 +41,7 @@ const floatingVariants = {
     transition: {
       duration: 4,
       repeat: Infinity,
-      ease: "easeInOut",
+        ease: "easeInOut" as const,
     },
   },
 }
@@ -64,7 +64,7 @@ const fadeUpItem = {
     y: 0,
     transition: {
       duration: 0.7,
-      ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
     },
   },
 }
