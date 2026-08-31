@@ -9,7 +9,7 @@ import type { MouseEvent } from 'react'
 const items = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/#stats', label: 'Stats', icon: BarChart3 },
-  { href: '/recommender', label: 'Match', icon: Sparkles, accent: true },
+  { href: '/match', label: 'Match', icon: Sparkles, accent: true },
   { href: '/#portfolio', label: 'Work', icon: Briefcase },
   { href: '/#contact', label: 'Contact', icon: MessageCircle },
 ]
@@ -30,8 +30,10 @@ export function BottomNav() {
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
+      } else {
+        e.preventDefault()
+        router.push(`${targetPath}#${hash}`)
       }
-      // else let the default Link navigation happen (will go to /#hash and scroll after load)
     }
   }
 
@@ -60,7 +62,7 @@ export function BottomNav() {
               >
                 <span className={cn(
                   'h-9 w-9 rounded-full flex items-center justify-center transition-all',
-                  accent && 'bg-gradient-to-br from-primary to-secondary text-primary-foreground shadow-lg shadow-primary/30',
+                   accent && 'nav-3d-button',
                   active && !accent && 'bg-primary/10'
                 )}>
                   <Icon className="h-4 w-4" />

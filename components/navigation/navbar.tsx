@@ -60,7 +60,13 @@ function MagneticNavLink({
       onMouseMove={handleMouse}
       onMouseLeave={reset}
       style={{ x: springX, y: springY }}
-      className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group py-2"
+      aria-current={isActive ? 'page' : undefined}
+      whileHover={{ y: -2, scale: 1.03, rotateX: 4 }}
+      whileTap={{ scale: 0.97 }}
+      className={cn(
+        "relative text-sm font-medium transition-colors group py-2 px-2.5 nav-link-3d",
+        isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+      )}
     >
       <span className="relative z-10">{label}</span>
       {/* Underline animation */}
@@ -245,8 +251,14 @@ export function Navbar() {
         <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Animated Logo */}
-            <AnimatedLogo 
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              <AnimatedLogo
+                onClick={() => {
+                  if (pathname !== '/') {
+                    router.push('/')
+                  } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }
+                }}
             />
 
             {/* Desktop Navigation with magnetic links */}
@@ -260,7 +272,7 @@ export function Navbar() {
                     setActiveLink(link.href)
                     scrollToSection(link.href)
                   }}
-                  isActive={activeLink === link.href}
+                    isActive={activeLink === link.href || (link.external && pathname === link.href)}
                 />
               ))}
             </div>
@@ -275,7 +287,7 @@ export function Navbar() {
               >
                 <Button
                   onClick={() => scrollToSection('#contact')}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground relative overflow-hidden group"
+                  className="nav-3d-button group"
                 >
                   <span className="relative z-10">Get in Touch</span>
                   {/* Button shine effect */}
@@ -293,7 +305,7 @@ export function Navbar() {
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-              className="md:hidden p-3 -mr-2 text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center relative"
+              className="md:hidden p-3 -mr-2 text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center relative rounded-xl border border-primary/20 bg-primary/5 shadow-[0_0_18px_oklch(0.85_0.18_195/0.12)]"
               whileTap={{ scale: 0.9 }}
             >
               <AnimatePresence mode="wait">
@@ -378,8 +390,11 @@ export function Navbar() {
                       ease: [0.25, 0.46, 0.45, 0.94]
                     }}
                     onClick={() => scrollToSection(link.href)}
-                    className="text-3xl font-bold text-foreground text-left py-3 min-h-[44px] relative group"
-                    whileHover={{ x: 10 }}
+                    className={cn(
+                      "text-3xl font-bold text-foreground text-left py-3 px-3 min-h-[44px] relative group nav-link-3d",
+                      pathname === link.href && "text-primary"
+                    )}
+                    whileHover={{ x: 8, rotateY: -3 }}
                   >
                     <span className="relative">
                       {link.label}
@@ -417,7 +432,7 @@ export function Navbar() {
                   <Button
                     onClick={() => scrollToSection('#contact')}
                     size="lg"
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground mt-4 h-14 text-lg"
+                    className="w-full nav-3d-button mt-4 h-14 text-lg"
                   >
                     Get in Touch
                   </Button>
