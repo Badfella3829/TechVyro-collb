@@ -22,6 +22,7 @@ export interface Lead {
 
 const DATA_DIR = path.join(process.cwd(), '.data')
 const FILE_PATH = path.join(DATA_DIR, 'leads.json')
+let memoryLeads: Lead[] = []
 
 // Serialize all reads/writes through a single in-flight promise chain to prevent
 // concurrent-write race conditions (multiple POSTs / PATCHes overwriting each other).
@@ -37,15 +38,27 @@ async function read(): Promise<{ leads: Lead[] }> {
     await fs.mkdir(DATA_DIR, { recursive: true })
     const raw = await fs.readFile(FILE_PATH, 'utf8')
     const parsed = JSON.parse(raw)
-    return { leads: Array.isArray(parsed.leads) ? parsed.leads : [] }
+    const leads = Array.isArray(parsed.leads) ? parsed.leads : []
+    memoryLeads = leads
+    return { leads }
   } catch {
-    return { leads: [] }
+    return { leads: memoryLeads.slice() }
   }
 }
 
 async function write(data: { leads: Lead[] }): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true })
-  await fs.writeFile(FILE_PATH, JSON.stringify(data, null, 2), 'utf8')
+  memoryLeads = data.leads.slice()
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true })
+    await fs.writeFile(FILE_PATH, JSON.stringify(data, null, 2), 'utf8')
+  } catch (err) {
+    // Serverless hosts may expose a read-only or ephemeral filesystem. Keep the
+    // request successful and retain leads for the lifetime of this instance.
+    console.warn(
+      '[lead-store] Persistent storage unavailable; using in-memory fallback.',
+      err instanceof Error ? err.message : String(err),
+    )
+  }
 }
 
 export async function listLeads(): Promise<Lead[]> {
