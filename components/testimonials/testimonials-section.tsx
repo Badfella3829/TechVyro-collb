@@ -118,7 +118,7 @@ export function TestimonialsSection() {
   const [direction, setDirection] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
 
-  const slideVariants = {
+  const slideVariants: any = {
     enter: (direction: number) => ({
       x: direction > 0 ? 300 : -300,
       opacity: 0,

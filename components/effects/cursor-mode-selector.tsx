@@ -19,7 +19,7 @@ const modeIcons: Record<CursorMode, IconComponent> = {
 export function CursorModeSelector() {
   const [isOpen, setIsOpen] = useState(false)
   const { mode, setMode } = useCursorMode()
-  const Icon = modeIcons[mode]
+  const Icon = modeIcons[mode] as any
 
   const handleSelect = (newMode: CursorMode) => {
     setMode(newMode)
@@ -39,7 +39,7 @@ export function CursorModeSelector() {
         aria-label="Select cursor mode"
       >
         <Icon className="h-4 w-4" />
-        <span className="hidden lg:inline">{cursorModeLabels[mode]}</span>
+        <span className="hidden lg:inline">{cursorModeLabels[mode as CursorMode]}</span>
         <ChevronDown className={cn(
           "h-3 w-3 transition-transform duration-200",
           isOpen && "rotate-180"
@@ -64,7 +64,7 @@ export function CursorModeSelector() {
               className="absolute right-0 top-full mt-2 z-50 min-w-[160px] rounded-lg border border-border bg-card/95 backdrop-blur-lg p-1 shadow-xl"
             >
               {(Object.keys(cursorModeLabels) as CursorMode[]).map((cursorMode) => {
-                const ModeIcon = modeIcons[cursorMode]
+                const ModeIcon = modeIcons[cursorMode] as any
                 const isActive = mode === cursorMode
                 
                 return (
@@ -79,7 +79,7 @@ export function CursorModeSelector() {
                     )}
                   >
                     <ModeIcon className="h-4 w-4" />
-                    <span>{cursorModeLabels[cursorMode]}</span>
+                    <span>{cursorModeLabels[cursorMode as CursorMode]}</span>
                     {isActive && (
                       <motion.div
                         layoutId="active-cursor"
