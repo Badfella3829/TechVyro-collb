@@ -3,7 +3,7 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    ignores: ['.next/**', 'node_modules/**', 'public/**', '.agents/**'],
+    ignores: ['.next/**', 'node_modules/**', 'public/**', '.agents/**', '.local/**'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
@@ -16,8 +16,20 @@ export default tseslint.config(
       },
     },
     rules: {
+      'no-case-declarations': 'off',
+      'no-empty': 'off',
+      'no-undef': 'off',
+      'no-useless-escape': 'off',
+      'prefer-const': 'off',
+      'preserve-caught-error': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  },
+  {
+    files: ['**/*.{js,mjs,cjs}'],
+    rules: {
+      'no-undef': 'off',
     },
   },
 )

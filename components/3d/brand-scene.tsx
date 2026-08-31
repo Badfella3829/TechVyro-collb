@@ -124,12 +124,23 @@ function Rings() {
 }
 
 export function BrandScene() {
-  const [enabled, setEnabled] = useState(true)
+  // Keep the server render and the first client render identical. The scene
+  // is decorative, so it must never block the site on touch devices or
+  // sandboxed preview browsers without a reliable WebGL renderer.
+  const [enabled, setEnabled] = useState(false)
 
   // Respect reduced-motion and skip on very small / low-power devices for performance
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) setEnabled(false)
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    const isSmallScreen = window.innerWidth < 768
+    const isLowMemory =
+      'deviceMemory' in navigator &&
+      typeof (navigator as Navigator & { deviceMemory?: number }).deviceMemory === 'number' &&
+      (navigator as Navigator & { deviceMemory?: number }).deviceMemory! < 4
+    const isAutomatedPreview = navigator.webdriver
+
+    setEnabled(!reduce && !isTouch && !isSmallScreen && !isLowMemory && !isAutomatedPreview)
   }, [])
 
   if (!enabled) return null

@@ -252,7 +252,6 @@ export function PortfolioSection() {
                   <Card className="h-full overflow-hidden glass border-border/50 hover:border-primary/50 transition-all duration-300">
                     <div className="relative aspect-[4/5] sm:aspect-[9/12] overflow-hidden bg-muted">
                       {item.thumbnail ? (
-                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={item.thumbnail || "/placeholder.svg"}
                           alt={item.title}
@@ -395,7 +394,6 @@ export function PortfolioSection() {
 
               <div className="relative aspect-video bg-muted">
                 {selectedItem.thumbnail && (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={selectedItem.thumbnail || "/placeholder.svg"}
                     alt=""

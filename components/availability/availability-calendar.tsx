@@ -69,7 +69,6 @@ export function AvailabilityCalendar() {
       if (getStatusForDay(d) === 'available') count++
     }
     return count
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [daysInMonth, currentMonth, currentYear, bookedSet, tentativeSet])
 
   const navigateMonth = (dir: number) => {

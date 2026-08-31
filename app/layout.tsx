@@ -149,7 +149,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className="font-sans antialiased min-h-screen pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
+      <body className="font-sans antialiased min-h-screen overflow-x-hidden pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
         {/* Structured data (JSON-LD) — rendered via next/script for crawlers */}
         <Script id="ld-person" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }} />
         <Script id="ld-organization" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }} />
