@@ -39,6 +39,7 @@ import {
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
 import { CalendlyEmbed } from '@/components/booking/calendly-embed'
 import { PACKAGE_SELECTED_EVENT, DATE_SELECTED_EVENT, mapPackageToCollabType, type SelectedPackage } from '@/lib/select-package'
+import { isTodayOrFutureIsoDate } from '@/lib/validation'
 
 const COLLAB_EMAIL = 'techvyro@gmail.com'
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
@@ -393,10 +394,8 @@ export function ContactSection() {
     if (s === 2) {
       if (!form.timeline) newErrors.timeline = 'Pick a timeline'
       if (!form.startDate) newErrors.startDate = 'Pick a preferred start date'
-      else {
-        const today = new Date(); today.setHours(0, 0, 0, 0)
-        const picked = new Date(form.startDate)
-        if (isNaN(picked.getTime()) || picked < today) newErrors.startDate = 'Pick today or a future date'
+      else if (!isTodayOrFutureIsoDate(form.startDate)) {
+        newErrors.startDate = 'Pick today or a future date'
       }
       const m = form.message.trim()
       if (!m) newErrors.message = 'Brief is required'

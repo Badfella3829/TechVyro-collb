@@ -81,8 +81,8 @@ function StatItem({ icon: Icon, value, suffix, label, color, delay, isInView }: 
 // Fixed headline metrics — edit these numbers anytime to match your real figures.
 const stats = [
   { icon: Users, value: 850000, suffix: '+', label: 'Total Followers', color: 'bg-primary/20 text-primary' },
-  { icon: Eye, value: 120000000, suffix: '+', label: 'Total Views', color: 'bg-red-500/20 text-red-500' },
-  { icon: Play, value: 1200, suffix: '+', label: 'Total Content', color: 'bg-secondary/20 text-secondary' },
+  { icon: Eye, value: 165000000, suffix: '+', label: 'Total Views', color: 'bg-red-500/20 text-red-500' },
+  { icon: Play, value: 1230, suffix: '+', label: 'Total Content', color: 'bg-secondary/20 text-secondary' },
   { icon: Heart, value: 45000, suffix: '+', label: 'Avg. Likes / Post', color: 'bg-accent/20 text-accent' },
   { icon: MessageCircle, value: 1800, suffix: '+', label: 'Avg. Comments', color: 'bg-primary/20 text-primary' },
   { icon: TrendingUp, value: 8, suffix: '%', label: 'Engagement Rate', color: 'bg-secondary/20 text-secondary' },
@@ -102,6 +102,7 @@ const platformStats = [
     iconBg: 'bg-gradient-to-br from-pink-500 via-fuchsia-500 to-orange-500 text-white',
     hover: 'hover:border-pink-500/50',
     accent: 'text-pink-500',
+    hoverAccent: 'group-hover:text-pink-500',
     glow: 'group-hover:shadow-pink-500/20',
   },
   {
@@ -116,6 +117,7 @@ const platformStats = [
     iconBg: 'bg-gradient-to-br from-blue-600 to-cyan-500 text-white',
     hover: 'hover:border-blue-500/50',
     accent: 'text-blue-500',
+    hoverAccent: 'group-hover:text-blue-500',
     glow: 'group-hover:shadow-blue-500/20',
   },
   {
@@ -130,6 +132,7 @@ const platformStats = [
     iconBg: 'bg-gradient-to-br from-red-600 to-orange-500 text-white',
     hover: 'hover:border-red-500/50',
     accent: 'text-red-500',
+    hoverAccent: 'group-hover:text-red-500',
     glow: 'group-hover:shadow-red-500/20',
   },
 ]
@@ -247,7 +250,7 @@ export function StatsSection() {
                             <p className="text-xs text-muted-foreground truncate">{platform.handle}</p>
                           )}
                         </div>
-                        <ArrowRight className={`h-4 w-4 text-muted-foreground group-hover:${platform.accent} group-hover:translate-x-1 transition-all shrink-0`} />
+                        <ArrowRight className={`h-4 w-4 text-muted-foreground ${platform.hoverAccent} group-hover:translate-x-1 transition-all shrink-0`} />
                       </div>
 
                       <CardContent className="p-5 sm:p-6 pt-5">

@@ -149,6 +149,7 @@ export function AvailabilityCalendar() {
                 <Button
                   variant="outline"
                   size="icon"
+                  aria-label="Previous month"
                   onClick={() => navigateMonth(-1)}
                   className="h-8 w-8 rounded-full"
                 >
@@ -163,6 +164,7 @@ export function AvailabilityCalendar() {
                 <Button
                   variant="outline"
                   size="icon"
+                  aria-label="Next month"
                   onClick={() => navigateMonth(1)}
                   className="h-8 w-8 rounded-full"
                 >

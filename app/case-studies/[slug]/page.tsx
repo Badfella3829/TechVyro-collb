@@ -130,7 +130,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         </section>
 
         <div className="mt-8 text-center">
-          <Link href="/contact" className="inline-block px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90">
+          <Link href="/#contact" className="inline-block px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90">
             Plan this for my brand →
           </Link>
         </div>

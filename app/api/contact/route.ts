@@ -5,6 +5,7 @@ import { sendInquiryWhatsapp } from '@/lib/whatsapp'
 import { addBooking } from '@/lib/availability-store'
 import { sendEmail, buildInquiryAckEmail, buildOwnerAlertEmail } from '@/lib/email'
 import { addLead } from '@/lib/lead-store'
+import { isTodayOrFutureIsoDate } from '@/lib/validation'
 
 const OWNER_EMAIL = process.env.OWNER_EMAIL || 'techvyro@gmail.com'
 
@@ -74,11 +75,7 @@ export async function POST(req: Request) {
 
     if (!startDate) fieldErrors.startDate = 'Start date is required'
     else if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) fieldErrors.startDate = 'Use YYYY-MM-DD format'
-    else {
-      const picked = new Date(startDate)
-      const today = new Date(); today.setHours(0, 0, 0, 0)
-      if (isNaN(picked.getTime()) || picked < today) fieldErrors.startDate = 'Pick today or a future date'
-    }
+    else if (!isTodayOrFutureIsoDate(startDate)) fieldErrors.startDate = 'Pick today or a future date'
 
     if (!msg) fieldErrors.message = 'Brief is required'
     else if (msg.length < 20) fieldErrors.message = 'Brief must be at least 20 characters'

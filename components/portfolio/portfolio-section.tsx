@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useMemo } from 'react'
+import { useRef, useState, useMemo, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import {
   Play,
@@ -15,6 +15,7 @@ import {
   Youtube,
   Share2,
   Eye,
+  ArrowUpDown,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -149,13 +150,28 @@ export function PortfolioSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [platformFilter, setPlatformFilter] = useState<Platform | 'all'>('all')
   const [typeFilter, setTypeFilter] = useState<FilterType>('all')
+  const [sortBy, setSortBy] = useState<'top' | 'recent'>('top')
   const [selectedItem, setSelectedItem] = useState<UnifiedItem | null>(null)
 
+  useEffect(() => {
+    if (!selectedItem) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedItem(null)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [selectedItem])
+
   const allItems = useMemo<UnifiedItem[]>(() => {
+    if (sortBy === 'recent') {
+      return [...PORTFOLIO_ITEMS].sort(
+        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      )
+    }
     const score = (i: UnifiedItem) =>
       i.platform === 'youtube' ? (i.views ?? 0) : (i.likes + i.comments) * 10
     return [...PORTFOLIO_ITEMS].sort((a, b) => score(b) - score(a))
-  }, [])
+  }, [sortBy])
 
   const filteredItems = useMemo(() => {
     let items = allItems
@@ -227,6 +243,16 @@ export function PortfolioSection() {
               <span>{filter.label}</span>
             </Button>
           ))}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSortBy((prev) => (prev === 'top' ? 'recent' : 'top'))}
+            className="rounded-full gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[40px] border-primary/40 text-primary hover:bg-primary/10"
+            aria-label={`Sort portfolio by ${sortBy === 'top' ? 'most recent' : 'top performing'}`}
+          >
+            <ArrowUpDown className="h-3.5 w-3.5 shrink-0" />
+            <span>{sortBy === 'top' ? 'Sorted: Top Performing' : 'Sorted: Most Recent'}</span>
+          </Button>
         </motion.div>
 
         {/* Grid */}

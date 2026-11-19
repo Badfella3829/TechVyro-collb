@@ -8,6 +8,7 @@ import { Menu, X, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { LangToggle } from '@/components/i18n/lang-toggle'
+import { CommandPaletteTrigger } from '@/components/navigation/command-palette'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -278,7 +279,8 @@ export function Navbar() {
             </div>
 
             {/* CTA Button + toggles */}
-            <div className="hidden md:flex items-center gap-3 lg:gap-4 ml-auto">
+            <div className="hidden md:flex items-center gap-2 lg:gap-3 ml-auto">
+              <CommandPaletteTrigger />
               <LangToggle />
               <ThemeToggle />
               <motion.div
@@ -421,6 +423,7 @@ export function Navbar() {
                 >
                   <ThemeToggle />
                   <LangToggle />
+                  <CommandPaletteTrigger />
                 </motion.div>
                 
                 {/* CTA Button */}

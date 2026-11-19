@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { motion, useInView } from 'framer-motion'
 import {
@@ -11,6 +11,8 @@ import {
   Heart,
   BarChart3,
   ExternalLink,
+  Check,
+  FileDown,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -18,7 +20,7 @@ import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
 
 const contentStyles = [
   'Tech Tips & Tricks',
-  'AI Tools (ChatGPT, Canva, Bard)',
+  'AI Tools & Productivity Workflows',
   'Computer & Mobile Tutorials',
   'Blogging & SEO',
   'Freelancing & Make Money Online',
@@ -29,6 +31,22 @@ export function MediaKitSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const { ig, fb, yt, totals, ready } = useCombinedStats()
+  const [sharedCopied, setSharedCopied] = useState(false)
+
+  const handleShare = async () => {
+    const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/#media-kit` : ''
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({ title: 'TechVyro Media Kit', url: shareUrl })
+        return
+      } catch {}
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setSharedCopied(true)
+      setTimeout(() => setSharedCopied(false), 2000)
+    } catch {}
+  }
 
   const platformData = [
     { name: 'YouTube', value: totals.ytSubs, color: '#FF0000', link: yt?.channel.link },
@@ -110,14 +128,10 @@ export function MediaKitSection() {
                       variant="outline"
                       size="sm"
                       className="gap-2"
-                      onClick={() => {
-                        if (typeof navigator !== 'undefined' && navigator.share) {
-                          navigator.share({ title: 'TechVyro', url: window.location.href }).catch(() => {})
-                        }
-                      }}
+                      onClick={handleShare}
                     >
-                      <Share2 className="h-4 w-4" />
-                      Share
+                      {sharedCopied ? <Check className="h-4 w-4 text-emerald-400" /> : <Share2 className="h-4 w-4" />}
+                      {sharedCopied ? 'Link Copied' : 'Share'}
                     </Button>
                   </div>
                 </div>
@@ -227,11 +241,17 @@ export function MediaKitSection() {
                   <span className="w-2 h-2 bg-accent rounded-full" />
                   Verified stats • Updated regularly
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button asChild variant="outline" size="sm" className="gap-2">
+                    <a href="/api/media-kit" target="_blank" rel="noopener noreferrer">
+                      <FileDown className="h-3.5 w-3.5" />
+                      View Printable Kit
+                    </a>
+                  </Button>
                   <Button
-                    variant="outline"
+                    variant="default"
                     size="sm"
-                    className="gap-2"
+                    className="gap-2 bg-primary text-primary-foreground"
                     onClick={() => {
                       const el = document.getElementById('contact')
                       el?.scrollIntoView({ behavior: 'smooth' })

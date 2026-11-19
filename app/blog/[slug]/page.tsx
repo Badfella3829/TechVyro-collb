@@ -46,7 +46,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
         <div className="mt-12 glass border border-border/50 rounded-2xl p-5 text-center">
           <p className="text-sm text-muted-foreground">Want this kind of strategy for your brand?</p>
-          <Link href="/contact" className="inline-block mt-3 px-5 py-2 rounded-lg bg-primary text-primary-foreground font-semibold text-sm">
+          <Link href="/#contact" className="inline-block mt-3 px-5 py-2 rounded-lg bg-primary text-primary-foreground font-semibold text-sm">
             Start a collaboration →
           </Link>
         </div>

@@ -121,9 +121,12 @@ export async function POST(req: Request) {
         reference: `ROI-${Date.now().toString(36).toUpperCase()}`,
         brandName: data.name || 'ROI Lead',
         contactName: data.name || 'Lead',
-        contactEmail: data.email,
+        email: data.email,
+        campaignGoal: 'ROI Calculator Lead',
+        collabType: data.package || 'ROI Estimate',
+        budget: `₹${data.budget.toLocaleString('en-IN')}`,
         message: `🔥 ROI report request\nBudget: ₹${data.budget.toLocaleString('en-IN')}\nProjected ROI: ${data.estROI.toFixed(1)}×\nPackage: ${data.package || 'N/A'}`,
-      } as any)
+      })
     } catch (e) {
       console.error('roi report whatsapp failed', e)
     }

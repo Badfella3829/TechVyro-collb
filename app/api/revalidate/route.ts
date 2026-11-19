@@ -26,7 +26,7 @@ async function handle(req: Request) {
 
   if (!path && !tag) {
     // Default: refresh primary pages
-    const paths = ['/', '/portfolio']
+    const paths = ['/', '/about', '/blog', '/case-studies']
     for (const p of paths) { revalidatePath(p); revalidated.push(`path:${p}`) }
   }
 

@@ -131,6 +131,7 @@ export function HeroSection() {
               fill
               sizes="(max-width: 640px) 144px, 176px"
               className="object-contain"
+              loading="eager"
               priority
             />
             {/* Glow effect behind logo */}
@@ -297,9 +298,9 @@ export function HeroSection() {
           className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-6 lg:gap-10 w-full max-w-md sm:max-w-none mx-auto px-4 sm:px-0"
         >
           {[
-            { value: ready ? formatBig(totals.followers) : '27K+', label: 'Followers' },
-            { value: ready ? formatBig(totals.totalViews) : '2M+', label: 'Views' },
-            { value: ready ? formatBig(totals.content) : '200+', label: 'Posts' },
+            { value: ready ? formatBig(totals.followers) : '850K+', label: 'Followers' },
+            { value: ready ? formatBig(totals.totalViews) : '165M+', label: 'Views' },
+            { value: ready ? formatBig(totals.content) : '1.2K+', label: 'Posts' },
           ].map((stat, index) => (
             <motion.div 
               key={index} 
@@ -327,7 +328,7 @@ export function HeroSection() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.button
-          onClick={() => scrollToSection('about')}
+          onClick={() => scrollToSection('stats')}
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center text-muted-foreground hover:text-primary transition-colors"

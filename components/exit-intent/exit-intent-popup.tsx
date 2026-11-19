@@ -13,6 +13,8 @@ export function ExitIntentPopup() {
   useEffect(() => {
     try {
       if (sessionStorage.getItem(STORAGE_KEY)) return
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('autostart') === '1') return
     } catch {}
     const armTimer = setTimeout(() => setArmed(true), 8000)
     return () => clearTimeout(armTimer)
@@ -21,7 +23,8 @@ export function ExitIntentPopup() {
   useEffect(() => {
     if (!armed) return
     const handler = (e: MouseEvent) => {
-      if (e.clientY <= 0) {
+      // Only fire when the cursor actually leaves the top edge of the browser viewport
+      if (e.clientY <= 0 && !e.relatedTarget) {
         setOpen(true)
         try { sessionStorage.setItem(STORAGE_KEY, '1') } catch {}
         document.removeEventListener('mouseout', handler)
@@ -30,6 +33,15 @@ export function ExitIntentPopup() {
     document.addEventListener('mouseout', handler)
     return () => document.removeEventListener('mouseout', handler)
   }, [armed])
+
+  useEffect(() => {
+    if (!open) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open])
 
   const close = () => setOpen(false)
 

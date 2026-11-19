@@ -6,8 +6,8 @@ import { Star, Users, Eye, Award, Zap, TrendingUp, Heart, CheckCircle2 } from 'l
 const ITEMS = [
   { icon: Star, label: '5.0 Rated by Brands' },
   { icon: Users, label: '50+ Brand Partners' },
-  { icon: Eye, label: '8.45M+ Total Views' },
-  { icon: Heart, label: '14K+ Community' },
+  { icon: Eye, label: '165M+ Total Views' },
+  { icon: Heart, label: '850K+ Community' },
   { icon: Award, label: 'Top Tech Creator 2025' },
   { icon: Zap, label: '48hr Avg Turnaround' },
   { icon: TrendingUp, label: '18% Avg Conversion Lift' },

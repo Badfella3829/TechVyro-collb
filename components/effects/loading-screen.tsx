@@ -90,6 +90,9 @@ function OrbitRing({ delay, size, reverse }: { delay: number; size: number; reve
   )
 }
 
+export const LOADING_COMPLETE_EVENT = 'tv:loading-complete'
+const INTRO_SHOWN_KEY = 'tv-intro-shown'
+
 export function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true)
   const [progress, setProgress] = useState(0)
@@ -97,7 +100,6 @@ export function LoadingScreen() {
   // Particles use randomized positions; render them only after mount so the
   // server-rendered HTML and the client never disagree (no hydration mismatch).
   const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
 
   const loadingSteps = useMemo(() => [
     'Initializing',
@@ -108,21 +110,46 @@ export function LoadingScreen() {
   ], [])
 
   useEffect(() => {
+    setMounted(true)
+
+    // Skip intro animation if ?autostart=1 or already viewed in this session
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const alreadyShown = sessionStorage.getItem(INTRO_SHOWN_KEY) === '1'
+      if (params.get('autostart') === '1' || alreadyShown) {
+        setIsLoading(false)
+        window.dispatchEvent(new CustomEvent(LOADING_COMPLETE_EVENT))
+        return
+      }
+    } catch {}
+
+    let exitTimer: ReturnType<typeof setTimeout> | null = null
+    let doneTimer: ReturnType<typeof setTimeout> | null = null
+
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(interval)
-          setTimeout(() => setIsLoading(false), 600)
+          exitTimer = setTimeout(() => {
+            setIsLoading(false)
+            try { sessionStorage.setItem(INTRO_SHOWN_KEY, '1') } catch {}
+            doneTimer = setTimeout(() => {
+              window.dispatchEvent(new CustomEvent(LOADING_COMPLETE_EVENT))
+            }, 850)
+          }, 350)
           return 100
         }
-        const newProgress = prev + Math.random() * 12 + 4
-        // Update loading text based on progress
+        const newProgress = prev + Math.random() * 14 + 6
         const stepIndex = Math.min(Math.floor(newProgress / 25), loadingSteps.length - 1)
         setLoadingText(loadingSteps[stepIndex])
         return newProgress
       })
-    }, 100)
-    return () => clearInterval(interval)
+    }, 90)
+    return () => {
+      clearInterval(interval)
+      if (exitTimer) clearTimeout(exitTimer)
+      if (doneTimer) clearTimeout(doneTimer)
+    }
   }, [loadingSteps])
 
   const particles = useMemo(() => Array.from({ length: 20 }), [])
@@ -251,7 +278,6 @@ export function LoadingScreen() {
                     fill
                     sizes="112px"
                     className="object-contain"
-                    priority
                   />
                   {/* Shine effect */}
                   <motion.div

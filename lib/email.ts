@@ -1,4 +1,5 @@
 import nodemailer, { type Transporter } from 'nodemailer'
+import { sanitizePhoneDigits } from './validation'
 
 let cachedTransporter: Transporter | null = null
 
@@ -237,7 +238,7 @@ export function buildOwnerAlertEmail(d: InquiryEmailData): { subject: string; te
         <div style="margin-top:20px;text-align:center;">
           <a href="https://techvyro.com/admin/availability" style="display:inline-block;background:#0d9488;color:#fff;text-decoration:none;padding:11px 22px;border-radius:8px;font-weight:600;font-size:14px;">Open Admin Panel →</a>
         </div>
-        <p style="margin:14px 0 0;color:#6b7280;font-size:12px;text-align:center;">Quick replies: <a href="mailto:${escapeHtml(d.email)}" style="color:#0d9488;">Email ${escapeHtml(d.contactName.split(' ')[0])}</a>${d.phone ? ` · <a href="https://wa.me/${d.phone.replace(/\\D/g, '')}" style="color:#0d9488;">WhatsApp</a>` : ''}</p>
+        <p style="margin:14px 0 0;color:#6b7280;font-size:12px;text-align:center;">Quick replies: <a href="mailto:${escapeHtml(d.email)}" style="color:#0d9488;">Email ${escapeHtml(d.contactName.split(' ')[0])}</a>${d.phone ? ` · <a href="https://wa.me/${sanitizePhoneDigits(d.phone)}" style="color:#0d9488;">WhatsApp</a>` : ''}</p>
       </td></tr>
     </table>
   </td></tr>

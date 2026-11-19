@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server'
 export const runtime = 'nodejs'
 
 function buildHtmlMediaKit() {
-  const ig = process.env.INSTAGRAM_USER_ID ? 'Connected' : 'N/A'
   return `<!doctype html><html><head><meta charset="utf-8"><title>TechVyro Media Kit</title>
 <style>
   body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#fff;padding:0;margin:0}
@@ -67,7 +66,7 @@ function buildHtmlMediaKit() {
   </ul>
 
   <div class="cta">
-    <a href="https://techvyro.com/contact">📩 Start a Collaboration → techvyro.com/contact</a><br>
+    <a href="https://techvyro.com/#contact">📩 Start a Collaboration → techvyro.com/#contact</a><br>
     <span style="color:#fff;font-size:13px;opacity:.9">WhatsApp: +91 63960 94707 · Email: techvyro@gmail.com</span>
   </div>
 

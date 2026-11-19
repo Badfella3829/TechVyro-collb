@@ -11,6 +11,7 @@ import { PageTransition } from '@/components/page-transition/page-transition'
 import { CookieConsent } from '@/components/cookie-consent/cookie-consent'
 import { BottomNav } from '@/components/mobile-nav/bottom-nav'
 import { BrandScene } from '@/components/3d/brand-scene'
+import { CommandPalette } from '@/components/navigation/command-palette'
 import { personJsonLd, organizationJsonLd, websiteJsonLd } from '@/lib/json-ld'
 import './globals.css'
 
@@ -166,6 +167,7 @@ export default function RootLayout({
             <VisitorCounter />
             <CookieConsent />
             <BottomNav />
+            <CommandPalette />
           </SmoothScroll>
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}

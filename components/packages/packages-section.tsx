@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { selectPackage } from '@/lib/select-package'
+import { formatPackagePrice, mergePackageAddons, type Currency } from '@/lib/pricing'
 
 type CategoryKey = 'all' | 'video' | 'shorts' | 'social' | 'live' | 'premium' | 'bundles'
 
@@ -25,7 +26,8 @@ interface PackageItem {
   description: string
   features: string[]
   popular?: boolean
-  startingPrice?: string
+  priceInr: number | null
+  pricePlus?: boolean
 }
 
 interface PackageCategory {
@@ -48,19 +50,19 @@ const categories: PackageCategory[] = [
         description: 'Full video on brand only - review, unboxing, or story',
         features: ['Full creative control', '5-15 min video', 'Custom thumbnail', 'Multi-platform upload'],
         popular: true,
-        startingPrice: '₹25,000'
+        priceInr: 25000
       },
       {
         name: 'Integrated Sponsorship',
         description: '30-60 sec mention inside existing video',
         features: ['Mid-roll or end-roll', 'Natural integration', 'Existing audience reach'],
-        startingPrice: '₹10,000'
+        priceInr: 10000
       },
       {
         name: 'Product Review Video',
         description: 'Honest detailed review with affiliate link',
         features: ['In-depth analysis', 'Pros & cons', 'Comparison with competitors', 'Affiliate tracking'],
-        startingPrice: '₹15,000'
+        priceInr: 15000
       }
     ]
   },
@@ -75,19 +77,19 @@ const categories: PackageCategory[] = [
         description: '15-60 sec high-reach reel content',
         features: ['Trending format', 'Music integration', 'Hashtag strategy', 'Explore page potential'],
         popular: true,
-        startingPrice: '₹8,000'
+        priceInr: 8000
       },
       {
         name: 'YouTube Short',
         description: 'Under 60 sec algorithm-boosted content',
         features: ['Shorts shelf placement', 'Vertical format', 'Quick engagement'],
-        startingPrice: '₹8,000'
+        priceInr: 8000
       },
       {
         name: 'TikTok Style Content',
         description: 'Trending format with viral potential',
         features: ['Trend participation', 'Sound trends', 'Duet/stitch friendly'],
-        startingPrice: '₹6,000'
+        priceInr: 6000
       }
     ]
   },
@@ -101,20 +103,20 @@ const categories: PackageCategory[] = [
         name: 'Instagram Feed Post',
         description: 'Photo/carousel with caption + hashtags',
         features: ['High-quality imagery', 'Engaging caption', 'Strategic hashtags', 'Grid aesthetic'],
-        startingPrice: '₹5,000'
+        priceInr: 5000
       },
       {
         name: 'Instagram Story',
         description: 'Swipe-up / link with poll/quiz/CTA',
         features: ['Interactive elements', 'Link stickers', '24hr visibility', 'Highlight option'],
         popular: true,
-        startingPrice: '₹3,000'
+        priceInr: 3000
       },
       {
         name: 'Twitter/X Thread',
         description: 'Thread or single post with brand mention',
         features: ['Thread format', 'Engagement hooks', 'Retweet potential'],
-        startingPrice: '₹2,500'
+        priceInr: 2500
       }
     ]
   },
@@ -129,19 +131,19 @@ const categories: PackageCategory[] = [
         description: 'Brand mention during live - real-time audience',
         features: ['Real-time engagement', 'Q&A opportunity', 'Chat interaction', 'Recording available'],
         popular: true,
-        startingPrice: '₹15,000'
+        priceInr: 15000
       },
       {
         name: 'Event/Meetup Presence',
         description: 'Brand presence at fan meetup or physical event',
         features: ['On-ground activation', 'Fan engagement', 'Photo ops', 'Social coverage'],
-        startingPrice: '₹50,000'
+        priceInr: 50000
       },
       {
         name: 'Webinar/Workshop',
         description: 'Brand co-hosts online session',
         features: ['Educational content', 'Lead generation', 'Extended engagement'],
-        startingPrice: '₹20,000'
+        priceInr: 20000
       }
     ]
   },
@@ -156,19 +158,20 @@ const categories: PackageCategory[] = [
         description: 'Long-term deal 3-12 months exclusive',
         features: ['Exclusive partnership', 'Multiple content pieces', 'Event appearances', 'Social takeovers'],
         popular: true,
-        startingPrice: '₹1,00,000+'
+        priceInr: 100000,
+        pricePlus: true
       },
       {
         name: 'Custom UGC Content',
         description: 'Content created for brand\'s own page - white-label',
         features: ['Full usage rights', 'Brand voice match', 'No creator branding'],
-        startingPrice: '₹12,000'
+        priceInr: 12000
       },
       {
         name: 'Affiliate Partnership',
         description: 'Commission per sale/click with promo code + link',
         features: ['Performance-based', 'Tracked conversions', 'Custom promo codes'],
-        startingPrice: 'Revenue Share'
+        priceInr: null
       }
     ]
   },
@@ -182,20 +185,20 @@ const categories: PackageCategory[] = [
         name: 'Starter Bundle',
         description: '1 Reel + 2 Stories + 1 Post - Perfect for startups',
         features: ['Multi-format coverage', 'Cost effective', 'Quick turnaround', 'Best for awareness'],
-        startingPrice: '₹15,000'
+        priceInr: 15000
       },
       {
         name: 'Growth Bundle',
         description: '1 Video + 1 Reel + 3 Stories + 1 Post',
         features: ['Comprehensive coverage', 'Multi-platform', 'Campaign cohesion', 'Mid-size brands'],
         popular: true,
-        startingPrice: '₹40,000'
+        priceInr: 40000
       },
       {
         name: 'Mega Campaign',
         description: 'Video + Reel + Live + Stories + Post - Full package',
         features: ['Maximum exposure', 'All platforms', 'Premium support', 'Best ROI'],
-        startingPrice: '₹75,000'
+        priceInr: 75000
       }
     ]
   }
@@ -205,6 +208,14 @@ export function PackagesSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all')
+  const [currency, setCurrency] = useState<Currency>('INR')
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([])
+
+  const toggleAddon = (name: string) => {
+    setSelectedAddons((prev) =>
+      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
+    )
+  }
 
   const filteredCategories = activeCategory === 'all' 
     ? categories 
@@ -241,6 +252,35 @@ export function PackagesSection() {
             From quick social mentions to full-scale campaigns, find the collaboration 
             type that fits your brand goals and budget.
           </p>
+          {/* Currency Switcher */}
+          <div className="mt-6 inline-flex items-center rounded-full border border-border/60 bg-muted/30 p-1" role="group" aria-label="Display currency">
+            <button
+              type="button"
+              onClick={() => setCurrency('INR')}
+              aria-pressed={currency === 'INR'}
+              className={cn(
+                "px-4 py-1.5 rounded-full text-xs font-semibold transition-all min-h-[36px]",
+                currency === 'INR'
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              INR (₹)
+            </button>
+            <button
+              type="button"
+              onClick={() => setCurrency('USD')}
+              aria-pressed={currency === 'USD'}
+              className={cn(
+                "px-4 py-1.5 rounded-full text-xs font-semibold transition-all min-h-[36px]",
+                currency === 'USD'
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              USD ($)
+            </button>
+          </div>
         </motion.div>
 
         {/* Category Filter */}
@@ -318,11 +358,10 @@ export function PackagesSection() {
                         <CardHeader>
                           <CardTitle className="text-lg pr-16">{pkg.name}</CardTitle>
                           <p className="text-sm text-muted-foreground">{pkg.description}</p>
-                          {pkg.startingPrice && (
-                            <p className="text-lg font-bold text-primary mt-2">
-                              Starting from {pkg.startingPrice}
-                            </p>
-                          )}
+                          <p className="text-lg font-bold text-primary mt-2">
+                            {pkg.priceInr !== null ? 'Starting from ' : ''}
+                            {formatPackagePrice(pkg.priceInr, currency, pkg.pricePlus)}
+                          </p>
                         </CardHeader>
                         
                         <CardContent>
@@ -341,11 +380,11 @@ export function PackagesSection() {
                             onClick={() => selectPackage({
                               name: pkg.name,
                               description: pkg.description,
-                              features: pkg.features,
+                              features: mergePackageAddons(pkg.features, selectedAddons),
                               category: category.label,
                             })}
                           >
-                            Get Quote
+                            {selectedAddons.length > 0 ? `Get Quote (+${selectedAddons.length} add-on${selectedAddons.length > 1 ? 's' : ''})` : 'Get Quote'}
                             <ChevronRight className="h-4 w-4 ml-1" />
                           </Button>
                         </CardContent>
@@ -365,28 +404,52 @@ export function PackagesSection() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-16"
         >
-          <h3 className="text-xl font-semibold text-center mb-8">Add-On Services</h3>
+          <div className="text-center mb-8">
+            <h3 className="text-xl font-semibold">Add-On Services</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Click any add-on below to bundle it automatically into your package quote
+              {selectedAddons.length > 0 && (
+                <span className="ml-2 text-primary font-semibold">
+                  ({selectedAddons.length} selected)
+                </span>
+              )}
+            </p>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { name: 'Usage Rights', desc: 'Brand can reuse content on their channels' },
               { name: 'Rush Delivery', desc: '48-hour turnaround - premium charge' },
               { name: 'Pinned Post', desc: 'Stay pinned on profile 30/60/90 days' },
               { name: 'Regional Content', desc: 'Hindi / local language version' },
-            ].map((addon, index) => (
-              <motion.div
-                key={addon.name}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
-                className="glass p-4 rounded-xl border border-border/50 hover:border-accent/50 transition-colors"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <Zap className="h-4 w-4 text-accent" />
-                  <span className="font-medium text-sm">{addon.name}</span>
-                </div>
-                <p className="text-xs text-muted-foreground">{addon.desc}</p>
-              </motion.div>
-            ))}
+            ].map((addon, index) => {
+              const isSelected = selectedAddons.includes(addon.name)
+              return (
+                <motion.button
+                  type="button"
+                  key={addon.name}
+                  onClick={() => toggleAddon(addon.name)}
+                  aria-pressed={isSelected}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
+                  className={cn(
+                    "glass p-4 rounded-xl border text-left transition-all",
+                    isSelected
+                      ? "border-accent bg-accent/10 shadow-md shadow-accent/10"
+                      : "border-border/50 hover:border-accent/50"
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-accent" />
+                      <span className="font-medium text-sm">{addon.name}</span>
+                    </div>
+                    {isSelected && <Check className="h-4 w-4 text-accent shrink-0" />}
+                  </div>
+                  <p className="text-xs text-muted-foreground">{addon.desc}</p>
+                </motion.button>
+              )
+            })}
           </div>
         </motion.div>
 

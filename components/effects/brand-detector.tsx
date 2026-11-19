@@ -18,13 +18,41 @@ export function BrandDetector() {
   const [hasInteracted, setHasInteracted] = useState(false)
 
   useEffect(() => {
-    // Check if user already interacted this session
-    const interacted = sessionStorage.getItem('tv-brand-detected')
-    if (!interacted) {
-      const timer = setTimeout(() => setIsVisible(true), 3000)
-      return () => clearTimeout(timer)
-    } else {
-      setHasInteracted(true)
+    // Skip when ?autostart=1 or user already interacted this session
+    try {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('autostart') === '1') {
+        setHasInteracted(true)
+        return
+      }
+      const interacted = sessionStorage.getItem('tv-brand-detected')
+      if (interacted) {
+        setHasInteracted(true)
+        return
+      }
+    } catch {}
+
+    let revealTimer: ReturnType<typeof setTimeout> | null = null
+    const scheduleReveal = () => {
+      if (revealTimer) return
+      revealTimer = setTimeout(() => setIsVisible(true), 600)
+    }
+
+    // If intro was already shown earlier in session, show after brief pause
+    try {
+      if (sessionStorage.getItem('tv-intro-shown') === '1') {
+        scheduleReveal()
+      }
+    } catch {}
+
+    window.addEventListener('tv:loading-complete', scheduleReveal)
+    // Safety fallback in case component is mounted on a page without LoadingScreen
+    const fallbackTimer = setTimeout(scheduleReveal, 6000)
+
+    return () => {
+      window.removeEventListener('tv:loading-complete', scheduleReveal)
+      clearTimeout(fallbackTimer)
+      if (revealTimer) clearTimeout(revealTimer)
     }
   }, [])
 
