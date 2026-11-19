@@ -14,6 +14,7 @@ import {
   Heart
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useLanguage } from '@/components/i18n/language-provider'
 
 const navLinks = [
   { href: '/about', label: 'About', external: true },
@@ -34,6 +35,7 @@ const socialLinks = [
 ]
 
 export function Footer() {
+  const { t } = useLanguage()
   const ref = useRef<HTMLElement>(null)
   const [showBackToTop, setShowBackToTop] = useState(false)
   
@@ -125,8 +127,7 @@ export function Footer() {
               <span className="text-2xl font-bold gradient-text">TechVyro</span>
             </div>
             <p className="text-muted-foreground mb-6 max-w-md">
-              India&apos;s Premier Tech Content Creator. Creating content that informs, 
-              engages, and converts for brands across the tech industry.
+              {t.footer.tagline}
             </p>
             {/* Social links */}
             <div className="flex items-center gap-4">
@@ -152,7 +153,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold mb-4">Quick Links</h3>
+            <h3 className="font-semibold mb-4">{t.footer.quickLinks}</h3>
             <ul className="space-y-3">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -178,19 +179,19 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="font-semibold mb-4">Get In Touch</h3>
+            <h3 className="font-semibold mb-4">{t.footer.getInTouch}</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <span className="block text-foreground font-medium">Email</span>
                 techvyro@gmail.com
               </li>
               <li>
-                <span className="block text-foreground font-medium">Response Time</span>
-                Within 24 hours
+                <span className="block text-foreground font-medium">{t.footer.responseTime}</span>
+                {t.footer.responseValue}
               </li>
               <li>
-                <span className="block text-foreground font-medium">Location</span>
-                India
+                <span className="block text-foreground font-medium">{t.footer.location}</span>
+                {t.footer.locationValue}
               </li>
             </ul>
           </div>
@@ -202,7 +203,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground text-center sm:text-left">
-            &copy; {currentYear} TechVyro. All rights reserved.
+            &copy; {currentYear} TechVyro. {t.footer.rights}
           </p>
           
           <div className="flex items-center gap-6">
@@ -215,7 +216,7 @@ export function Footer() {
           </div>
 
           <p className="text-xs text-muted-foreground flex items-center gap-1 hover:scale-105 transition-transform cursor-default">
-            Made with <Heart className="h-3 w-3 text-secondary fill-secondary animate-pulse" /> in India
+            Made with <Heart className="h-3 w-3 text-secondary fill-secondary animate-pulse" /> {t.footer.madeInIndia}
           </p>
         </div>
       </motion.div>

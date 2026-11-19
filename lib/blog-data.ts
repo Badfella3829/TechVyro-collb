@@ -3,11 +3,15 @@ type Block =
   | { type: 'h2'; text: string }
   | { type: 'list'; items: string[] }
 
+export type BlogCategory = 'Strategy' | 'Short-Form' | 'ROI & Analytics' | 'Production'
+
 export type BlogPost = {
   slug: string
   title: string
   date: string
   readMinutes: number
+  category: BlogCategory
+  tags: string[]
   excerpt: string
   body: Block[]
 }
@@ -18,6 +22,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'Why real engagement beats follower count in 2026',
     date: '2026-04-10',
     readMinutes: 4,
+    category: 'ROI & Analytics',
+    tags: ['Engagement', 'Metrics', 'Brand Strategy'],
     excerpt: 'Brands chasing follower counts are leaving 80% of their ROI on the table. Here is the metric that actually predicts campaign performance.',
     body: [
       { type: 'p', text: 'Most brand briefs we receive start with a question about follower count. It is the wrong question. Two creators with identical follower counts can deliver wildly different results — and the variable that explains the gap is engagement quality, not size.' },
@@ -43,6 +49,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'Instagram Reels vs YouTube Shorts — which one should brands prioritize?',
     date: '2026-03-22',
     readMinutes: 5,
+    category: 'Short-Form',
+    tags: ['Instagram Reels', 'YouTube Shorts', 'Distribution'],
     excerpt: 'Both formats look identical but they serve very different goals. Pick the wrong one and you waste 50% of your budget.',
     body: [
       { type: 'p', text: 'Short-form video is the dominant ad format of this decade — but Reels and Shorts are not interchangeable. They have different discovery mechanics, different audience intent, and different conversion behavior.' },
@@ -67,6 +75,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'How to brief a creator for maximum ROI (a 6-step template)',
     date: '2026-03-05',
     readMinutes: 6,
+    category: 'Strategy',
+    tags: ['Creator Brief', 'Campaign Planning', 'Workflow'],
     excerpt: 'A great brief is the difference between content that moves the needle and content that disappears in 24 hours. Here is the template we use.',
     body: [
       { type: 'p', text: 'After running collaborations across Instagram, Facebook, and YouTube, we have noticed a pattern: brands with crisp briefs get 2–3× better results than brands with vague ones. Here is the structure that consistently works.' },
@@ -88,6 +98,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'Facebook Reels: The secret weapon brands are ignoring',
     date: '2026-02-18',
     readMinutes: 5,
+    category: 'Short-Form',
+    tags: ['Facebook Reels', 'Organic Reach', 'Cross-Posting'],
     excerpt: 'While everyone fights for attention on Instagram, Facebook Reels offers 3x more organic reach with zero competition. Here is how to capitalize.',
     body: [
       { type: 'p', text: 'Instagram Reels gets all the hype, but Facebook Reels is quietly delivering insane organic reach. Most brands have not even discovered it yet — which means now is the perfect time to get in.' },
@@ -114,6 +126,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'The psychology behind viral tech unboxings',
     date: '2026-02-01',
     readMinutes: 6,
+    category: 'Production',
+    tags: ['Unboxing', 'Storytelling', 'ASMR'],
     excerpt: 'Unboxing videos get 10x more engagement than standard reviews. Here is the science behind why — and how to engineer virality into your next launch.',
     body: [
       { type: 'p', text: 'Unboxing videos tap into something primal: the anticipation of a gift, the reveal of something new, the vicarious thrill of ownership. Brands that understand this psychology win.' },
@@ -140,6 +154,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'How to actually measure influencer marketing ROI',
     date: '2026-01-15',
     readMinutes: 7,
+    category: 'ROI & Analytics',
+    tags: ['Attribution', 'UTM Tracking', 'Conversions'],
     excerpt: 'Most brands track vanity metrics that mean nothing. Here are the 5 metrics that actually predict whether your campaign made money.',
     body: [
       { type: 'p', text: 'Likes and comments feel good but they do not pay the bills. After running 50+ brand campaigns, here is what we have learned actually predicts ROI.' },
@@ -163,3 +179,26 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
   },
 ]
+
+export function getBlogCategories(posts: BlogPost[] = BLOG_POSTS): BlogCategory[] {
+  return Array.from(new Set(posts.map((p) => p.category)))
+}
+
+export function filterBlogPosts(
+  posts: BlogPost[],
+  query: string,
+  category: string = 'All'
+): BlogPost[] {
+  const q = query.trim().toLowerCase()
+  return posts.filter((post) => {
+    const matchesCategory = category === 'All' || post.category === category
+    if (!matchesCategory) return false
+    if (!q) return true
+    return (
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q) ||
+      post.category.toLowerCase().includes(q) ||
+      post.tags.some((t) => t.toLowerCase().includes(q))
+    )
+  })
+}

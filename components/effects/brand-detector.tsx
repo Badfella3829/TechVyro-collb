@@ -21,7 +21,7 @@ export function BrandDetector() {
     // Skip when ?autostart=1 or user already interacted this session
     try {
       const params = new URLSearchParams(window.location.search)
-      if (params.get('autostart') === '1') {
+      if (params.get('autostart') === '1' || window.location.pathname !== '/') {
         setHasInteracted(true)
         return
       }

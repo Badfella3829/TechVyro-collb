@@ -7,7 +7,9 @@ import { BrandsSection } from '@/components/brands/brands-section'
 import { ServicesGrid } from '@/components/services/services-grid'
 import { JourneyTimeline } from '@/components/journey/journey-timeline'
 import { PackagesSection } from '@/components/packages/packages-section'
+import { QuoteBuilder } from '@/components/quote-builder/quote-builder'
 import { ROICalculator } from '@/components/calculators/roi-calculator'
+import { CampaignIdeaGenerator } from '@/components/ai-studio/campaign-idea-generator'
 import { ComparisonTable } from '@/components/comparison/comparison-table'
 import { PortfolioSection } from '@/components/portfolio/portfolio-section'
 import { WhyMeSection } from '@/components/why-me/why-me-section'
@@ -93,9 +95,11 @@ export default function Home() {
         <SectionDivider
           label="05 — OFFER"
           title="Pick Your Growth Pack"
-          subtitle="Transparent pricing · Calculate ROI · See the difference"
+          subtitle="Transparent pricing · Custom quote builder · AI campaign hooks · Calculate ROI"
         />
         <PackagesSection />
+        <QuoteBuilder />
+        <CampaignIdeaGenerator />
         <ROICalculator />
         <ComparisonTable />
       </div>

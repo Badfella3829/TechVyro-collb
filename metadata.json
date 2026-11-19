@@ -1,0 +1,8 @@
+{
+  "name": "TechVyro",
+  "description": "India's Premier Tech Content Creator & Brand Collaboration Platform featuring interactive campaign quote builder, AI campaign concept generator, live analytics, and creator playbooks.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

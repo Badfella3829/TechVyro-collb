@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, HelpCircle } from 'lucide-react'
+import { useLanguage } from '@/components/i18n/language-provider'
 
 const FAQS = [
   {
@@ -40,6 +41,7 @@ const FAQS = [
 ]
 
 export function FaqSection() {
+  const { t } = useLanguage()
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
@@ -50,13 +52,13 @@ export function FaqSection() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <HelpCircle className="h-3.5 w-3.5 text-primary" />
-            <span className="text-xs font-semibold text-primary tracking-wide">FREQUENTLY ASKED</span>
+            <span className="text-xs font-semibold text-primary tracking-wide">{t.faq.badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
-            Got <span className="gradient-text">Questions?</span>
+            {t.faq.headingPrefix}<span className="gradient-text">{t.faq.headingAccent}</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Everything you wanted to know — clear, straightforward answers. Anything else? Just send us a WhatsApp message.
+            {t.faq.subtitle}
           </p>
         </div>
 
@@ -112,14 +114,14 @@ export function FaqSection() {
 
         <div className="mt-10 text-center">
           <p className="text-sm text-muted-foreground">
-            Have another question?{' '}
+            {t.faq.moreQuestion}{' '}
             <a
               href="https://wa.me/916396094707?text=Hi%20TechVyro%20Team!%20I%20have%20a%20question."
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary font-semibold hover:underline"
             >
-              Ask on WhatsApp →
+              {t.faq.whatsappCta}
             </a>
           </p>
         </div>

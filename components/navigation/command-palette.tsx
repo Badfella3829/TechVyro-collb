@@ -123,6 +123,14 @@ export function CommandPalette() {
             <Package className="h-4 w-4 text-primary" />
             <span>Collaboration Packages &amp; Pricing</span>
           </CommandItem>
+          <CommandItem onSelect={() => goTo('#quote-builder')}>
+            <Calculator className="h-4 w-4 text-primary" />
+            <span>Custom Campaign Quote Builder</span>
+          </CommandItem>
+          <CommandItem onSelect={() => goTo('#ai-studio')}>
+            <Wand2 className="h-4 w-4 text-primary" />
+            <span>AI Campaign Hook &amp; Concept Studio</span>
+          </CommandItem>
           <CommandItem onSelect={() => goTo('#roi-calculator')}>
             <Calculator className="h-4 w-4 text-primary" />
             <span>ROI Calculator</span>

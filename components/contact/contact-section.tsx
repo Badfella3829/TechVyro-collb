@@ -40,6 +40,7 @@ import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
 import { CalendlyEmbed } from '@/components/booking/calendly-embed'
 import { PACKAGE_SELECTED_EVENT, DATE_SELECTED_EVENT, mapPackageToCollabType, type SelectedPackage } from '@/lib/select-package'
 import { isTodayOrFutureIsoDate } from '@/lib/validation'
+import { useLanguage } from '@/components/i18n/language-provider'
 
 const COLLAB_EMAIL = 'techvyro@gmail.com'
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
@@ -129,6 +130,7 @@ const emptyForm: FormState = {
 const stepLabels = ['About Brand', 'Campaign', 'Brief', 'Review']
 
 export function ContactSection() {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
@@ -492,15 +494,14 @@ export function ContactSection() {
           className="text-center mb-12"
         >
           <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-            Let&apos;s Work Together
+            {t.contact.eyebrow}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-2 mb-4">
-            Book a
-            <span className="gradient-text"> Collaboration</span>
+            {t.contact.headingPrefix}
+            <span className="gradient-text">{t.contact.headingAccent}</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            A quick 4-step brief — tell me about your brand and campaign, and I&apos;ll
-            personally reply within 24 hours with the perfect plan.
+            {t.contact.subtitle}
           </p>
         </motion.div>
 
@@ -519,7 +520,7 @@ export function ContactSection() {
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <span className="text-xs uppercase tracking-wider text-muted-foreground">
-                    Total Audience
+                    {t.contact.totalAudience}
                   </span>
                 </div>
                 <p className="text-2xl font-bold gradient-text">
@@ -588,7 +589,7 @@ export function ContactSection() {
                 )}
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Clock className="h-4 w-4 shrink-0" />
-                  <span>Replies within 24 hours</span>
+                  <span>{t.contact.repliesWithin}</span>
                 </div>
               </CardContent>
             </Card>

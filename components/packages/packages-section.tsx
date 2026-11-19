@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { selectPackage } from '@/lib/select-package'
 import { formatPackagePrice, mergePackageAddons, type Currency } from '@/lib/pricing'
+import { useLanguage } from '@/components/i18n/language-provider'
 
 type CategoryKey = 'all' | 'video' | 'shorts' | 'social' | 'live' | 'premium' | 'bundles'
 
@@ -205,6 +206,7 @@ const categories: PackageCategory[] = [
 ]
 
 export function PackagesSection() {
+  const { t } = useLanguage()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all')
@@ -242,15 +244,14 @@ export function PackagesSection() {
           className="text-center mb-12"
         >
           <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-            Collaboration Packages
+            {t.packages.eyebrow}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-2 mb-4">
-            Choose Your
-            <span className="gradient-text"> Perfect Package</span>
+            {t.packages.headingPrefix}
+            <span className="gradient-text">{t.packages.headingAccent}</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            From quick social mentions to full-scale campaigns, find the collaboration 
-            type that fits your brand goals and budget.
+            {t.packages.subtitle}
           </p>
           {/* Currency Switcher */}
           <div className="mt-6 inline-flex items-center rounded-full border border-border/60 bg-muted/30 p-1" role="group" aria-label="Display currency">
@@ -298,7 +299,7 @@ export function PackagesSection() {
               activeCategory === 'all' && "bg-primary text-primary-foreground"
             )}
           >
-            All Packages
+            {t.packages.allPackages}
           </Button>
           {categories.map((category) => (
             <Button
@@ -350,7 +351,7 @@ export function PackagesSection() {
                         {pkg.popular && (
                           <div className="absolute top-4 right-4">
                             <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
-                              Popular
+                              {t.packages.popular}
                             </span>
                           </div>
                         )}
@@ -359,7 +360,7 @@ export function PackagesSection() {
                           <CardTitle className="text-lg pr-16">{pkg.name}</CardTitle>
                           <p className="text-sm text-muted-foreground">{pkg.description}</p>
                           <p className="text-lg font-bold text-primary mt-2">
-                            {pkg.priceInr !== null ? 'Starting from ' : ''}
+                            {pkg.priceInr !== null ? t.packages.startingFrom : ''}
                             {formatPackagePrice(pkg.priceInr, currency, pkg.pricePlus)}
                           </p>
                         </CardHeader>
@@ -384,7 +385,7 @@ export function PackagesSection() {
                               category: category.label,
                             })}
                           >
-                            {selectedAddons.length > 0 ? `Get Quote (+${selectedAddons.length} add-on${selectedAddons.length > 1 ? 's' : ''})` : 'Get Quote'}
+                            {selectedAddons.length > 0 ? `${t.packages.getQuote} (+${selectedAddons.length} add-on${selectedAddons.length > 1 ? 's' : ''})` : t.packages.getQuote}
                             <ChevronRight className="h-4 w-4 ml-1" />
                           </Button>
                         </CardContent>
@@ -405,9 +406,9 @@ export function PackagesSection() {
           className="mt-16"
         >
           <div className="text-center mb-8">
-            <h3 className="text-xl font-semibold">Add-On Services</h3>
+            <h3 className="text-xl font-semibold">{t.packages.addonsTitle}</h3>
             <p className="text-xs text-muted-foreground mt-1">
-              Click any add-on below to bundle it automatically into your package quote
+              {t.packages.addonsHint}
               {selectedAddons.length > 0 && (
                 <span className="ml-2 text-primary font-semibold">
                   ({selectedAddons.length} selected)
@@ -461,14 +462,14 @@ export function PackagesSection() {
           className="text-center mt-16"
         >
           <p className="text-muted-foreground mb-4">
-            Not sure which package is right for you?
+            {t.packages.notSure}
           </p>
           <Button 
             size="lg" 
             onClick={scrollToContact}
             className="bg-primary hover:bg-primary/90 text-primary-foreground neon-glow-cyan"
           >
-            Let&apos;s Discuss Your Campaign
+            {t.packages.discussCta}
             <ChevronRight className="h-5 w-5 ml-1" />
           </Button>
         </motion.div>

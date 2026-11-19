@@ -9,16 +9,18 @@ import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { LangToggle } from '@/components/i18n/lang-toggle'
 import { CommandPaletteTrigger } from '@/components/navigation/command-palette'
+import { useLanguage } from '@/components/i18n/language-provider'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
-  { href: '/about', label: 'About', external: true },
-  { href: '#stats', label: 'Stats' },
-  { href: '#packages', label: 'Packages' },
-  { href: '/match', label: 'Match', external: true },
-  { href: '/case-studies', label: 'Case Studies', external: true },
-  { href: '/blog', label: 'Blog', external: true },
-  { href: '#contact', label: 'Contact' },
+  { href: '/about', key: 'about' as const, external: true },
+  { href: '#stats', key: 'stats' as const },
+  { href: '#packages', key: 'packages' as const },
+  { href: '#quote-builder', key: 'quote' as const },
+  { href: '#ai-studio', key: 'aiStudio' as const },
+  { href: '/case-studies', key: 'caseStudies' as const, external: true },
+  { href: '/blog', key: 'blog' as const, external: true },
+  { href: '#contact', key: 'contact' as const },
 ]
 
 // Magnetic nav link component
@@ -165,6 +167,7 @@ function AnimatedLogo({ onClick }: { onClick: () => void }) {
 export function Navbar() {
   const router = useRouter()
   const pathname = usePathname()
+  const { t } = useLanguage()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isHidden, setIsHidden] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -263,17 +266,17 @@ export function Navbar() {
             />
 
             {/* Desktop Navigation with magnetic links */}
-            <div className="hidden md:flex items-center gap-1 lg:gap-2">
+            <div className="hidden md:flex items-center gap-1 lg:gap-1.5">
               {navLinks.map((link) => (
                 <MagneticNavLink
                   key={link.href}
                   href={link.href}
-                  label={link.label}
+                  label={t.nav[link.key]}
                   onClick={() => {
                     setActiveLink(link.href)
                     scrollToSection(link.href)
                   }}
-                    isActive={activeLink === link.href || (link.external && pathname === link.href)}
+                  isActive={activeLink === link.href || (link.external && pathname === link.href)}
                 />
               ))}
             </div>
@@ -291,7 +294,7 @@ export function Navbar() {
                   onClick={() => scrollToSection('#contact')}
                   className="nav-3d-button group"
                 >
-                  <span className="relative z-10">Get in Touch</span>
+                  <span className="relative z-10">{t.nav.cta}</span>
                   {/* Button shine effect */}
                   <motion.span
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
@@ -399,7 +402,7 @@ export function Navbar() {
                     whileHover={{ x: 8, rotateY: -3 }}
                   >
                     <span className="relative">
-                      {link.label}
+                      {t.nav[link.key]}
                       <motion.span
                         className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-primary to-secondary"
                         initial={{ width: 0 }}
@@ -437,7 +440,7 @@ export function Navbar() {
                     size="lg"
                     className="w-full nav-3d-button mt-4 h-14 text-lg"
                   >
-                    Get in Touch
+                    {t.nav.cta}
                   </Button>
                 </motion.div>
               </div>

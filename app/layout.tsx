@@ -12,6 +12,7 @@ import { CookieConsent } from '@/components/cookie-consent/cookie-consent'
 import { BottomNav } from '@/components/mobile-nav/bottom-nav'
 import { BrandScene } from '@/components/3d/brand-scene'
 import { CommandPalette } from '@/components/navigation/command-palette'
+import { LanguageProvider } from '@/components/i18n/language-provider'
 import { personJsonLd, organizationJsonLd, websiteJsonLd } from '@/lib/json-ld'
 import './globals.css'
 
@@ -159,16 +160,18 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <BrandScene />
-          <SmoothScroll>
-            <div id="main-content"><PageTransition>{children}</PageTransition></div>
-            <WhatsAppButton />
-            <ExitIntentPopup />
-            <VisitorCounter />
-            <CookieConsent />
-            <BottomNav />
-            <CommandPalette />
-          </SmoothScroll>
+          <LanguageProvider>
+            <BrandScene />
+            <SmoothScroll>
+              <div id="main-content"><PageTransition>{children}</PageTransition></div>
+              <WhatsAppButton />
+              <ExitIntentPopup />
+              <VisitorCounter />
+              <CookieConsent />
+              <BottomNav />
+              <CommandPalette />
+            </SmoothScroll>
+          </LanguageProvider>
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

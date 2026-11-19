@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Users, Play, Eye, TrendingUp, Heart, MessageCircle, ArrowRight, Instagram, Facebook, Youtube } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { useLanguage } from '@/components/i18n/language-provider'
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
@@ -138,6 +139,7 @@ const platformStats = [
 ]
 
 export function StatsSection() {
+  const { t } = useLanguage()
   const ref = useRef<HTMLDivElement>(null)
   const [isInView, setIsInView] = useState(false)
 
@@ -187,15 +189,14 @@ export function StatsSection() {
           className="text-center mb-16"
         >
           <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-            Reach & Impact
+            {t.stats.eyebrow}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-2 mb-4">
-            Numbers That
-            <span className="gradient-text"> Speak</span>
+            {t.stats.headingPrefix}
+            <span className="gradient-text">{t.stats.headingAccent}</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Real metrics from real campaigns. These numbers represent the impact and reach
-            of content created for brands across platforms.
+            {t.stats.subtitle}
           </p>
         </motion.div>
 
@@ -222,9 +223,9 @@ export function StatsSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <div className="text-center mb-10">
-            <span className="text-primary text-xs font-semibold tracking-wider uppercase">Platform Breakdown</span>
-            <h3 className="text-2xl sm:text-3xl font-bold mt-2">Performance Across <span className="gradient-text">Channels</span></h3>
-            <p className="text-sm text-muted-foreground mt-2">Follow us across every platform</p>
+            <span className="text-primary text-xs font-semibold tracking-wider uppercase">{t.stats.platformEyebrow}</span>
+            <h3 className="text-2xl sm:text-3xl font-bold mt-2">{t.stats.platformHeadingPrefix}<span className="gradient-text">{t.stats.platformHeadingAccent}</span></h3>
+            <p className="text-sm text-muted-foreground mt-2">{t.stats.platformSubtitle}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
@@ -278,7 +279,7 @@ export function StatsSection() {
 
                         {/* CTA */}
                         <div className={`mt-5 pt-4 border-t border-border/30 flex items-center justify-between text-xs font-medium ${platform.accent} group-hover:gap-3 transition-all`}>
-                          <span>Visit profile</span>
+                          <span>{t.stats.visitProfile}</span>
                           <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </CardContent>

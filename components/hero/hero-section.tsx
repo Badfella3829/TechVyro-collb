@@ -7,6 +7,7 @@ import { ChevronDown, Play, Zap, TrendingUp, Award, Instagram, Youtube, Facebook
 import { Button } from '@/components/ui/button'
 import { ParticleField } from './particle-field'
 import { useCombinedStats, formatBig } from '@/hooks/use-combined-stats'
+import { useLanguage } from '@/components/i18n/language-provider'
 
 const textVariants: any = {
   hidden: { opacity: 0, y: 20 },
@@ -73,6 +74,7 @@ export function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const { totals, ready } = useCombinedStats()
+  const { t } = useLanguage()
 
   useEffect(() => {
     setIsLoaded(true)
@@ -115,7 +117,7 @@ export function HeroSection() {
               <span className="absolute inline-flex h-full w-full rounded-full bg-gold opacity-75 animate-ping" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold" />
             </span>
-            Available for Collaborations
+            {t.hero.availability}
           </motion.div>
 
           {/* Logo with gold corner-bracket frame + floating badges */}
@@ -164,7 +166,7 @@ export function HeroSection() {
               className="absolute -top-3 -right-10 sm:-right-16 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg glass border-gold/30 text-gold text-[11px] sm:text-xs font-semibold shadow-lg"
             >
               <TrendingUp className="h-3.5 w-3.5" />
-              850K+ Reach
+              {t.hero.reachBadge}
             </motion.div>
 
             {/* Floating badge — bottom left */}
@@ -175,7 +177,7 @@ export function HeroSection() {
               className="absolute -bottom-3 -left-10 sm:-left-16 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg glass border-primary/30 text-primary text-[11px] sm:text-xs font-semibold shadow-lg"
             >
               <Award className="h-3.5 w-3.5" />
-              200+ Projects
+              {t.hero.projectsBadge}
             </motion.div>
           </motion.div>
         </motion.div>
@@ -199,7 +201,7 @@ export function HeroSection() {
           animate={isLoaded ? "visible" : "hidden"}
           className="font-serif italic text-2xl sm:text-3xl lg:text-4xl text-foreground/90 mb-2 max-w-2xl mx-auto"
         >
-          India&apos;s Premier Tech Content Creator
+          {t.hero.tagline}
         </motion.p>
         
         <motion.p
@@ -209,7 +211,7 @@ export function HeroSection() {
           animate={isLoaded ? "visible" : "hidden"}
           className="text-base sm:text-lg text-gold font-medium tracking-wide mb-6"
         >
-          Creating Content That Converts
+          {t.hero.subTagline}
         </motion.p>
 
         {/* Skill / content pills — reference inspired */}
@@ -220,7 +222,7 @@ export function HeroSection() {
           animate={isLoaded ? "visible" : "hidden"}
           className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-10 px-4 sm:px-0"
         >
-          {['Tech Reviews', 'Unboxings', 'Brand Collabs', 'Tutorials', 'Shorts & Reels'].map((skill) => (
+          {t.hero.skills.map((skill) => (
             <motion.span
               key={skill}
               whileHover={{ scale: 1.05, borderColor: 'rgba(217, 119, 6, 0.8)' }}
@@ -245,7 +247,7 @@ export function HeroSection() {
             className="group relative overflow-hidden gold-gradient-bg hover:opacity-90 text-background px-7 sm:px-10 py-6 sm:py-7 text-base sm:text-lg font-semibold neon-glow-gold w-full sm:w-auto transition-all duration-300"
           >
             <Zap className="mr-2.5 h-5 w-5" />
-            Let&apos;s Collab
+            {t.hero.primaryCta}
             <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           </Button>
           
@@ -256,7 +258,7 @@ export function HeroSection() {
             className="group border-gold/60 text-gold hover:bg-gold hover:text-background px-7 sm:px-10 py-6 sm:py-7 text-base sm:text-lg font-semibold w-full sm:w-auto transition-all duration-300"
           >
             <Play className="mr-2.5 h-5 w-5" />
-            View My Work
+            {t.hero.secondaryCta}
           </Button>
         </motion.div>
 
@@ -268,7 +270,7 @@ export function HeroSection() {
           animate={isLoaded ? "visible" : "hidden"}
           className="flex items-center justify-center gap-3 mb-10 sm:mb-12"
         >
-          <span className="text-xs uppercase tracking-widest text-muted-foreground mr-1">Follow</span>
+          <span className="text-xs uppercase tracking-widest text-muted-foreground mr-1">{t.hero.follow}</span>
           {[
             { Icon: Instagram, href: 'https://instagram.com/techvyro', label: 'Instagram' },
             { Icon: Youtube, href: 'https://youtube.com/@techvyro', label: 'YouTube' },
@@ -298,9 +300,9 @@ export function HeroSection() {
           className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-6 lg:gap-10 w-full max-w-md sm:max-w-none mx-auto px-4 sm:px-0"
         >
           {[
-            { value: ready ? formatBig(totals.followers) : '850K+', label: 'Followers' },
-            { value: ready ? formatBig(totals.totalViews) : '165M+', label: 'Views' },
-            { value: ready ? formatBig(totals.content) : '1.2K+', label: 'Posts' },
+            { value: ready ? formatBig(totals.followers) : '850K+', label: t.hero.followersLabel },
+            { value: ready ? formatBig(totals.totalViews) : '165M+', label: t.hero.viewsLabel },
+            { value: ready ? formatBig(totals.content) : '1.2K+', label: t.hero.postsLabel },
           ].map((stat, index) => (
             <motion.div 
               key={index} 
@@ -333,7 +335,7 @@ export function HeroSection() {
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center text-muted-foreground hover:text-primary transition-colors"
         >
-          <span className="text-xs mb-2 uppercase tracking-widest">Scroll</span>
+          <span className="text-xs mb-2 uppercase tracking-widest">{t.hero.scroll}</span>
           <ChevronDown className="h-6 w-6" />
         </motion.button>
       </motion.div>
