@@ -94,11 +94,10 @@ export const LOADING_COMPLETE_EVENT = 'tv:loading-complete'
 const INTRO_SHOWN_KEY = 'tv-intro-shown'
 
 export function LoadingScreen() {
-  const [isLoading, setIsLoading] = useState(true)
+  // Never block initial SSR paint with a stuck 0% overlay before client hydration
+  const [isLoading, setIsLoading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [loadingText, setLoadingText] = useState('Initializing')
-  // Particles use randomized positions; render them only after mount so the
-  // server-rendered HTML and the client never disagree (no hydration mismatch).
   const [mounted, setMounted] = useState(false)
 
   const loadingSteps = useMemo(() => [
@@ -112,17 +111,18 @@ export function LoadingScreen() {
   useEffect(() => {
     setMounted(true)
 
-    // Skip intro animation if ?autostart=1 or already viewed in this session
+    // Skip intro animation if ?autostart=1, reduced motion, or already viewed in this session
     try {
       const params = new URLSearchParams(window.location.search)
       const alreadyShown = sessionStorage.getItem(INTRO_SHOWN_KEY) === '1'
-      if (params.get('autostart') === '1' || alreadyShown) {
-        setIsLoading(false)
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (params.get('autostart') === '1' || alreadyShown || reducedMotion) {
         window.dispatchEvent(new CustomEvent(LOADING_COMPLETE_EVENT))
         return
       }
     } catch {}
 
+    setIsLoading(true)
     let exitTimer: ReturnType<typeof setTimeout> | null = null
     let doneTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -135,16 +135,16 @@ export function LoadingScreen() {
             try { sessionStorage.setItem(INTRO_SHOWN_KEY, '1') } catch {}
             doneTimer = setTimeout(() => {
               window.dispatchEvent(new CustomEvent(LOADING_COMPLETE_EVENT))
-            }, 850)
-          }, 350)
+            }, 500)
+          }, 180)
           return 100
         }
-        const newProgress = prev + Math.random() * 14 + 6
+        const newProgress = Math.min(100, prev + Math.random() * 18 + 14)
         const stepIndex = Math.min(Math.floor(newProgress / 25), loadingSteps.length - 1)
         setLoadingText(loadingSteps[stepIndex])
         return newProgress
       })
-    }, 90)
+    }, 65)
     return () => {
       clearInterval(interval)
       if (exitTimer) clearTimeout(exitTimer)

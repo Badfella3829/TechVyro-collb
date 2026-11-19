@@ -6,13 +6,16 @@ const nextConfig = {
     ],
   },
   allowedDevOrigins: [
+    '**.run.app',
     '*.run.app',
-    '*.aistudio.google.com',
+    '**.aistudio.google.com',
+    'aistudio.google.com',
+    '**.googleusercontent.com',
+    '**.google.com',
     'localhost',
     '127.0.0.1',
-    '*.replit.dev',
-    '*.repl.co',
-    '*.riker.replit.dev',
+    '**.replit.dev',
+    '**.repl.co',
   ],
 }
 
